@@ -1,0 +1,86 @@
+<div class="auth-wrapper">
+  <p-card class="auth-card">
+    <div class="auth-logo">
+      <i class="pi pi-shopping-cart logo-icon"></i>
+      <h1 class="logo-text">VyaparPOS</h1>
+    </div>
+
+    <div class="auth-header">
+      <h2>Create account</h2>
+      <p>Enter your details to register for an account.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input
+          id="name"
+          type="text"
+          pInputText
+          formControlName="name"
+          placeholder="Enter full name"
+        />
+        <div class="field-error" *ngIf="name?.touched && name?.invalid">
+          Full name is required.
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          formControlName="email"
+          placeholder="Enter email address"
+        />
+        <div class="field-error" *ngIf="email?.touched && email?.invalid">
+          <span *ngIf="email?.errors?.['required']">Email is required.</span>
+          <span *ngIf="email?.errors?.['email']">Invalid email format.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          pInputText
+          formControlName="password"
+          placeholder="Enter password"
+        />
+        <div class="field-error" *ngIf="password?.touched && password?.invalid">
+          <span *ngIf="password?.errors?.['required']">Password is required.</span>
+          <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="phone">Mobile number</label>
+        <input
+          id="phone"
+          type="tel"
+          pInputText
+          formControlName="phone"
+          placeholder="Enter mobile number"
+        />
+        <div class="field-error" *ngIf="phone?.touched && phone?.invalid">
+          Mobile number is required.
+        </div>
+      </div>
+
+      <div class="auth-actions">
+        <button pButton type="submit" label="Register" [disabled]="form.invalid"></button>
+      </div>
+
+      <div class="auth-footer">
+        <span>Already have an account?</span>
+        <a routerLink="/auth/login">Login</a>
+      </div>
+    </form>
+
+    <div class="auth-error" *ngIf="error">
+      {{ error }}
+    </div>
+  </p-card>
+</div>

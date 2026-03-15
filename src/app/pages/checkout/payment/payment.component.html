@@ -1,0 +1,169 @@
+<div class="payment-page">
+    <!-- Stepper -->
+    <div class="checkout-stepper">
+        <div class="step completed">
+            <div class="step-circle"><i class="pi pi-check"></i></div>
+            <span>Cart</span>
+        </div>
+        <div class="step-line filled"></div>
+        <div class="step completed">
+            <div class="step-circle"><i class="pi pi-check"></i></div>
+            <span>Address</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step active">
+            <div class="step-circle">3</div>
+            <span>Payment</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-circle">4</div>
+            <span>Confirm</span>
+        </div>
+    </div>
+
+    <div class="payment-content">
+        <!-- Payment Methods -->
+        <div class="methods-section">
+            <h2><i class="pi pi-credit-card"></i> Payment Method</h2>
+
+            <div class="method-tabs">
+                <div class="method-tab" [class.active]="selectedMethod === 'upi'" (click)="selectMethod('upi')">
+                    <i class="pi pi-mobile"></i>
+                    <span>UPI</span>
+                </div>
+                <div class="method-tab" [class.active]="selectedMethod === 'credit_card'"
+                    (click)="selectMethod('credit_card')">
+                    <i class="pi pi-credit-card"></i>
+                    <span>Credit Card</span>
+                </div>
+                <div class="method-tab" [class.active]="selectedMethod === 'debit_card'"
+                    (click)="selectMethod('debit_card')">
+                    <i class="pi pi-wallet"></i>
+                    <span>Debit Card</span>
+                </div>
+            </div>
+
+            <!-- UPI Form -->
+            @if (selectedMethod === 'upi') {
+            <div class="payment-form">
+                <div class="upi-apps">
+                    <span class="upi-label">Popular UPI Apps:</span>
+                    <div class="upi-badges">
+                        <span class="upi-badge">Google Pay</span>
+                        <span class="upi-badge">PhonePe</span>
+                        <span class="upi-badge">Paytm</span>
+                        <span class="upi-badge">BHIM</span>
+                    </div>
+                </div>
+                <form [formGroup]="upiForm">
+                    <div class="form-row">
+                        <label class="form-label" for="upiId">UPI ID *</label>
+                        <input pInputText id="upiId" formControlName="upiId" placeholder="yourname@upi"
+                            class="full-width" />
+                        @if (isUpiInvalid('upiId')) {
+                        <small class="error-msg">Enter a valid UPI ID (e.g. name&#64;upi)</small>
+                        }
+                    </div>
+                </form>
+            </div>
+            }
+
+            <!-- Card Form (Credit / Debit) -->
+            @if (selectedMethod === 'credit_card' || selectedMethod === 'debit_card') {
+            <div class="payment-form">
+                <form [formGroup]="cardForm">
+                    <div class="form-row">
+                        <label class="form-label" for="cardNumber">Card Number *</label>
+                        <input pInputText id="cardNumber" formControlName="cardNumber" placeholder="1234 5678 9012 3456"
+                            class="full-width" maxlength="16" />
+                        @if (isCardInvalid('cardNumber')) {
+                        <small class="error-msg">Enter a valid 16-digit card number</small>
+                        }
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" for="cardName">Name on Card *</label>
+                        <input pInputText id="cardName" formControlName="cardName" placeholder="Enter name as on card"
+                            class="full-width" />
+                        @if (isCardInvalid('cardName')) {
+                        <small class="error-msg">Name is required</small>
+                        }
+                    </div>
+                    <div class="form-row-group">
+                        <div class="form-row flex-1">
+                            <label class="form-label" for="expiry">Expiry (MM/YY) *</label>
+                            <input pInputText id="expiry" formControlName="expiry" placeholder="MM/YY"
+                                class="full-width" maxlength="5" />
+                            @if (isCardInvalid('expiry')) {
+                            <small class="error-msg">Enter valid expiry (MM/YY)</small>
+                            }
+                        </div>
+                        <div class="form-row flex-1">
+                            <label class="form-label" for="cvv">CVV *</label>
+                            <input pInputText id="cvv" formControlName="cvv" type="password" placeholder="•••"
+                                class="full-width" maxlength="3" />
+                            @if (isCardInvalid('cvv')) {
+                            <small class="error-msg">Enter 3-digit CVV</small>
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+            }
+
+            <div class="form-actions">
+                <button pButton type="button" label="Back" icon="pi pi-arrow-left"
+                    class="p-button-outlined p-button-rounded" (click)="goBack()"></button>
+                <button pButton type="button"
+                    [label]="isProcessing ? 'Processing...' : 'Pay ' + (cartService.grandTotal() | currency:'INR':'symbol':'1.0-0')"
+                    [icon]="isProcessing ? 'pi pi-spin pi-spinner' : 'pi pi-lock'" class="p-button-rounded pay-btn"
+                    (click)="pay()" [disabled]="isProcessing"></button>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="order-summary">
+            <div class="summary-card">
+                <h3 class="summary-title">Order Summary</h3>
+                @for (item of cartService.items(); track item.product.id) {
+                <div class="summary-item">
+                    <span class="item-info">{{ item.product.name }} × {{ item.quantity }}</span>
+                    <span>{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                }
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>{{ cartService.cartTotal() | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    @if (cartService.deliveryFee() === 0) {
+                    <span class="free-tag">FREE</span>
+                    } @else {
+                    <span>{{ cartService.deliveryFee() | currency:'INR':'symbol':'1.0-0' }}</span>
+                    }
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span>{{ cartService.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+
+                @if (orderService.getAddress(); as addr) {
+                <div class="summary-divider"></div>
+                <div class="delivery-address">
+                    <h4><i class="pi pi-map-marker"></i> Delivering to</h4>
+                    <p>{{ addr.fullName }}</p>
+                    <p>{{ addr.addressLine1 }}</p>
+                    @if (addr.addressLine2) {
+                    <p>{{ addr.addressLine2 }}</p>
+                    }
+                    <p>{{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
+                    <p>Phone: {{ addr.phone }}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

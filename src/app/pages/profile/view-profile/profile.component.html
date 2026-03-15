@@ -1,0 +1,98 @@
+<div class="profile-page">
+    @if (user) {
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="avatar">
+            <span>{{ getInitials() }}</span>
+        </div>
+        <div class="header-info">
+            <h1>{{ user.name || 'User' }}</h1>
+            <p class="member-since">Member since {{ getMemberSince() | date:'mediumDate' }}</p>
+        </div>
+        <button pButton icon="pi pi-pencil" label="Edit Profile" class="p-button-rounded p-button-outlined edit-btn"
+            (click)="editProfile()"></button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon orders-icon"><i class="pi pi-shopping-bag"></i></div>
+            <div class="stat-info">
+                <span class="stat-value">{{ totalOrders }}</span>
+                <span class="stat-label">Total Orders</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon spent-icon"><i class="pi pi-indian-rupee"></i></div>
+            <div class="stat-info">
+                <span class="stat-value">₹{{ totalSpent }}</span>
+                <span class="stat-label">Total Spent</span>
+            </div>
+        </div>
+        <div class="stat-card clickable" (click)="viewOrders()">
+            <div class="stat-icon view-icon"><i class="pi pi-arrow-right"></i></div>
+            <div class="stat-info">
+                <span class="stat-value">View</span>
+                <span class="stat-label">My Orders</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Sections -->
+    <div class="info-grid">
+        <!-- Personal Info -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <h3><i class="pi pi-user"></i> Personal Information</h3>
+            </div>
+            <div class="info-rows">
+                <div class="info-row">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">{{ user.name || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ user.email || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">{{ user.phone || '—' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Info -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <h3><i class="pi pi-map-marker"></i> Address</h3>
+            </div>
+            <div class="info-rows">
+                <div class="info-row">
+                    <span class="info-label">Street</span>
+                    <span class="info-value">{{ user.address || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">City</span>
+                    <span class="info-value">{{ user.city || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">State</span>
+                    <span class="info-value">{{ user.state || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pincode</span>
+                    <span class="info-value">{{ user.pincode || '—' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <button pButton icon="pi pi-pencil" label="Edit Profile" class="p-button-rounded"
+            (click)="editProfile()"></button>
+        <button pButton icon="pi pi-shopping-bag" label="My Orders" class="p-button-rounded p-button-outlined"
+            (click)="viewOrders()"></button>
+    </div>
+    }
+</div>

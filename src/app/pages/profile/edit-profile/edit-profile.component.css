@@ -1,0 +1,165 @@
+.edit-profile-page {
+    padding: 24px;
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.edit-header {
+    margin-bottom: 20px;
+}
+
+.edit-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 8px 0 0;
+}
+
+.edit-card {
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--surface-border, #e0e0e0);
+    border-radius: 16px;
+    padding: 28px;
+}
+
+/* Avatar */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.avatar span {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.avatar-hint {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 0;
+}
+
+/* Form */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.form-section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #555;
+}
+
+.form-field {
+    margin-bottom: 16px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.required {
+    color: #ee5a24;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.state-select {
+    padding: 10px 12px;
+    border: 1px solid var(--surface-border, #d0d0d0);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background: var(--surface-ground, #fafafa);
+    cursor: pointer;
+    appearance: auto;
+}
+
+.state-select:focus {
+    border-color: #667eea;
+}
+
+/* Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--surface-100, #f0f0f0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark Mode Overrides */
+:host-context(.my-app-dark) .edit-card {
+    background: var(--surface-card, #1e293b);
+    border-color: var(--surface-border, #334155);
+}
+
+:host-context(.my-app-dark) .edit-header h1 {
+    color: #f8fafc;
+}
+
+:host-context(.my-app-dark) .form-section h3 {
+    color: #cbd5e1;
+}
+
+:host-context(.my-app-dark) .form-field label {
+    color: #94a3b8;
+}
+
+:host-context(.my-app-dark) .state-select {
+    background: var(--surface-ground, #0f172a);
+    border-color: var(--surface-border, #334155);
+    color: #f8fafc;
+}
+
+:host-context(.my-app-dark) .state-select:focus {
+    border-color: #667eea;
+}
+
+:host-context(.my-app-dark) .form-actions {
+    border-top-color: var(--surface-100, #334155);
+}

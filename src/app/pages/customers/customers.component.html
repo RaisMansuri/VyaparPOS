@@ -1,0 +1,64 @@
+<div class="customers-page">
+  <p-toast></p-toast>
+  <div class="header">
+    <h2>Customer Management</h2>
+    <button pButton label="New Customer" icon="pi pi-plus" (click)="openNew()"></button>
+  </div>
+
+  <p-table [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Total Orders</th>
+        <th>Spent</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-customer>
+      <tr>
+        <td>{{customer.name}}</td>
+        <td>{{customer.email}}</td>
+        <td>{{customer.phone}}</td>
+        <td>{{customer.totalOrders}}</td>
+        <td>{{customer.totalSpent | currency:'INR'}}</td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editCustomer(customer)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCustomer(customer)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog [(visible)]="showDialog" [header]="editingCustomerId ? 'Edit Customer' : 'Add New Customer'" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+      <form [formGroup]="customerForm">
+        <div class="field mb-3">
+          <label for="name">Name</label>
+          <input pInputText id="name" formControlName="name" />
+        </div>
+        <div class="field mb-3">
+          <label for="email">Email</label>
+          <input pInputText id="email" formControlName="email" />
+        </div>
+        <div class="field mb-3">
+          <label for="phone">Phone</label>
+          <input pInputText id="phone" formControlName="phone" />
+        </div>
+        <div class="field mb-3">
+          <label for="address">Address</label>
+          <input pInputText id="address" formControlName="address" />
+        </div>
+        <div class="field mb-3">
+          <label for="notes">Notes</label>
+          <input pInputText id="notes" formControlName="notes" />
+        </div>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
+      <button pButton label="Save" icon="pi pi-check" class="p-button-text" (click)="saveCustomer()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

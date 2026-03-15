@@ -1,0 +1,286 @@
+﻿
+> vyapar-pos@0.0.0 build
+> ng build
+
+node.exe : - Generating 
+browser application 
+bundles (phase: setup)...
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (- Generating br...h   
+ ase: setup)...:Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+Γ£ö Browser application 
+bundle generation 
+complete.
+Γ£ö Browser application 
+bundle generation 
+complete.
+[1m[33m
+Warning: D:/POS/VyaparPOS
+/src/app/pages/checkout/p
+ayment/payment.component.
+css exceeded maximum 
+budget. Budget 4.00 kB 
+was not met by 631 bytes 
+with a total of 4.63 kB.
+
+Warning: D:/POS/VyaparPOS
+/src/app/pages/orders/ord
+er-detail/order-detail.co
+mponent.css exceeded 
+maximum budget. Budget 
+4.00 kB was not met by 
+1.23 kB with a total of 
+5.23 kB.
+
+Warning: D:/POS/VyaparPOS
+/src/app/pages/product-li
+sting/product-listing.com
+ponent.css exceeded 
+maximum budget. Budget 
+4.00 kB was not met by 
+4.82 kB with a total of 
+8.82 kB.
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.in
+dex-of.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.it
+erator.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.re
+duce.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.re
+verse.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.promise.
+js'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.regexp.t
+o-string.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.e
+nds-with.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.i
+ncludes.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.m
+atch.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.r
+eplace.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.s
+plit.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.s
+tarts-with.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.t
+rim.js'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/web.dom-col
+lections.iterator.js'. 
+CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 
+'raf'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 
+'rgbcolor'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\src\app\pages\orders\inv
+oice\invoice.component.ts
+ depends on 
+'html2canvas'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+[39m[22m
+[1m[31m
+Error: D:/POS/VyaparPOS/s
+rc/app/pages/product-list
+ing/product-listing.compo
+nent.css exceeded 
+maximum budget. Budget 
+8.00 kB was not met by 
+823 bytes with a total 
+of 8.82 kB.
+
+[39m[22m

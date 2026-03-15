@@ -1,0 +1,87 @@
+<p-toast />
+
+<div class="edit-profile-page">
+    <div class="edit-header">
+        <button pButton icon="pi pi-arrow-left" label="Back to Profile" class="p-button-text p-button-plain"
+            (click)="cancel()"></button>
+        <h1>Edit Profile</h1>
+    </div>
+
+    <div class="edit-card">
+        <!-- Avatar Preview -->
+        <div class="avatar-section">
+            <div class="avatar">
+                <span>{{ getInitials() }}</span>
+            </div>
+            <p class="avatar-hint">Initials are generated from your name</p>
+        </div>
+
+        <!-- Form -->
+        <div class="form-grid">
+            <!-- Personal -->
+            <div class="form-section">
+                <h3><i class="pi pi-user"></i> Personal Information</h3>
+
+                <div class="form-field">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input pInputText id="name" [(ngModel)]="form.name" placeholder="Enter your full name"
+                        class="full-width" />
+                </div>
+
+                <div class="form-field">
+                    <label for="email">Email Address</label>
+                    <input pInputText id="email" [(ngModel)]="form.email" placeholder="yourname@email.com"
+                        class="full-width" />
+                </div>
+
+                <div class="form-field">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input pInputText id="phone" [(ngModel)]="form.phone" placeholder="10-digit mobile number"
+                        class="full-width" maxlength="10" />
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-section">
+                <h3><i class="pi pi-map-marker"></i> Address</h3>
+
+                <div class="form-field">
+                    <label for="address">Street Address</label>
+                    <input pInputText id="address" [(ngModel)]="form.address" placeholder="House/Flat, Street, Area"
+                        class="full-width" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="city">City</label>
+                        <input pInputText id="city" [(ngModel)]="form.city" placeholder="City" class="full-width" />
+                    </div>
+                    <div class="form-field">
+                        <label for="pincode">Pincode</label>
+                        <input pInputText id="pincode" [(ngModel)]="form.pincode" placeholder="6-digit pincode"
+                            class="full-width" maxlength="6" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="state">State</label>
+                    <select id="state" [(ngModel)]="form.state" class="state-select full-width">
+                        <option value="">Select State</option>
+                        @for (s of states; track s) {
+                        <option [value]="s">{{ s }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <button pButton label="Cancel" icon="pi pi-times" class="p-button-rounded p-button-text"
+                (click)="cancel()"></button>
+            <button pButton [label]="isSaving ? 'Saving...' : 'Save Changes'"
+                [icon]="isSaving ? 'pi pi-spin pi-spinner' : 'pi pi-check'" class="p-button-rounded"
+                (click)="saveProfile()" [disabled]="isSaving"></button>
+        </div>
+    </div>
+</div>
