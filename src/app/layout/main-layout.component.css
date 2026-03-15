@@ -24,8 +24,11 @@
 }
 
 .sidebar-header {
-  padding: 1.25rem 1rem;
+  height: 64px;
+  padding: 0 1rem;
   border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-title {
@@ -134,6 +137,10 @@
   z-index: 10;
   border-bottom: 1px solid #e5e7eb;
   background: #ffffff;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
 }
 
 :host-context(.my-app-dark) .layout-toolbar {
@@ -201,6 +208,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+/* Ensure dropdown panels appear above app header/toolbar */
+.p-dropdown-panel {
+  z-index: 2000 !important;
 }
 
 .notification-item:last-child {

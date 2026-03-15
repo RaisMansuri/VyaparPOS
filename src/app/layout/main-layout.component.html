@@ -69,7 +69,7 @@
       <div class="p-toolbar-group-right toolbar-right">
         <!-- Language Switcher -->
         <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
-          class="mr-2 language-dropdown" [style]="{'min-width': '100px'}"></p-dropdown>
+          class="mr-2 language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
 
         <!-- Notification Button -->
         <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text ml-2 notification-btn"
