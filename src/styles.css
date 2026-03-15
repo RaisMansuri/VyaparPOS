@@ -1,0 +1,100 @@
+@import 'primeicons/primeicons.css';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1f2937;
+  background-color: #f3f4f6;
+}
+
+body.my-app-dark {
+  color: #f8fafc;
+  background-color: #0f172a;
+}
+
+app-root {
+  display: block;
+  min-height: 100%;
+}
+
+/* Global prime ng component overrides for dark mode */
+html.my-app-dark .p-sidebar {
+  background: #0f172a !important;
+  border-right: 1px solid #334155 !important;
+}
+
+html.my-app-dark .p-sidebar .sidebar-title,
+html.my-app-dark .p-sidebar .sidebar-nav a,
+html.my-app-dark .p-sidebar .nav-item i,
+html.my-app-dark .p-sidebar .nav-section-title,
+html.my-app-dark .p-sidebar .theme-footer-row,
+html.my-app-dark .p-sidebar .theme-footer-row span {
+  color: #ffffff !important;
+}
+
+html.my-app-dark .p-sidebar .sidebar-nav a:hover,
+html.my-app-dark .p-sidebar .sidebar-nav a.active {
+  background-color: #1e293b !important;
+}
+
+/* Sidebar light mode */
+html:not(.my-app-dark) .p-sidebar .sidebar-title,
+html:not(.my-app-dark) .p-sidebar .sidebar-nav a,
+html:not(.my-app-dark) .p-sidebar .nav-item i,
+html:not(.my-app-dark) .p-sidebar .nav-section-title,
+html:not(.my-app-dark) .p-sidebar .theme-footer-row,
+html:not(.my-app-dark) .p-sidebar .theme-footer-row span {
+  color: #000000 !important;
+}
+
+html.my-app-dark .p-menu {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+html.my-app-dark .p-menu .p-menuitem-link,
+html.my-app-dark .p-menu .p-menuitem-text,
+html.my-app-dark .p-menu .p-menuitem-icon {
+  color: #ffffff !important;
+}
+
+html.my-app-dark .p-menu .p-menuitem-link:hover {
+  background: #334155;
+}
+
+/* Global prime ng component overrides for light mode */
+html:not(.my-app-dark) .p-menu .p-menuitem-link,
+html:not(.my-app-dark) .p-menu .p-menuitem-text,
+html:not(.my-app-dark) .p-menu .p-menuitem-icon {
+  color: #000000 !important;
+}
+
+/* Layout Toolbar dark mode */
+html.my-app-dark .layout-toolbar .toolbar-title,
+html.my-app-dark .layout-toolbar .theme-toggle-btn,
+html.my-app-dark .layout-toolbar .theme-toggle-btn i,
+html.my-app-dark .layout-toolbar .cart-toolbar-btn,
+html.my-app-dark .layout-toolbar .cart-toolbar-btn i,
+html.my-app-dark .layout-toolbar .menu-button,
+html.my-app-dark .layout-toolbar .menu-button i,
+html.my-app-dark .layout-toolbar .p-button-icon {
+  color: #ffffff !important;
+}
+
+/* Layout Toolbar light mode */
+html:not(.my-app-dark) .layout-toolbar .toolbar-title,
+html:not(.my-app-dark) .layout-toolbar .theme-toggle-btn,
+html:not(.my-app-dark) .layout-toolbar .theme-toggle-btn i,
+html:not(.my-app-dark) .layout-toolbar .cart-toolbar-btn,
+html:not(.my-app-dark) .layout-toolbar .cart-toolbar-btn i,
+html:not(.my-app-dark) .layout-toolbar .menu-button,
+html:not(.my-app-dark) .layout-toolbar .menu-button i,
+html:not(.my-app-dark) .layout-toolbar .p-button-icon {
+  color: #000000 !important;
+}

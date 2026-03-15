@@ -1,0 +1,391 @@
+.detail-page {
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header */
+.back-btn {
+    margin-bottom: 8px;
+}
+
+.detail-header {
+    margin-bottom: 28px;
+}
+
+.header-info h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.order-id-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color, #667eea);
+}
+
+.order-date-label {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+}
+
+/* Tracking Section */
+.tracking-section {
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--surface-border, #e0e0e0);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 28px;
+}
+
+.tracking-section h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tracking-timeline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+}
+
+.track-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+}
+
+.track-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: var(--surface-200, #e8e8e8);
+    color: #999;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.track-step.completed .track-icon {
+    background: #27ae60;
+    color: #fff;
+    border-color: #27ae60;
+}
+
+.track-step.current .track-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border-color: #667eea;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(102, 126, 234, 0.7);
+    }
+}
+
+.track-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #999;
+    text-align: center;
+}
+
+.track-step.completed .track-label {
+    color: #27ae60;
+}
+
+.track-step.current .track-label {
+    color: #667eea;
+}
+
+.track-connector {
+    flex: 1;
+    max-width: 100px;
+    height: 3px;
+    background: var(--surface-200, #e0e0e0);
+    margin-top: 23px;
+    border-radius: 2px;
+    transition: background 0.3s ease;
+}
+
+.track-connector.completed {
+    background: #27ae60;
+}
+
+/* Detail Grid */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.detail-card {
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--surface-border, #e0e0e0);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.detail-side {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Items */
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--surface-100, #f0f0f0);
+}
+
+.detail-item:last-of-type {
+    border-bottom: none;
+}
+
+.detail-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.detail-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-item-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.detail-item-category {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.detail-item-qty {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.detail-item-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.per-unit {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.line-total {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+/* Price Breakdown */
+.price-breakdown {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--surface-border, #e0e0e0);
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.9rem;
+}
+
+.price-row.total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--surface-border, #e0e0e0);
+}
+
+.free {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+/* Address */
+.address-info p {
+    margin: 3px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.addr-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color, #333) !important;
+}
+
+.address-info .pi-phone {
+    margin-right: 4px;
+    font-size: 0.8rem;
+}
+
+/* Payment */
+.payment-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pay-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pay-label {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.pay-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.pay-amount {
+    font-size: 1.1rem;
+    color: var(--primary-color, #27ae60);
+}
+
+.pay-status.confirmed {
+    background: #27ae60;
+    color: #fff;
+    padding: 3px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Action */
+.action-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-btn {
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tracking-timeline {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .track-connector {
+        display: none;
+    }
+
+    .detail-item {
+        flex-wrap: wrap;
+    }
+}
+
+/* Dark Mode Overrides */
+:host-context(.my-app-dark) .tracking-section,
+:host-context(.my-app-dark) .detail-card {
+    background: var(--surface-card, #1e293b);
+    border-color: var(--surface-border, #334155);
+}
+
+:host-context(.my-app-dark) .tracking-section h3,
+:host-context(.my-app-dark) .detail-card h3 {
+    color: #f8fafc;
+}
+
+:host-context(.my-app-dark) .track-icon {
+    background: var(--surface-200, #334155);
+    color: #94a3b8;
+}
+
+:host-context(.my-app-dark) .track-connector {
+    background: var(--surface-200, #334155);
+}
+
+:host-context(.my-app-dark) .detail-item,
+:host-context(.my-app-dark) .price-breakdown,
+:host-context(.my-app-dark) .price-row.total {
+    border-color: var(--surface-border, #334155);
+}
+
+:host-context(.my-app-dark) .order-id-label,
+:host-context(.my-app-dark) .detail-item-name,
+:host-context(.my-app-dark) .line-total,
+:host-context(.my-app-dark) .price-row,
+:host-context(.my-app-dark) .addr-name,
+:host-context(.my-app-dark) .pay-value {
+    color: #f8fafc;
+}
+
+:host-context(.my-app-dark) .order-date-label,
+:host-context(.my-app-dark) .track-label,
+:host-context(.my-app-dark) .detail-item-category,
+:host-context(.my-app-dark) .detail-item-qty,
+:host-context(.my-app-dark) .per-unit,
+:host-context(.my-app-dark) .address-info p,
+:host-context(.my-app-dark) .pay-label {
+    color: #94a3b8;
+}

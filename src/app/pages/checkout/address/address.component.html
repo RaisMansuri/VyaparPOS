@@ -1,0 +1,113 @@
+<div class="address-page">
+    <!-- Stepper -->
+    <div class="checkout-stepper">
+        <div class="step completed">
+            <div class="step-circle"><i class="pi pi-check"></i></div>
+            <span>Cart</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step active">
+            <div class="step-circle">2</div>
+            <span>Address</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <span>Payment</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-circle">4</div>
+            <span>Confirm</span>
+        </div>
+    </div>
+
+    <div class="address-content">
+        <div class="form-section">
+            <h2><i class="pi pi-map-marker"></i> Delivery Address</h2>
+
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+                <!-- Address Type -->
+                <div class="form-row">
+                    <label class="form-label">Address Type</label>
+                    <p-selectButton [options]="addressTypes" formControlName="addressType" optionLabel="label"
+                        optionValue="value" />
+                </div>
+
+                <!-- Full Name -->
+                <div class="form-row">
+                    <label class="form-label" for="fullName">Full Name *</label>
+                    <input pInputText id="fullName" formControlName="fullName" placeholder="Enter your full name"
+                        class="full-width" />
+                    @if (isInvalid('fullName')) {
+                    <small class="error-msg">Full name is required (min 3 characters)</small>
+                    }
+                </div>
+
+                <!-- Phone -->
+                <div class="form-row">
+                    <label class="form-label" for="phone">Mobile Number *</label>
+                    <input pInputText id="phone" formControlName="phone" placeholder="10-digit mobile number"
+                        class="full-width" maxlength="10" />
+                    @if (isInvalid('phone')) {
+                    <small class="error-msg">Enter a valid 10-digit mobile number</small>
+                    }
+                </div>
+
+                <!-- Address Line 1 -->
+                <div class="form-row">
+                    <label class="form-label" for="addr1">Address Line 1 *</label>
+                    <input pInputText id="addr1" formControlName="addressLine1"
+                        placeholder="House/Flat No., Building, Street" class="full-width" />
+                    @if (isInvalid('addressLine1')) {
+                    <small class="error-msg">Address is required</small>
+                    }
+                </div>
+
+                <!-- Address Line 2 -->
+                <div class="form-row">
+                    <label class="form-label" for="addr2">Address Line 2</label>
+                    <input pInputText id="addr2" formControlName="addressLine2"
+                        placeholder="Area, Colony, Landmark (optional)" class="full-width" />
+                </div>
+
+                <!-- City & Pincode -->
+                <div class="form-row-group">
+                    <div class="form-row flex-1">
+                        <label class="form-label" for="city">City *</label>
+                        <input pInputText id="city" formControlName="city" placeholder="City" class="full-width" />
+                        @if (isInvalid('city')) {
+                        <small class="error-msg">City is required</small>
+                        }
+                    </div>
+                    <div class="form-row flex-1">
+                        <label class="form-label" for="pincode">Pincode *</label>
+                        <input pInputText id="pincode" formControlName="pincode" placeholder="6-digit pincode"
+                            class="full-width" maxlength="6" />
+                        @if (isInvalid('pincode')) {
+                        <small class="error-msg">Enter a valid 6-digit pincode</small>
+                        }
+                    </div>
+                </div>
+
+                <!-- State -->
+                <div class="form-row">
+                    <label class="form-label" for="state">State *</label>
+                    <p-dropdown [options]="states" formControlName="state" placeholder="Select State"
+                        styleClass="full-width" [filter]="true" />
+                    @if (isInvalid('state')) {
+                    <small class="error-msg">State is required</small>
+                    }
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-actions">
+                    <button pButton type="button" label="Back to Cart" icon="pi pi-arrow-left"
+                        class="p-button-outlined p-button-rounded" (click)="goBack()"></button>
+                    <button pButton type="submit" label="Deliver Here" icon="pi pi-arrow-right" iconPos="right"
+                        class="p-button-rounded deliver-btn"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+.address-page {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Checkout Stepper */
+.checkout-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: var(--surface-200, #e8e8e8);
+    color: #888;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-circle {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.step.active span {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.step.completed .step-circle {
+    background: #27ae60;
+    color: #fff;
+}
+
+.step.completed span {
+    color: #27ae60;
+}
+
+.step-line {
+    flex: 1;
+    max-width: 80px;
+    height: 3px;
+    background: var(--surface-200, #e0e0e0);
+    margin: 0 8px;
+    margin-bottom: 22px;
+    border-radius: 2px;
+}
+
+/* Form */
+.form-section {
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--surface-border, #e0e0e0);
+    border-radius: 14px;
+    padding: 32px;
+}
+
+.form-section h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color, #333);
+}
+
+.full-width {
+    width: 100%;
+}
+
+:host ::ng-deep .full-width .p-dropdown {
+    width: 100%;
+}
+
+.form-row-group {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.error-msg {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    gap: 16px;
+}
+
+.deliver-btn {
+    font-weight: 600;
+    min-width: 160px;
+}
+
+/* Dark Mode Overrides */
+:host-context(.my-app-dark) .step-circle {
+    background: var(--surface-200, #334155);
+    color: #94a3b8;
+}
+
+:host-context(.my-app-dark) .step.active .step-circle {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+}
+
+:host-context(.my-app-dark) .step-line {
+    background: var(--surface-200, #334155);
+}
+
+:host-context(.my-app-dark) .form-section {
+    background: var(--surface-card, #1e293b);
+    border-color: var(--surface-border, #334155);
+}
+
+:host-context(.my-app-dark) .form-section h2 {
+    color: #f8fafc;
+}
+
+:host-context(.my-app-dark) .form-label {
+    color: var(--text-color, #f8fafc);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row-group {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .address-page {
+        padding: 16px;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    .checkout-stepper {
+        gap: 0;
+    }
+
+    .step span {
+        font-size: 0.7rem;
+    }
+}

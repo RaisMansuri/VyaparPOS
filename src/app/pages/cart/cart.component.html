@@ -1,0 +1,88 @@
+<div class="cart-page">
+    <div class="cart-header">
+        <h1><i class="pi pi-shopping-cart"></i> Shopping Cart</h1>
+        <p-tag [value]="cartService.cartCount() + ' items'" severity="info" />
+    </div>
+
+    @if (cartService.items().length === 0) {
+    <div class="empty-cart">
+        <i class="pi pi-shopping-cart empty-icon"></i>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything to your cart yet.</p>
+        <button pButton label="Continue Shopping" icon="pi pi-arrow-left" class="p-button-rounded"
+            (click)="continueShopping()"></button>
+    </div>
+    } @else {
+    <div class="cart-content">
+        <div class="cart-items">
+            @for (item of cartService.items(); track item.product.id) {
+            <div class="cart-item-card">
+                <div class="item-image-wrapper">
+                    <img [src]="item.product.imageUrl" [alt]="item.product.name" class="item-image" />
+                </div>
+                <div class="item-details">
+                    <h3 class="item-name">{{ item.product.name }}</h3>
+                    <p class="item-category">{{ item.product.category }}</p>
+                    @if (item.product.discount) {
+                    <div class="item-discount">
+                        <span class="original-price">{{ item.product.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                        <span class="discount-badge">{{ item.product.discount.value }}% OFF</span>
+                    </div>
+                    }
+                    <p class="item-price">{{ item.subtotal / item.quantity | currency:'INR':'symbol':'1.0-0' }} each</p>
+                </div>
+                <div class="item-quantity">
+                    <button pButton icon="pi pi-minus" class="p-button-rounded p-button-outlined p-button-sm qty-btn"
+                        (click)="decreaseQty(item.product.id, item.quantity)"></button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button pButton icon="pi pi-plus" class="p-button-rounded p-button-outlined p-button-sm qty-btn"
+                        (click)="increaseQty(item.product.id, item.quantity)"></button>
+                </div>
+                <div class="item-subtotal">
+                    <span class="subtotal-label">Subtotal</span>
+                    <span class="subtotal-value">{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text remove-btn"
+                    (click)="removeItem(item.product.id)" pTooltip="Remove"></button>
+            </div>
+            }
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-card">
+                <h3 class="summary-title">Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal ({{ cartService.cartCount() }} items)</span>
+                    <span>{{ cartService.cartTotal() | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    @if (cartService.deliveryFee() === 0) {
+                    <span class="free-delivery">FREE</span>
+                    } @else {
+                    <span>{{ cartService.deliveryFee() | currency:'INR':'symbol':'1.0-0' }}</span>
+                    }
+                </div>
+                @if (cartService.deliveryFee() === 0) {
+                <div class="delivery-note">
+                    <i class="pi pi-check-circle"></i> Free delivery on orders above ₹500
+                </div>
+                } @else {
+                <div class="delivery-hint">
+                    Add ₹{{ 500 - cartService.cartTotal() }} more for free delivery
+                </div>
+                }
+                <div class="summary-divider"></div>
+                <div class="summary-row total-row">
+                    <span>Grand Total</span>
+                    <span>{{ cartService.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <button pButton label="Proceed to Checkout" icon="pi pi-arrow-right" iconPos="right"
+                    class="p-button-rounded checkout-btn" (click)="proceedToCheckout()"></button>
+                <button pButton label="Continue Shopping" icon="pi pi-arrow-left"
+                    class="p-button-text p-button-plain continue-btn" (click)="continueShopping()"></button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

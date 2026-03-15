@@ -1,0 +1,157 @@
+<p-toast />
+
+<div class="invoice-page">
+    <!-- Action Bar (hidden during print) -->
+    <div class="action-bar no-print">
+        <button pButton icon="pi pi-arrow-left" label="Back to Order" class="p-button-text p-button-plain"
+            (click)="goBack()"></button>
+        <div class="action-buttons">
+            <button pButton icon="pi pi-print" label="Print" class="p-button-rounded p-button-outlined"
+                (click)="printInvoice()"></button>
+            <button pButton [icon]="isDownloading ? 'pi pi-spin pi-spinner' : 'pi pi-download'"
+                [label]="isDownloading ? 'Generating...' : 'Download PDF'" class="p-button-rounded p-button-outlined"
+                (click)="downloadInvoice()" [disabled]="isDownloading"></button>
+            <button pButton icon="pi pi-send" label="Send" class="p-button-rounded" (click)="openSendDialog()"></button>
+        </div>
+    </div>
+
+    @if (order) {
+    <!-- Invoice Paper -->
+    <div class="invoice-paper" #invoiceArea>
+        <!-- Header -->
+        <div class="invoice-top">
+            <div class="brand">
+                <h1>VyaparPOS</h1>
+                <p>Your Smart POS Solution</p>
+                <p>contact&#64;vyaparpos.com | +91 1800-XXX-XXXX</p>
+            </div>
+            <div class="invoice-meta">
+                <h2>INVOICE</h2>
+                <p><strong>Invoice #:</strong> {{ invoiceNumber }}</p>
+                <p><strong>Date:</strong> {{ order.orderDate | date:'mediumDate' }}</p>
+                <p><strong>Order ID:</strong> {{ order.id }}</p>
+            </div>
+        </div>
+
+        <!-- Addresses -->
+        <div class="addresses">
+            <div class="address-block">
+                <h4>Bill To</h4>
+                <p class="name">{{ order.address.fullName }}</p>
+                <p>{{ order.address.addressLine1 }}</p>
+                @if (order.address.addressLine2) {
+                <p>{{ order.address.addressLine2 }}</p>
+                }
+                <p>{{ order.address.city }}, {{ order.address.state }} - {{ order.address.pincode }}</p>
+                <p>Phone: {{ order.address.phone }}</p>
+            </div>
+            <div class="address-block">
+                <h4>From</h4>
+                <p class="name">VyaparPOS Store</p>
+                <p>123 Business Park</p>
+                <p>Mumbai, Maharashtra - 400001</p>
+                <p>GSTIN: 27AAAAV0000A1Z5</p>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of order.items; track item.product.id; let i = $index) {
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td><strong>{{ item.product.name }}</strong></td>
+                    <td>{{ item.product.category }}</td>
+                    <td class="text-right">{{ item.subtotal / item.quantity | currency:'INR':'symbol':'1.0-0' }}</td>
+                    <td class="text-right">{{ item.quantity }}</td>
+                    <td class="text-right"><strong>{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</strong></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals">
+            <div class="total-row">
+                <span>Subtotal</span>
+                <span>{{ order.totalAmount - order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="total-row">
+                <span>Delivery Fee</span>
+                @if (order.deliveryFee === 0) {
+                <span class="free">FREE</span>
+                } @else {
+                <span>{{ order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+                }
+            </div>
+            <div class="total-row grand">
+                <span>Total Amount</span>
+                <span>{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+        </div>
+
+        <!-- Payment Info -->
+        <div class="payment-info">
+            <div class="pay-item">
+                <span>Payment Method</span>
+                <span>{{ getPaymentLabel(order.paymentMethod) }}</span>
+            </div>
+            <div class="pay-item">
+                <span>Payment Status</span>
+                <span class="paid-badge">Paid</span>
+            </div>
+            <div class="pay-item">
+                <span>Order Date</span>
+                <span>{{ order.orderDate | date:'medium' }}</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-note">
+            <p>Thank you for shopping with VyaparPOS!</p>
+            <p>This is a computer-generated invoice and does not require a signature.</p>
+        </div>
+    </div>
+    }
+</div>
+
+<!-- Send Invoice Dialog -->
+<p-dialog header="Send Invoice" [(visible)]="showSendDialog" [modal]="true" [style]="{ width: '420px' }"
+    [closable]="true">
+    <div class="send-form">
+        <p class="send-desc">Send invoice <strong>{{ invoiceNumber }}</strong> to the customer via email or SMS.</p>
+
+        <div class="send-field">
+            <label for="sendEmail"><i class="pi pi-envelope"></i> Email Address</label>
+            <input pInputText id="sendEmail" [(ngModel)]="sendEmail" placeholder="customer@email.com"
+                class="full-width" />
+        </div>
+
+        <div class="send-divider">
+            <span>OR</span>
+        </div>
+
+        <div class="send-field">
+            <label for="sendPhone"><i class="pi pi-phone"></i> Mobile Number</label>
+            <input pInputText id="sendPhone" [(ngModel)]="sendPhone" placeholder="10-digit mobile number"
+                class="full-width" maxlength="10" />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="Cancel" class="p-button-text" (click)="showSendDialog = false"></button>
+        <button pButton [label]="isSending ? 'Sending...' : 'Send Invoice'"
+            [icon]="isSending ? 'pi pi-spin pi-spinner' : 'pi pi-send'" class="p-button-rounded" (click)="sendInvoice()"
+            [disabled]="isSending"></button>
+    </ng-template>
+</p-dialog>

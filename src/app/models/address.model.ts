@@ -1,0 +1,10 @@
+export interface Address {
+    fullName: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    pincode: string;
+    addressType: 'home' | 'office';
+}
