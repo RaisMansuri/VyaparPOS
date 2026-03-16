@@ -3,18 +3,21 @@
         [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }"
         styleClass="custom-table">
         <ng-template #caption>
-            <div class="flex justify-start items-center flex-wrap gap-3 mb-2">
+            <div class="flex justify-between items-center flex-wrap gap-3 mb-2">
                 <h3 class="m-0 mr-4">Manage Users</h3>
-                <div class="search-action-group">
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-search"></p-inputicon>
-                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Search users..." />
-                    </p-iconfield>
-                </div>
-                <div class="ml-auto">
-                    <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success shadow-1"
-                        (click)="openNew()"></button>
+                <div class="flex gap-2">
+                    <div class="search-action-group">
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search"></p-inputicon>
+                            <input pInputText type="text"
+                                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                placeholder="Search users..." />
+                        </p-iconfield>
+                    </div>
+                    <div class="ml-auto">
+                        <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success shadow-1"
+                            (click)="openNew()"></button>
+                    </div>
                 </div>
             </div>
         </ng-template>
@@ -63,10 +66,9 @@
                 </td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-pencil"
-                            class="btn-action-edit" (click)="editUser(user)"></button>
-                        <button pButton pRipple icon="pi pi-trash"
-                            class="btn-action-delete"
+                        <button pButton pRipple icon="pi pi-pencil" class="btn-action-edit"
+                            (click)="editUser(user)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="btn-action-delete"
                             (click)="deleteUser(user)"></button>
                     </div>
                 </td>
