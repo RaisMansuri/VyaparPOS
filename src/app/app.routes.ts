@@ -144,8 +144,8 @@ export const routes: Routes = [
       {
         path: 'settings/products',
         loadComponent: () =>
-          import('./pages/settings/products/products.component').then(
-            (m) => m.ProductsComponent
+          import('./pages/settings/product-management/product-management.component').then(
+            (m) => m.ProductManagementComponent
           ),
       },
       {

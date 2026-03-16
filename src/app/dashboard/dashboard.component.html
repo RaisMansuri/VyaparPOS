@@ -1,63 +1,94 @@
-<div class="dashboard-container">
-  <header class="dashboard-title">
-    <h1>Wholesale Analytics Dashboard</h1>
-    <p>Real-time overview of your profit and inventory</p>
-  </header>
+<div class="dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="welcome-text">Welcome back, Admin</h1>
+      <p class="subtitle-text">Here's what's happening with your bakery today.</p>
+    </div>
+    <div class="header-actions">
+      <button pButton icon="pi pi-plus" label="New Sale" class="p-button-primary shadow-2" (click)="navigate('/products')"></button>
+    </div>
+  </div>
 
   @if (stats) {
   <div class="stats-grid">
-    <div class="stat-card gross">
-      <div class="stat-icon"><i class="pi pi-dollar"></i></div>
-      <div class="stat-content">
-        <span class="stat-label">Gross Total</span>
-        <span class="stat-value text-blue-600">{{ stats.grossTotal | currency:'INR' }}</span>
+    <div class="glass-card stat-item">
+      <div class="stat-icon-wrapper bg-blue-100">
+        <i class="pi pi-wallet text-blue-600"></i>
+      </div>
+      <div class="stat-data">
+        <span class="label">Total Revenue</span>
+        <h2 class="value">{{ stats.grossTotal | currency:'INR' }}</h2>
+        <span class="trend up"><i class="pi pi-arrow-up"></i> 12% vs last week</span>
       </div>
     </div>
-    <div class="stat-card profit">
-      <div class="stat-icon"><i class="pi pi-chart-line"></i></div>
-      <div class="stat-content">
-        <span class="stat-label">Net Profit</span>
-        <span class="stat-value text-green-600">{{ stats.netProfit | currency:'INR' }}</span>
+
+    <div class="glass-card stat-item">
+      <div class="stat-icon-wrapper bg-green-100">
+        <i class="pi pi-chart-line text-green-600"></i>
+      </div>
+      <div class="stat-data">
+        <span class="label">Net Profit</span>
+        <h2 class="value text-green-600">{{ stats.netProfit | currency:'INR' }}</h2>
+        <span class="trend up"><i class="pi pi-arrow-up"></i> 8% vs last week</span>
       </div>
     </div>
-    <div class="stat-card inventory">
-      <div class="stat-icon"><i class="pi pi-box"></i></div>
-      <div class="stat-content">
-        <span class="stat-label">Items in Stock</span>
-        <span class="stat-value text-indigo-600">{{ stats.totalItemsInStock }}</span>
+
+    <div class="glass-card stat-item">
+      <div class="stat-icon-wrapper bg-purple-100">
+        <i class="pi pi-box text-purple-600"></i>
+      </div>
+      <div class="stat-data">
+        <span class="label">Inventory Value</span>
+        <h2 class="value text-purple-600">{{ stats.totalStockValue | currency:'INR' }}</h2>
+        <span class="trend"><i class="pi pi-info-circle"></i> {{ stats.totalItemsInStock }} items</span>
       </div>
     </div>
-    <div class="stat-card alerts" [class.has-alerts]="stats.outOfStockCount > 0">
-      <div class="stat-icon"><i class="pi pi-exclamation-triangle"></i></div>
-      <div class="stat-content">
-        <span class="stat-label">Stock Alerts</span>
-        <span class="stat-value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</span>
+
+    <div class="glass-card stat-item" [class.alert]="stats.outOfStockCount > 0">
+      <div class="stat-icon-wrapper bg-red-100">
+        <i class="pi pi-bell text-red-600"></i>
+      </div>
+      <div class="stat-data">
+        <span class="label">Stock Alerts</span>
+        <h2 class="value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</h2>
+        <span class="trend down"><i class="pi pi-exclamation-circle"></i> Immediate action</span>
       </div>
     </div>
   </div>
   }
 
-  <div class="dashboard-details">
-    <div class="section-card">
+  <div class="dashboard-grid mt-4">
+    <div class="glass-card table-section">
       <div class="section-header">
-        <h2><i class="pi pi-sort-alt"></i> Low Stock Inventory</h2>
-        <span class="sub-label">Items requiring immediate attention</span>
+        <div class="title-group">
+          <h3>Low Stock Inventory</h3>
+          <p>Manage items that are running low on stock.</p>
+        </div>
+        <button pButton label="View All" class="p-button-text p-button-sm" (click)="navigate('/products')"></button>
       </div>
-      <p-table [value]="lowStockProducts" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm custom-table">
+      
+      <p-table [value]="lowStockProducts" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table">
         <ng-template pTemplate="header">
           <tr>
-            <th>Product Name</th>
+            <th>Product</th>
             <th>Category</th>
-            <th>Current Stock</th>
+            <th>Stock</th>
             <th>Min Level</th>
             <th>Status</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
           <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td><span class="font-bold">{{ product.stock }}</span></td>
+            <td class="font-semibold">{{ product.name }}</td>
+            <td><p-tag [value]="product.category" severity="secondary"></p-tag></td>
+            <td>
+              <div class="stock-progress">
+                <span class="stock-num">{{ product.stock }}</span>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" [style.width]="(product.stock / product.minStockLevel * 50) + '%'"></div>
+                </div>
+              </div>
+            </td>
             <td>{{ product.minStockLevel }}</td>
             <td>
               <p-tag [value]="product.stock === 0 ? 'Out of Stock' : 'Low Stock'"

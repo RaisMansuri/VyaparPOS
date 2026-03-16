@@ -64,7 +64,7 @@
 
         <div class="field mt-4">
           <p-floatlabel>
-            <p-dropdown [options]="priorityOptions" formControlName="priority" inputId="priority"></p-dropdown>
+            <p-dropdown [options]="priorityOptions" formControlName="priority" inputId="priority" appendTo="body"></p-dropdown>
             <label for="priority">Priority</label>
           </p-floatlabel>
         </div>
@@ -101,7 +101,7 @@
         </div>
         <div class="detail-row mt-3">
           <span class="label">Status:</span>
-          <p-dropdown [options]="statusOptions" [(ngModel)]="selectedTicket.status" (onChange)="updateStatus(selectedTicket.id, $event.value)"></p-dropdown>
+          <p-dropdown [options]="statusOptions" [(ngModel)]="selectedTicket.status" (onChange)="updateStatus(selectedTicket.id, $event.value)" appendTo="body"></p-dropdown>
         </div>
 
         <div class="comments-section mt-4">

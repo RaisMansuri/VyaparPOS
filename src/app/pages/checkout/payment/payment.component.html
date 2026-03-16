@@ -42,6 +42,11 @@
                     <i class="pi pi-wallet"></i>
                     <span>Debit Card</span>
                 </div>
+                <div class="method-tab" [class.active]="selectedMethod === 'cash'"
+                    (click)="selectMethod('cash')">
+                    <i class="pi pi-money-bill"></i>
+                    <span>Cash</span>
+                </div>
             </div>
 
             <!-- UPI Form -->
@@ -108,6 +113,16 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            }
+
+            <!-- Cash Form -->
+            @if (selectedMethod === 'cash') {
+            <div class="payment-form">
+                <div class="cash-info">
+                    <i class="pi pi-check-circle"></i>
+                    <p>Please pay <strong>{{ cartService.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong> to the delivery agent.</p>
+                </div>
             </div>
             }
 

@@ -1,35 +1,51 @@
 <div class="customers-page">
   <p-toast></p-toast>
   <div class="header">
-    <h2>Customer Management</h2>
-    <button pButton label="New Customer" icon="pi pi-plus" (click)="openNew()"></button>
+    <div class="title-group">
+      <h1>Customer Database</h1>
+      <p>Manage your loyal customers and their spending habits.</p>
+    </div>
+    <button pButton label="Add Customer" icon="pi pi-user-plus" class="p-button-primary shadow-2" (click)="openNew()"></button>
   </div>
 
-  <p-table [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Total Orders</th>
-        <th>Spent</th>
-        <th>Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-customer>
-      <tr>
-        <td>{{customer.name}}</td>
-        <td>{{customer.email}}</td>
-        <td>{{customer.phone}}</td>
-        <td>{{customer.totalOrders}}</td>
-        <td>{{customer.totalSpent | currency:'INR'}}</td>
-        <td>
-          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editCustomer(customer)"></button>
-          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCustomer(customer)"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <div class="card-modern">
+    <p-table [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th class="text-center">Orders</th>
+          <th class="text-right">Total Spent</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-customer>
+        <tr>
+          <td>
+            <div class="customer-cell">
+              <div class="avatar">{{ customer.name.charAt(0) }}</div>
+              <div class="info">
+                <span class="name">{{ customer.name }}</span>
+                <small class="id">{{ customer.id }}</small>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="contact-cell">
+              <span><i class="pi pi-envelope mr-1"></i>{{ customer.email }}</span>
+              <span><i class="pi pi-phone mr-1"></i>{{ customer.phone }}</span>
+            </div>
+          </td>
+          <td class="text-center"><p-tag [value]="customer.totalOrders" severity="info"></p-tag></td>
+          <td class="text-right font-bold">{{ customer.totalSpent | currency:'INR' }}</td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-success p-button-rounded mr-2" (click)="editCustomer(customer)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-rounded" (click)="deleteCustomer(customer)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
   <p-dialog [(visible)]="showDialog" [header]="editingCustomerId ? 'Edit Customer' : 'Add New Customer'" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">

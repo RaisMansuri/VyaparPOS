@@ -61,55 +61,62 @@
   <div class="layout-main">
     <p-toast></p-toast>
     <p-toolbar class="layout-toolbar">
-      <div class="p-toolbar-group-left toolbar-left">
-        <button pButton type="button" icon="pi pi-bars" class="p-button-text p-button-plain menu-button"
-          (click)="toggleSidebar()"></button>
-        <span class="toolbar-title">VyaparPOS</span>
-      </div>
-      <div class="p-toolbar-group-right toolbar-right">
-        <!-- Language Switcher -->
-        <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
-          class="mr-2 language-dropdown" [style]="{'min-width': '100px'}"></p-dropdown>
+      <ng-template #start>
+        <div class="toolbar-left">
+          <button pButton type="button" icon="pi pi-bars" class="p-button-text p-button-plain menu-button"
+            (click)="toggleSidebar()"></button>
+          <span class="toolbar-title">VyaparPOS</span>
+        </div>
+      </ng-template>
 
-        <!-- Notification Button -->
-        <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text ml-2 notification-btn"
-          (click)="op.toggle($event)">
-          <p-badge *ngIf="lowStockItems.length > 0" [value]="lowStockItems.length" severity="danger"></p-badge>
-        </button>
+      <ng-template #end>
+        <div class="toolbar-right">
+          <!-- Language Switcher -->
+          <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
+            class="mr-2 language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
 
-        <!-- Notification Overlay -->
-        <p-overlayPanel #op>
-          <div class="notification-panel">
-            <h4 class="m-0 p-2 border-bottom">Inventory Alerts</h4>
-            <div *ngIf="lowStockItems.length === 0" class="p-3 text-center text-muted">
-              No low stock alerts
-            </div>
-            <div class="notification-list" *ngIf="lowStockItems.length > 0">
-              <div *ngFor="let item of lowStockItems" class="notification-item p-2 border-bottom">
-                <div class="d-flex justify-content-between">
-                  <span class="font-bold">{{item.name}}</span>
-                  <span class="text-danger font-bold">{{item.stock}} left</span>
+          <!-- Notification Button -->
+          <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text ml-2 notification-btn"
+            (click)="op.toggle($event)">
+            <p-badge *ngIf="lowStockItems.length > 0" [value]="lowStockItems.length" severity="danger"></p-badge>
+          </button>
+
+          <!-- Notification Overlay -->
+          <p-overlayPanel #op>
+            <div class="notification-panel">
+              <h4 class="m-0 p-2 border-bottom">Inventory Alerts</h4>
+              <div *ngIf="lowStockItems.length === 0" class="p-3 text-center text-muted">
+                No low stock alerts
+              </div>
+              <div class="notification-list" *ngIf="lowStockItems.length > 0">
+                <div *ngFor="let item of lowStockItems" class="notification-item p-2 border-bottom">
+                  <div class="d-flex justify-content-between">
+                    <span class="font-bold">{{item.name}}</span>
+                    <span class="text-danger font-bold">{{item.stock}} left</span>
+                  </div>
+                  <small class="text-muted">Minimum: {{item.minStockLevel || 5}}</small>
                 </div>
-                <small class="text-muted">Minimum: {{item.minStockLevel || 5}}</small>
               </div>
             </div>
-          </div>
-        </p-overlayPanel>
+          </p-overlayPanel>
 
-        <button pButton type="button" [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
-          class="p-button-rounded p-button-text theme-toggle-btn" (click)="themeService.toggleTheme()"
-          pTooltip="Toggle Theme"></button>
-        <div class="cart-wrapper" (click)="navigate('/cart')">
-          <button pButton type="button" icon="pi pi-shopping-cart"
-            class="p-button-rounded p-button-text cart-toolbar-btn"></button>
-          @if (cartService.cartCount() > 0) {
-          <span class="cart-badge">{{ cartService.cartCount() }}</span>
-          }
+          <button pButton type="button" [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+            class="p-button-rounded p-button-text theme-toggle-btn" (click)="themeService.toggleTheme()"
+            pTooltip="Toggle Theme"></button>
+
+          <div class="cart-wrapper" (click)="navigate('/cart')">
+            <button pButton type="button" icon="pi pi-shopping-cart"
+              class="p-button-rounded p-button-text cart-toolbar-btn"></button>
+            @if (cartService.cartCount() > 0) {
+            <span class="cart-badge">{{ cartService.cartCount() }}</span>
+            }
+          </div>
+
+          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text ml-2"
+            (click)="menu.toggle($event)"></button>
+          <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
         </div>
-        <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text ml-2"
-          (click)="menu.toggle($event)"></button>
-        <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
-      </div>
+      </ng-template>
     </p-toolbar>
 
     <main class="layout-content">

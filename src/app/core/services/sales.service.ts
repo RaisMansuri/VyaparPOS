@@ -42,4 +42,25 @@ export class SalesService {
       ]
     });
   }
+
+  getDailySalesReport(): Observable<any[]> {
+    const today = new Date();
+    const reports = [];
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      
+      reports.push({
+        date: date,
+        orders: Math.floor(Math.random() * 50) + 20,
+        revenue: Math.floor(Math.random() * 20000) + 10000,
+        taxable: Math.floor(Math.random() * 15000) + 8000,
+        gst: Math.floor(Math.random() * 3000) + 1000,
+        profit: Math.floor(Math.random() * 5000) + 2000
+      });
+    }
+    
+    return of(reports);
+  }
 }

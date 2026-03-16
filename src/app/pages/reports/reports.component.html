@@ -18,6 +18,35 @@
 
   <div class="grid mt-4">
     <div class="col-12">
+      <p-card header="Daily Sales Report">
+        <p-table [value]="dailyReports" [rows]="10" [paginator]="true" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Date</th>
+              <th class="text-right">Orders</th>
+              <th class="text-right">Taxable Value</th>
+              <th class="text-right">GST Collected</th>
+              <th class="text-right">Total Revenue</th>
+              <th class="text-right">Profit</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-report>
+            <tr>
+              <td>{{ report.date | date:'mediumDate' }}</td>
+              <td class="text-right">{{ report.orders }}</td>
+              <td class="text-right">{{ report.taxable | currency:'INR' }}</td>
+              <td class="text-right">{{ report.gst | currency:'INR' }}</td>
+              <td class="text-right"><strong>{{ report.revenue | currency:'INR' }}</strong></td>
+              <td class="text-right"><span class="text-success">{{ report.profit | currency:'INR' }}</span></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+
+  <div class="grid mt-4">
+    <div class="col-12">
       <p-card header="Performance Summary">
         <div class="summary-stats">
           <div class="stat-item">

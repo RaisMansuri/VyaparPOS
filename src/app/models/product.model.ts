@@ -11,6 +11,7 @@ export interface Product {
   costPrice: number;
   minStockLevel: number;
   barcode?: string;
+  gstRate: number; // e.g., 5, 12, 18, 28
 }
 
 export interface Discount {

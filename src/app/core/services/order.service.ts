@@ -23,12 +23,34 @@ export class OrderService {
     }
 
     placeOrder(items: CartItem[], address: Address, paymentMethod: PaymentMethod, totalAmount: number, deliveryFee: number): Order {
+        let taxableAmount = 0;
+        let totalGST = 0;
+        let subTotal = 0;
+
+        items.forEach(item => {
+            const itemTotal = item.product.price * item.quantity;
+            subTotal += itemTotal;
+            
+            const gstRate = (item.product as any).gstRate || 0;
+            const itemTaxable = itemTotal / (1 + gstRate / 100);
+            const itemTax = itemTotal - itemTaxable;
+            
+            taxableAmount += itemTaxable;
+            totalGST += itemTax;
+        });
+
         const order: Order = {
             id: 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(),
             items: [...items],
             address: { ...address },
             paymentMethod,
             totalAmount,
+            subTotal,
+            taxableAmount,
+            totalGST,
+            cgst: totalGST / 2,
+            sgst: totalGST / 2,
+            igst: 0, // Assuming intra-state for now
             deliveryFee,
             status: 'confirmed',
             orderDate: new Date()

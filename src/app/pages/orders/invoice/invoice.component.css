@@ -130,26 +130,57 @@ tbody tr:last-child td {
     text-align: right;
 }
 
-/* Totals */
+/* Totals Section */
+.totals-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    gap: 60px;
+}
+
+.gst-breakdown {
+    flex: 1;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+}
+
+.gst-breakdown h4 {
+    margin: 0 0 16px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .totals {
-    margin-left: auto;
-    width: 280px;
-    margin-bottom: 28px;
+    width: 320px;
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
-    font-size: 0.9rem;
+    padding: 8px 0;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.total-row span:last-child {
+    font-weight: 600;
 }
 
 .total-row.grand {
-    font-size: 1.2rem;
-    font-weight: 700;
-    border-top: 2px solid #333;
-    margin-top: 8px;
-    padding-top: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid #667eea;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #333;
+}
+
+.total-row.grand span:last-child {
+    color: #667eea;
 }
 
 .free {

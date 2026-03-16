@@ -1,18 +1,33 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, QueryList, ElementRef, inject, HostListener } from '@angular/core';
 import { Product } from '../../models/product.model';
-import { CurrencyPipe, KeyValuePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, KeyValuePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { MessageService } from 'primeng/api';
-
+import { SidebarModule } from 'primeng/sidebar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-product-listing',
   standalone: true,
-  imports: [CurrencyPipe, KeyValuePipe, FormsModule, ToastModule],
+  imports: [
+    CommonModule, 
+    CurrencyPipe, 
+    KeyValuePipe, 
+    FormsModule, 
+    ToastModule, 
+    SidebarModule, 
+    DropdownModule, 
+    InputSwitchModule, 
+    TagModule,
+    ButtonModule
+  ],
   providers: [MessageService],
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css']
@@ -32,6 +47,17 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   products: Product[] = [];
   groupedProducts: { [key: string]: Product[] } = {};
   currentCategory: string | null = null;
+
+  // UI state
+  viewMode: 'grid' | 'list' = 'grid';
+  sortOptions = [
+    { label: 'Default', value: 'default' },
+    { label: 'Price: Low to High', value: 'price-low' },
+    { label: 'Price: High to Low', value: 'price-high' },
+    { label: 'Name: A-Z', value: 'name-az' },
+    { label: 'Name: Z-A', value: 'name-za' },
+    { label: 'Highest Discount', value: 'discount' }
+  ];
 
   // Barcode state
   private barcodeBuffer = '';
@@ -104,7 +130,6 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   activeFilterCount = 0;
 
   // View mode
-  viewMode: 'grid' | 'list' = 'grid';
   showFilterPanel = false;
 
   ngOnInit(): void {

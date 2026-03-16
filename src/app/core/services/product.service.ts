@@ -8,12 +8,12 @@ import { Observable, of } from 'rxjs';
 })
 export class ProductService {
   private products: Product[] = [
-    { id: 1, barcode: '8901234567890', name: 'Fresh White Bread', price: 40, costPrice: 25, stock: 50, minStockLevel: 10, description: 'Soft and fluffy white bread.', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400', category: 'Breads', quantity: 0 },
-    { id: 2, barcode: '8901234567891', name: 'Whole Wheat Bread', price: 50, costPrice: 30, stock: 5, minStockLevel: 10, description: 'Healthy and nutritious.', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400', category: 'Breads', discount: { type: 'daily', value: 10 }, quantity: 0 },
-    { id: 3, barcode: '8901234567892', name: 'French Baguette', price: 60, costPrice: 35, stock: 15, minStockLevel: 5, description: 'Classic crusty French baguette.', imageUrl: 'https://images.unsplash.com/photo-1597079910443-60c43fc4f729?w=400', category: 'Breads', quantity: 0 },
-    { id: 6, barcode: '8901234567893', name: 'Chocolate Cake', price: 500, costPrice: 300, stock: 0, minStockLevel: 5, description: 'Rich chocolate ganache cake.', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', category: 'Cakes', quantity: 0 },
-    { id: 7, barcode: '8901234567894', name: 'Vanilla Sponge Cake', price: 400, costPrice: 200, stock: 12, minStockLevel: 5, description: 'Light and airy vanilla cake.', imageUrl: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400', category: 'Cakes', quantity: 0 },
-    { id: 11, barcode: '8901234567895', name: 'Butter Croissant', price: 45, costPrice: 20, stock: 30, minStockLevel: 15, description: 'Flaky and buttery.', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400', category: 'Pastries', quantity: 0 },
+    { id: 1, barcode: '8901234567890', name: 'Fresh White Bread', price: 40, costPrice: 25, stock: 50, minStockLevel: 10, description: 'Soft and fluffy white bread.', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400', category: 'Breads', quantity: 0, gstRate: 5 },
+    { id: 2, barcode: '8901234567891', name: 'Whole Wheat Bread', price: 50, costPrice: 30, stock: 5, minStockLevel: 10, description: 'Healthy and nutritious.', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400', category: 'Breads', discount: { type: 'daily', value: 10 }, quantity: 0, gstRate: 5 },
+    { id: 3, barcode: '8901234567892', name: 'French Baguette', price: 60, costPrice: 35, stock: 15, minStockLevel: 5, description: 'Classic crusty French baguette.', imageUrl: 'https://images.unsplash.com/photo-1597079910443-60c43fc4f729?w=400', category: 'Breads', quantity: 0, gstRate: 5 },
+    { id: 6, barcode: '8901234567893', name: 'Chocolate Cake', price: 500, costPrice: 300, stock: 0, minStockLevel: 5, description: 'Rich chocolate ganache cake.', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', category: 'Cakes', quantity: 0, gstRate: 18 },
+    { id: 7, barcode: '8901234567894', name: 'Vanilla Sponge Cake', price: 400, costPrice: 200, stock: 12, minStockLevel: 5, description: 'Light and airy vanilla cake.', imageUrl: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400', category: 'Cakes', quantity: 0, gstRate: 18 },
+    { id: 11, barcode: '8901234567895', name: 'Butter Croissant', price: 45, costPrice: 20, stock: 30, minStockLevel: 15, description: 'Flaky and buttery.', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400', category: 'Pastries', quantity: 0, gstRate: 12 },
   ];
 
   private transactions: Transaction[] = [
@@ -55,5 +55,25 @@ export class ProductService {
 
   getLowStockProducts(): Observable<Product[]> {
     return of(this.products.filter(p => p.stock <= p.minStockLevel));
+  }
+
+  addProduct(product: Product): Observable<Product> {
+    const newProduct = { ...product, id: this.products.length + 1 };
+    this.products.push(newProduct);
+    return of(newProduct);
+  }
+
+  updateProduct(product: Product): Observable<Product> {
+    const index = this.products.findIndex(p => p.id === product.id);
+    if (index !== -1) {
+      this.products[index] = product;
+      return of(product);
+    }
+    return of(product); // Or throw error
+  }
+
+  deleteProduct(id: number): Observable<boolean> {
+    this.products = this.products.filter(p => p.id !== id);
+    return of(true);
   }
 }

@@ -99,6 +99,16 @@ export class InvoiceComponent implements OnInit {
         }
     }
 
+    getPaymentLabel(method: string): string {
+        switch (method) {
+            case 'credit_card': return 'Credit Card';
+            case 'debit_card': return 'Debit Card';
+            case 'upi': return 'UPI';
+            case 'cash': return 'Cash';
+            default: return method;
+        }
+    }
+
     openSendDialog(): void {
         this.showSendDialog = true;
     }
@@ -131,15 +141,6 @@ export class InvoiceComponent implements OnInit {
             this.sendEmail = '';
             this.sendPhone = '';
         }, 1500);
-    }
-
-    getPaymentLabel(method: string): string {
-        switch (method) {
-            case 'credit_card': return 'Credit Card';
-            case 'debit_card': return 'Debit Card';
-            case 'upi': return 'UPI';
-            default: return method;
-        }
     }
 
     goBack(): void {

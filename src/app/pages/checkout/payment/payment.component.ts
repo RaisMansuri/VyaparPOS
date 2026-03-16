@@ -62,7 +62,7 @@ export class PaymentComponent implements OnInit {
                 this.upiForm.markAllAsTouched();
                 return;
             }
-        } else {
+        } else if (this.selectedMethod === 'credit_card' || this.selectedMethod === 'debit_card') {
             if (this.cardForm.invalid) {
                 this.cardForm.markAllAsTouched();
                 return;

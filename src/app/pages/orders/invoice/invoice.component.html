@@ -60,9 +60,10 @@
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th>Category</th>
                     <th class="text-right">Price</th>
                     <th class="text-right">Qty</th>
+                    <th class="text-right">Taxable</th>
+                    <th class="text-right">GST %</th>
                     <th class="text-right">Amount</th>
                 </tr>
             </thead>
@@ -70,10 +71,14 @@
                 @for (item of order.items; track item.product.id; let i = $index) {
                 <tr>
                     <td>{{ i + 1 }}</td>
-                    <td><strong>{{ item.product.name }}</strong></td>
-                    <td>{{ item.product.category }}</td>
-                    <td class="text-right">{{ item.subtotal / item.quantity | currency:'INR':'symbol':'1.0-0' }}</td>
+                    <td>
+                        <strong>{{ item.product.name }}</strong><br>
+                        <small>{{ item.product.category }}</small>
+                    </td>
+                    <td class="text-right">{{ item.product.price | currency:'INR':'symbol':'1.0-0' }}</td>
                     <td class="text-right">{{ item.quantity }}</td>
+                    <td class="text-right">{{ (item.product.price * item.quantity) / (1 + ((item.product.gstRate || 0) / 100)) | currency:'INR':'symbol':'1.2-2' }}</td>
+                    <td class="text-right">{{ item.product.gstRate || 0 }}%</td>
                     <td class="text-right"><strong>{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</strong></td>
                 </tr>
                 }
@@ -81,22 +86,54 @@
         </table>
 
         <!-- Totals -->
-        <div class="totals">
-            <div class="total-row">
-                <span>Subtotal</span>
-                <span>{{ order.totalAmount - order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
-            </div>
-            <div class="total-row">
-                <span>Delivery Fee</span>
-                @if (order.deliveryFee === 0) {
-                <span class="free">FREE</span>
-                } @else {
-                <span>{{ order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+        <div class="totals-section">
+            <div class="gst-breakdown">
+                <h4>GST Summary</h4>
+                <div class="total-row">
+                    <span>Taxable Amount</span>
+                    <span>{{ order.taxableAmount | currency:'INR':'symbol':'1.2-2' }}</span>
+                </div>
+                @if (order.cgst > 0) {
+                <div class="total-row">
+                    <span>CGST</span>
+                    <span>{{ order.cgst | currency:'INR':'symbol':'1.2-2' }}</span>
+                </div>
                 }
+                @if (order.sgst > 0) {
+                <div class="total-row">
+                    <span>SGST</span>
+                    <span>{{ order.sgst | currency:'INR':'symbol':'1.2-2' }}</span>
+                </div>
+                }
+                @if (order.igst > 0) {
+                <div class="total-row">
+                    <span>IGST</span>
+                    <span>{{ order.igst | currency:'INR':'symbol':'1.2-2' }}</span>
+                </div>
+                }
+                <div class="total-row">
+                    <span>Total GST</span>
+                    <span>{{ order.totalGST | currency:'INR':'symbol':'1.2-2' }}</span>
+                </div>
             </div>
-            <div class="total-row grand">
-                <span>Total Amount</span>
-                <span>{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+
+            <div class="totals">
+                <div class="total-row">
+                    <span>Subtotal (Incl. Tax)</span>
+                    <span>{{ order.subTotal | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="total-row">
+                    <span>Delivery Fee</span>
+                    @if (order.deliveryFee === 0) {
+                    <span class="free">FREE</span>
+                    } @else {
+                    <span>{{ order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+                    }
+                </div>
+                <div class="total-row grand">
+                    <span>Grand Total</span>
+                    <span>{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
             </div>
         </div>
 
