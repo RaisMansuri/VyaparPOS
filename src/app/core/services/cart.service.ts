@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, effect } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Product } from '../../models/product.model';
 import { CartItem } from '../../models/cart.model';
 
@@ -7,6 +8,8 @@ import { CartItem } from '../../models/cart.model';
 })
 export class CartService {
 
+    private platformId = inject(PLATFORM_ID);
+    private readonly CART_KEY = 'vyapar-pos-cart';
     private cartItems = signal<CartItem[]>([]);
 
     readonly items = this.cartItems.asReadonly();
@@ -14,6 +17,27 @@ export class CartService {
     readonly cartTotal = computed(() => this.cartItems().reduce((sum, item) => sum + item.subtotal, 0));
     readonly deliveryFee = computed(() => this.cartTotal() > 500 ? 0 : 40);
     readonly grandTotal = computed(() => this.cartTotal() + this.deliveryFee());
+
+    constructor() {
+        if (isPlatformBrowser(this.platformId)) {
+            const savedCart = localStorage.getItem(this.CART_KEY);
+            if (savedCart) {
+                try {
+                    this.cartItems.set(JSON.parse(savedCart));
+                } catch (e) {
+                    console.error('Failed to parse cart from localStorage', e);
+                }
+            }
+        }
+
+        // Persistence effect
+        effect(() => {
+            const items = this.cartItems();
+            if (isPlatformBrowser(this.platformId)) {
+                localStorage.setItem(this.CART_KEY, JSON.stringify(items));
+            }
+        });
+    }
 
     addToCart(product: Product, quantity: number = 1): void {
         const currentItems = this.cartItems();

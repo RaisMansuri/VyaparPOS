@@ -3,15 +3,16 @@
 <div class="product-listing-container">
   <!-- Modern Header -->
   <div class="listing-header glass-card">
-    <div class="search-box">
-      <i class="pi pi-search"></i>
-      <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Search products, categories or scan barcode..." />
+    <p-iconfield styleClass="flex-1">
+      <p-inputicon class="pi pi-search"></p-inputicon>
+      <input type="text" pInputText [(ngModel)]="searchQuery" (input)="applyFilters()" 
+             placeholder="Search products, categories or scan barcode..." class="w-full" />
       @if (searchQuery) {
-        <button class="p-button-text p-button-rounded" (click)="searchQuery = ''; applyFilters()">
+        <button class="p-button-text p-button-rounded clear-btn" (click)="searchQuery = ''; applyFilters()">
           <i class="pi pi-times"></i>
         </button>
       }
-    </div>
+    </p-iconfield>
     
     <div class="header-actions">
       <button pButton icon="pi pi-filter" [label]="'Filters (' + activeFilterCount + ')'" 
@@ -85,8 +86,9 @@
                           <button (click)="increaseQuantity(product)" [disabled]="product.stock <= product.quantity"><i class="pi pi-plus"></i></button>
                         </div>
                       } @else {
-                        <button pButton icon="pi pi-shopping-cart" label="Add" 
-                                class="p-button-sm p-button-rounded shadow-1"
+                        <button pButton [icon]="addedProductId === product.id ? 'pi pi-check' : 'pi pi-shopping-cart'" 
+                                [label]="addedProductId === product.id ? 'Added' : 'Add'" 
+                                [class]="addedProductId === product.id ? 'p-button-sm p-button-rounded p-button-success' : 'p-button-sm p-button-rounded shadow-1'"
                                 [disabled]="product.stock === 0"
                                 (click)="addToCart(product)"></button>
                       }

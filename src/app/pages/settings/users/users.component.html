@@ -3,15 +3,17 @@
         [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }"
         styleClass="custom-table">
         <ng-template #caption>
-            <div class="flex justify-between items-center">
-                <h3 class="m-0">Manage Users</h3>
-                <div class="flex gap-2">
-                    <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
+            <div class="flex justify-start items-center flex-wrap gap-3 mb-2">
+                <h3 class="m-0 mr-4">Manage Users</h3>
+                <div class="search-action-group">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search"></p-inputicon>
                         <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Search keyword" />
-                    </span>
-                    <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success"
+                            placeholder="Search users..." />
+                    </p-iconfield>
+                </div>
+                <div class="ml-auto">
+                    <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success shadow-1"
                         (click)="openNew()"></button>
                 </div>
             </div>
@@ -62,9 +64,9 @@
                 <td>
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-pencil"
-                            class="p-button-rounded p-button-text p-button-info" (click)="editUser(user)"></button>
+                            class="btn-action-edit" (click)="editUser(user)"></button>
                         <button pButton pRipple icon="pi pi-trash"
-                            class="p-button-rounded p-button-text p-button-danger"
+                            class="btn-action-delete"
                             (click)="deleteUser(user)"></button>
                     </div>
                 </td>

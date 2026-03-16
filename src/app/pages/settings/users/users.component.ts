@@ -12,6 +12,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 interface User {
     id: number;
@@ -38,7 +40,9 @@ interface User {
         InputSwitchModule,
         MultiSelectModule,
         ToastModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        IconFieldModule,
+        InputIconModule
     ],
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.css']

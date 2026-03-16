@@ -9,7 +9,21 @@
   </div>
 
   <div class="card-modern">
-    <p-table [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table">
+    <p-table #dt [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table"
+      [globalFilterFields]="['name', 'email', 'phone']">
+      
+      <ng-template #caption>
+        <div class="flex justify-start items-center flex-wrap gap-3 mb-2">
+            <h3 class="m-0 mr-4">Customer Lists</h3>
+            <div class="search-action-group">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search"></p-inputicon>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search customers..." />
+                </p-iconfield>
+            </div>
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th>Customer</th>
@@ -39,8 +53,8 @@
           <td class="text-center"><p-tag [value]="customer.totalOrders" severity="info"></p-tag></td>
           <td class="text-right font-bold">{{ customer.totalSpent | currency:'INR' }}</td>
           <td class="text-center">
-            <button pButton icon="pi pi-pencil" class="p-button-text p-button-success p-button-rounded mr-2" (click)="editCustomer(customer)"></button>
-            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-rounded" (click)="deleteCustomer(customer)"></button>
+            <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editCustomer(customer)"></button>
+            <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteCustomer(customer)"></button>
           </td>
         </tr>
       </ng-template>

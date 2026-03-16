@@ -10,9 +10,22 @@
   </div>
 
   <div class="card-modern">
-    <p-table [value]="products" [rows]="10" [paginator]="true" [globalFilterFields]="['name', 'category', 'barcode']"
+    <p-table #dt [value]="products" [rows]="10" [paginator]="true" [globalFilterFields]="['name', 'category', 'barcode']"
       [rowHover]="true" dataKey="id" styleClass="p-datatable-sm modern-table"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+      
+      <ng-template #caption>
+        <div class="flex flex-row justify-content-between align-items-center w-full">
+            <h3 class="m-0">Bakery Inventory</h3>
+            <div class="search-action-group">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search"></p-inputicon>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search items..." />
+                </p-iconfield>
+            </div>
+        </div>
+      </ng-template>
       
       <ng-template pTemplate="header">
         <tr>
@@ -48,93 +61,93 @@
           </td>
           <td>{{ product.gstRate }}%</td>
           <td class="text-center">
-            <button pButton icon="pi pi-pencil" class="p-button-text p-button-success p-button-rounded mr-2" (click)="editProduct(product)"></button>
-            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-rounded" (click)="deleteProduct(product)"></button>
+            <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editProduct(product)"></button>
+            <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteProduct(product)"></button>
           </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true"
-    styleClass="p-fluid">
+  <p-dialog [(visible)]="productDialog" [style]="{ width: '600px' }" header="Product Details" [modal]="true"
+    styleClass="p-fluid modern-dialog">
     <ng-template pTemplate="content">
-      <form [formGroup]="productForm">
-        <div class="field mt-4">
-          <p-floatLabel>
+      <form [formGroup]="productForm" class="product-form">
+        <div class="field mb-5">
+          <p-floatlabel>
             <input type="text" pInputText id="name" formControlName="name" required autofocus />
-            <label for="name">Name</label>
-          </p-floatLabel>
+            <label for="name">Product Name</label>
+          </p-floatlabel>
           <small class="p-error" *ngIf="submitted && !productForm.get('name')?.valid">Name is required.</small>
         </div>
 
-        <div class="field mt-4">
-          <p-floatLabel>
-            <input type="text" pInputText id="category" formControlName="category" required />
-            <label for="category">Category</label>
-          </p-floatLabel>
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-6 mb-5">
+              <p-floatlabel>
+                <input type="text" pInputText id="category" formControlName="category" required />
+                <label for="category">Category</label>
+              </p-floatlabel>
+            </div>
+            <div class="field col-12 md:col-6 mb-5">
+              <p-floatlabel>
+                <input type="text" pInputText id="barcode" formControlName="barcode" />
+                <label for="barcode">Barcode</label>
+              </p-floatlabel>
+            </div>
         </div>
 
-        <div class="field mt-4">
-          <p-floatLabel>
-            <textarea id="description" pInputTextarea formControlName="description" required rows="3"
-              cols="20"></textarea>
-            <label for="description">Description</label>
-          </p-floatLabel>
+        <div class="field mb-5">
+          <p-floatlabel>
+            <textarea id="description" pInputTextarea formControlName="description" rows="2"></textarea>
+            <label for="description">Description (Optional)</label>
+          </p-floatlabel>
         </div>
 
         <div class="formgrid grid">
-          <div class="field col mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <p-inputNumber id="price" formControlName="price" mode="currency" currency="INR" locale="en-IN">
               </p-inputNumber>
-              <label for="price">Price</label>
-            </p-floatLabel>
+              <label for="price">Selling Price</label>
+            </p-floatlabel>
           </div>
-          <div class="field col mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <p-inputNumber id="costPrice" formControlName="costPrice" mode="currency" currency="INR" locale="en-IN">
               </p-inputNumber>
               <label for="costPrice">Cost Price</label>
-            </p-floatLabel>
+            </p-floatlabel>
           </div>
         </div>
 
         <div class="formgrid grid">
-          <div class="field col mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <p-inputNumber id="stock" formControlName="stock"></p-inputNumber>
-              <label for="stock">Stock</label>
-            </p-floatLabel>
+              <label for="stock">Current Stock</label>
+            </p-floatlabel>
           </div>
-          <div class="field col mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <p-inputNumber id="minStockLevel" formControlName="minStockLevel"></p-inputNumber>
-              <label for="minStockLevel">Min Stock</label>
-            </p-floatLabel>
+              <label for="minStockLevel">Min Stock Alert</label>
+            </p-floatlabel>
           </div>
         </div>
 
         <div class="formgrid grid">
-          <div class="field col mt-4">
-            <p-floatLabel>
-              <input type="text" pInputText id="barcode" formControlName="barcode" />
-              <label for="barcode">Barcode</label>
-            </p-floatLabel>
-          </div>
-          <div class="field col mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <p-inputNumber id="gstRate" formControlName="gstRate" suffix="%"></p-inputNumber>
               <label for="gstRate">GST Rate</label>
-            </p-floatLabel>
+            </p-floatlabel>
           </div>
-        </div>
-        
-        <div class="field mt-4">
-            <p-floatLabel>
+          <div class="field col-12 md:col-6 mb-5">
+            <p-floatlabel>
               <input type="text" pInputText id="imageUrl" formControlName="imageUrl" />
               <label for="imageUrl">Image URL</label>
-            </p-floatLabel>
+            </p-floatlabel>
+          </div>
         </div>
       </form>
     </ng-template>

@@ -13,6 +13,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { TagModule } from 'primeng/tag';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-product-management',
@@ -29,7 +31,9 @@ import { TagModule } from 'primeng/tag';
     ToolbarModule,
     InputNumberModule,
     FloatLabelModule,
-    TagModule
+    TagModule,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [MessageService],
   templateUrl: './product-management.component.html',

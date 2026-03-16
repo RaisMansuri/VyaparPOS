@@ -1,6 +1,12 @@
 <div class="orders-page">
-    <div class="orders-header">
-        <h1><i class="pi pi-shopping-bag"></i> My Orders</h1>
+    <div class="orders-header flex justify-start items-center flex-wrap gap-4 mb-4">
+        <h1 class="m-0 mr-4"><i class="pi pi-shopping-bag"></i> My Orders</h1>
+        <div class="search-action-group">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search"></p-inputicon>
+                <input pInputText type="text" placeholder="Search orders..." />
+            </p-iconfield>
+        </div>
     </div>
 
     @if (orderService.getOrders().length === 0) {

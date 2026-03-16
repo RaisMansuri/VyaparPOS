@@ -12,6 +12,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-product-listing',
@@ -26,7 +29,10 @@ import { ButtonModule } from 'primeng/button';
     DropdownModule, 
     InputSwitchModule, 
     TagModule,
-    ButtonModule
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule
   ],
   providers: [MessageService],
   templateUrl: './product-listing.component.html',

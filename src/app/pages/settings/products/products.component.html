@@ -2,15 +2,17 @@
     <p-table #dt [value]="products" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
         [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }">
         <ng-template #caption>
-            <div class="flex flex-column sm:flex-row justify-between items-center gap-3">
-                <h3 class="m-0">Manage Products</h3>
-                <div class="flex gap-2">
-                    <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
+            <div class="flex flex-column sm:flex-row justify-start items-center gap-3 mb-2">
+                <h3 class="m-0 mr-4">Manage Products</h3>
+                <div class="search-action-group">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search"></p-inputicon>
                         <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Search keyword" />
-                    </span>
-                    <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success"
+                            placeholder="Search products..." />
+                    </p-iconfield>
+                </div>
+                <div class="ml-auto flex gap-2">
+                    <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success shadow-1"
                         (click)="openNew()"></button>
                     <!-- Bulk Upload Button -->
                     <p-fileUpload mode="basic" accept=".csv" [maxFileSize]="1000000" label="Bulk Import"
@@ -64,10 +66,10 @@
                 </td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+                        <button pButton pRipple icon="pi pi-pencil" class="btn-action-edit"
                             (click)="editProduct(prod)"></button>
                         <button pButton pRipple icon="pi pi-trash"
-                            class="p-button-rounded p-button-text p-button-danger"
+                            class="btn-action-delete"
                             (click)="deleteProduct(prod)"></button>
                     </div>
                 </td>

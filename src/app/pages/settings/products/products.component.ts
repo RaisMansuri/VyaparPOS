@@ -12,6 +12,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 interface Product {
     id: number;
@@ -39,7 +41,9 @@ interface Product {
         ToastModule,
         ConfirmDialogModule,
         FileUploadModule,
-        InputNumberModule
+        InputNumberModule,
+        IconFieldModule,
+        InputIconModule
     ],
     templateUrl: './products.component.html',
     styleUrls: ['./products.component.css']

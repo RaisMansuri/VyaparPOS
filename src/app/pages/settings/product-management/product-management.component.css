@@ -92,3 +92,34 @@
 :host ::ng-deep .p-dialog .p-floatlabel {
   margin-top: 1.5rem;
 }
+
+.modern-dialog :host ::ng-deep .p-dialog-content {
+  padding: 2rem 1.5rem !important;
+}
+
+.product-form .field {
+  position: relative;
+}
+
+/* Ensure labels don't overlap with icons or input content */
+:host ::ng-deep .p-floatlabel label {
+  left: 0.75rem;
+  transition: all 0.2s ease-out;
+}
+
+:host ::ng-deep .p-floatlabel input:focus ~ label,
+:host ::ng-deep .p-floatlabel input.p-filled ~ label,
+:host ::ng-deep .p-floatlabel textarea:focus ~ label,
+:host ::ng-deep .p-floatlabel textarea.p-filled ~ label,
+:host ::ng-deep .p-floatlabel .p-inputwrapper-focus ~ label,
+:host ::ng-deep .p-floatlabel .p-inputwrapper-filled ~ label {
+  transform: translateY(-1.25rem) scale(0.8);
+  font-weight: 700;
+  color: var(--primary-color);
+  background: var(--surface-card);
+  padding: 0 4px;
+}
+
+.mb-5 {
+  margin-bottom: 2rem !important;
+}

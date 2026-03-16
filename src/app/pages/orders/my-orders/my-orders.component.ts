@@ -5,11 +5,14 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../models/order.model';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-my-orders',
     standalone: true,
-    imports: [CommonModule, CurrencyPipe, DatePipe, ButtonModule, TagModule],
+    imports: [CommonModule, CurrencyPipe, DatePipe, ButtonModule, TagModule, IconFieldModule, InputIconModule, InputTextModule],
     templateUrl: './my-orders.component.html',
     styleUrl: './my-orders.component.css'
 })

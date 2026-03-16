@@ -10,6 +10,8 @@ import { TagModule } from 'primeng/tag';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-customers',
@@ -22,7 +24,9 @@ import { MessageService } from 'primeng/api';
     DialogModule,
     TagModule,
     ReactiveFormsModule,
-    ToastModule
+    ToastModule,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [MessageService],
   templateUrl: './customers.component.html',

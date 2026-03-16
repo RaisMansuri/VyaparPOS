@@ -48,10 +48,6 @@
       </a>
     </nav>
     <div class="sidebar-footer">
-      <div class="theme-footer-row" (click)="themeService.toggleTheme()">
-        <i [class]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"></i>
-        <span>{{ themeService.isDarkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
-      </div>
       <button pButton type="button" label="Logout" class="p-button-text logout-btn" (click)="logout()"></button>
     </div>
   </p-sidebar>
@@ -71,10 +67,12 @@
         <div class="toolbar-right">
           <!-- Language Switcher -->
           <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
-            class="mr-2 language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
+            class="language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
+
+          <div class="toolbar-separator"></div>
 
           <!-- Notification Button -->
-          <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text ml-2 notification-btn"
+          <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text notification-btn"
             (click)="op.toggle($event)">
             <p-badge *ngIf="lowStockItems.length > 0" [value]="lowStockItems.length" severity="danger"></p-badge>
           </button>
@@ -98,10 +96,6 @@
             </div>
           </p-overlayPanel>
 
-          <button pButton type="button" [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
-            class="p-button-rounded p-button-text theme-toggle-btn" (click)="themeService.toggleTheme()"
-            pTooltip="Toggle Theme"></button>
-
           <div class="cart-wrapper" (click)="navigate('/cart')">
             <button pButton type="button" icon="pi pi-shopping-cart"
               class="p-button-rounded p-button-text cart-toolbar-btn"></button>
@@ -110,7 +104,9 @@
             }
           </div>
 
-          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text ml-2"
+          <div class="toolbar-separator"></div>
+
+          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text profile-btn"
             (click)="menu.toggle($event)"></button>
           <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
         </div>
