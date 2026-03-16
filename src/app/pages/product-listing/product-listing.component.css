@@ -13,12 +13,36 @@
   gap: 1.5rem;
 }
 
+.search-box {
+  width: 100%;
+  max-width: 450px;
+}
+
+.search-box input {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px !important;
+  border: 1px solid var(--surface-border) !important;
+  background: var(--surface-card) !important;
+  padding-left: 3rem !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
 .clear-btn {
   position: absolute;
-  right: 0.5rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
 }
 
 .header-actions {

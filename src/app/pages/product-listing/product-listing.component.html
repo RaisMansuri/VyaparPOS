@@ -3,10 +3,10 @@
 <div class="product-listing-container">
   <!-- Modern Header -->
   <div class="listing-header glass-card">
-    <p-iconfield styleClass="flex-1">
+    <p-iconfield class="search-box">
       <p-inputicon class="pi pi-search"></p-inputicon>
       <input type="text" pInputText [(ngModel)]="searchQuery" (input)="applyFilters()" 
-             placeholder="Search products, categories or scan barcode..." class="w-full" />
+             placeholder="Search products, categories or scan barcode..." />
       @if (searchQuery) {
         <button class="p-button-text p-button-rounded clear-btn" (click)="searchQuery = ''; applyFilters()">
           <i class="pi pi-times"></i>
