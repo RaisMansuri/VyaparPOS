@@ -5,11 +5,12 @@ import { CartService } from '../../core/services/cart.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-cart',
     standalone: true,
-    imports: [CommonModule, CurrencyPipe, ButtonModule, TableModule, TagModule],
+    imports: [CommonModule, CurrencyPipe, ButtonModule, TableModule, TagModule, TooltipModule],
     templateUrl: './cart.component.html',
     styleUrl: './cart.component.css'
 })

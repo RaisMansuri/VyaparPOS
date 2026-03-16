@@ -23,6 +23,27 @@ app-root {
   min-height: 100%;
 }
 
+/* Global CSS variables not covered by PrimeNG theme */
+:root {
+  --danger-color: #ef4444;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+}
+
+/* Glass card - used across product cards, dashboard cards, etc. */
+.glass-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.glass-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
 /* Global prime ng component overrides for dark mode */
 html.my-app-dark .p-sidebar {
   background: #0f172a !important;

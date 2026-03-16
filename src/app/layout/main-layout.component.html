@@ -51,8 +51,6 @@
       <div class="theme-footer-row" (click)="themeService.toggleTheme()">
         <i [class]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"></i>
         <span>{{ themeService.isDarkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
-        <button pButton type="button" class="p-button-rounded p-button-text p-button-sm ml-auto"
-          icon="pi pi-sync"></button>
       </div>
       <button pButton type="button" label="Logout" class="p-button-text logout-btn" (click)="logout()"></button>
     </div>

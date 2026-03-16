@@ -149,7 +149,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background: var(--danger-color);
+  background: #ef4444;
   color: #fff;
   font-size: 0.7rem;
   font-weight: 800;
