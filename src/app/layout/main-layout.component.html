@@ -1,5 +1,16 @@
 <div class="layout-root">
   <p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="false" styleClass="layout-sidebar">
+    <div class="sidebar-profile-section">
+      <div class="user-avatar-wrapper">
+        <img src="assets/avatar.png" alt="User" class="user-avatar"
+          onerror="this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'" />
+        <span class="status-indicator"></span>
+      </div>
+      <div class="user-info">
+        <span class="user-name">Rais Mansuri</span>
+        <span class="user-role">Administrator</span>
+      </div>
+    </div>
     <div class="sidebar-header">
       <div class="sidebar-title">VyaparPOS</div>
     </div>
@@ -47,9 +58,9 @@
         <i class="pi pi-users"></i> Users
       </a>
     </nav>
-    <div class="sidebar-footer">
+    <!-- <div class="sidebar-footer">
       <button pButton type="button" label="Logout" class="p-button-text logout-btn" (click)="logout()"></button>
-    </div>
+    </div> -->
   </p-sidebar>
 
   <div class="layout-main">
