@@ -1,0 +1,125 @@
+<div class="detail-page">
+    @if (order) {
+    <!-- Header -->
+    <div class="detail-header">
+        <button pButton icon="pi pi-arrow-left" label="Back to Orders" class="p-button-text p-button-plain back-btn"
+            (click)="goBack()"></button>
+        <div class="header-info">
+            <h1>Order Details</h1>
+            <div class="header-meta">
+                <span class="order-id-label">{{ order.id }}</span>
+                <p-tag [value]="order.status | titlecase" [severity]="getStatusSeverity(order.status)" />
+            </div>
+            <p class="order-date-label">Placed on {{ order.orderDate | date:'fullDate' }} at {{ order.orderDate |
+                date:'shortTime' }}</p>
+        </div>
+    </div>
+
+    <!-- Order Tracking Timeline -->
+    <div class="tracking-section">
+        <h3><i class="pi pi-map"></i> Track Your Order</h3>
+        <div class="tracking-timeline">
+            @for (step of trackingSteps; track step.key; let i = $index) {
+            <div class="track-step" [class.completed]="isStepComplete(step.key)"
+                [class.current]="isCurrentStep(step.key)">
+                <div class="track-icon">
+                    @if (isStepComplete(step.key) && !isCurrentStep(step.key)) {
+                    <i class="pi pi-check"></i>
+                    } @else {
+                    <i [class]="step.icon"></i>
+                    }
+                </div>
+                <span class="track-label">{{ step.label }}</span>
+            </div>
+            @if (i < trackingSteps.length - 1) { <div class="track-connector"
+                [class.completed]="isStepComplete(trackingSteps[i + 1].key)">
+        </div>
+        }
+        }
+    </div>
+</div>
+
+<div class="detail-grid">
+    <!-- Order Items -->
+    <div class="detail-card">
+        <h3><i class="pi pi-shopping-bag"></i> Items Ordered</h3>
+        @for (item of order.items; track item.product.id) {
+        <div class="detail-item">
+            <img [src]="item.product.imageUrl" [alt]="item.product.name" class="detail-thumb" />
+            <div class="detail-item-info">
+                <span class="detail-item-name">{{ item.product.name }}</span>
+                <span class="detail-item-category">{{ item.product.category }}</span>
+                <span class="detail-item-qty">Qty: {{ item.quantity }}</span>
+            </div>
+            <div class="detail-item-price">
+                <span class="per-unit">{{ item.subtotal / item.quantity | currency:'INR':'symbol':'1.0-0' }} each</span>
+                <span class="line-total">{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+        </div>
+        }
+
+        <!-- Price Breakdown -->
+        <div class="price-breakdown">
+            <div class="price-row">
+                <span>Subtotal</span>
+                <span>{{ order.totalAmount - order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="price-row">
+                <span>Delivery Fee</span>
+                @if (order.deliveryFee === 0) {
+                <span class="free">FREE</span>
+                } @else {
+                <span>{{ order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+                }
+            </div>
+            <div class="price-row total">
+                <span>Total Amount</span>
+                <span>{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery & Payment -->
+    <div class="detail-side">
+        <div class="detail-card">
+            <h3><i class="pi pi-map-marker"></i> Delivery Address</h3>
+            <div class="address-info">
+                <p class="addr-name">{{ order.address.fullName }}</p>
+                <p>{{ order.address.addressLine1 }}</p>
+                @if (order.address.addressLine2) {
+                <p>{{ order.address.addressLine2 }}</p>
+                }
+                <p>{{ order.address.city }}, {{ order.address.state }} - {{ order.address.pincode }}</p>
+                <p><i class="pi pi-phone"></i> {{ order.address.phone }}</p>
+                <p-tag [value]="order.address.addressType | titlecase" severity="secondary" />
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3><i class="pi pi-credit-card"></i> Payment Information</h3>
+            <div class="payment-detail">
+                <div class="pay-row">
+                    <span class="pay-label">Method</span>
+                    <span class="pay-value">{{ getPaymentLabel(order.paymentMethod) }}</span>
+                </div>
+                <div class="pay-row">
+                    <span class="pay-label">Status</span>
+                    <span class="pay-status confirmed">Paid</span>
+                </div>
+                <div class="pay-row">
+                    <span class="pay-label">Amount</span>
+                    <span class="pay-value pay-amount">{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-card">
+            <button pButton label="View Invoice" icon="pi pi-file" class="p-button-rounded p-button-outlined action-btn"
+                (click)="viewInvoice()"></button>
+            <button pButton label="Continue Shopping" icon="pi pi-shopping-cart" class="p-button-rounded action-btn"
+                (click)="continueShopping()"></button>
+        </div>
+    </div>
+</div>
+}
+</div>

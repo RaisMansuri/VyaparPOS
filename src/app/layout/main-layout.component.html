@@ -1,0 +1,132 @@
+<div class="layout-root">
+  <p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="false" styleClass="layout-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">VyaparPOS</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a (click)="navigate('/dashboard')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-home"></i> {{ translationService.translate('DASHBOARD') }}
+      </a>
+      <a (click)="navigate('/customers')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-users"></i> {{ translationService.translate('CUSTOMERS') }}
+      </a>
+      <a (click)="navigate('/reports')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-chart-bar"></i> {{ translationService.translate('REPORTS') }}
+      </a>
+      <a (click)="navigate('/support')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-question-circle"></i> Customer Support
+      </a>
+      <div class="nav-section-title">{{ translationService.translate('CATEGORIES') }}</div>
+      <a (click)="navigate('/products')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-th-large"></i> {{ translationService.translate('PRODUCTS') }}
+      </a>
+      @for (category of categories; track category) {
+      <a (click)="navigate('/category/' + category.toLowerCase())" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-tag"></i> {{ category }}
+      </a>
+      }
+      <div class="nav-section-title">Shopping</div>
+      <a (click)="navigate('/cart')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-shopping-cart"></i> Cart
+        @if (cartService.cartCount() > 0) {
+        <span class="sidebar-badge">{{ cartService.cartCount() }}</span>
+        }
+      </a>
+      <a (click)="navigate('/orders')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-list"></i> My Orders
+      </a>
+      <div class="nav-section-title">Account</div>
+      <a (click)="navigate('/profile')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-user"></i> My Profile
+      </a>
+      <div class="nav-section-title">Settings</div>
+      <a (click)="navigate('/settings/products')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-box"></i> Products
+      </a>
+      <a (click)="navigate('/settings/users')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-users"></i> Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="theme-footer-row" (click)="themeService.toggleTheme()">
+        <i [class]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+        <span>{{ themeService.isDarkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+        <button pButton type="button" class="p-button-rounded p-button-text p-button-sm ml-auto"
+          icon="pi pi-sync"></button>
+      </div>
+      <button pButton type="button" label="Logout" class="p-button-text logout-btn" (click)="logout()"></button>
+    </div>
+  </p-sidebar>
+
+  <div class="layout-main">
+    <p-toast></p-toast>
+    <p-toolbar class="layout-toolbar">
+      <ng-template #start>
+        <div class="toolbar-left">
+          <button pButton type="button" icon="pi pi-bars" class="p-button-text p-button-plain menu-button"
+            (click)="toggleSidebar()"></button>
+          <span class="toolbar-title">VyaparPOS</span>
+        </div>
+      </ng-template>
+
+      <ng-template #end>
+        <div class="toolbar-right">
+          <!-- Language Switcher -->
+          <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
+            class="mr-2 language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
+
+          <!-- Notification Button -->
+          <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text ml-2 notification-btn"
+            (click)="op.toggle($event)">
+            <p-badge *ngIf="lowStockItems.length > 0" [value]="lowStockItems.length" severity="danger"></p-badge>
+          </button>
+
+          <!-- Notification Overlay -->
+          <p-overlayPanel #op>
+            <div class="notification-panel">
+              <h4 class="m-0 p-2 border-bottom">Inventory Alerts</h4>
+              <div *ngIf="lowStockItems.length === 0" class="p-3 text-center text-muted">
+                No low stock alerts
+              </div>
+              <div class="notification-list" *ngIf="lowStockItems.length > 0">
+                <div *ngFor="let item of lowStockItems" class="notification-item p-2 border-bottom">
+                  <div class="d-flex justify-content-between">
+                    <span class="font-bold">{{item.name}}</span>
+                    <span class="text-danger font-bold">{{item.stock}} left</span>
+                  </div>
+                  <small class="text-muted">Minimum: {{item.minStockLevel || 5}}</small>
+                </div>
+              </div>
+            </div>
+          </p-overlayPanel>
+
+          <button pButton type="button" [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+            class="p-button-rounded p-button-text theme-toggle-btn" (click)="themeService.toggleTheme()"
+            pTooltip="Toggle Theme"></button>
+
+          <div class="cart-wrapper" (click)="navigate('/cart')">
+            <button pButton type="button" icon="pi pi-shopping-cart"
+              class="p-button-rounded p-button-text cart-toolbar-btn"></button>
+            @if (cartService.cartCount() > 0) {
+            <span class="cart-badge">{{ cartService.cartCount() }}</span>
+            }
+          </div>
+
+          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text ml-2"
+            (click)="menu.toggle($event)"></button>
+          <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <main class="layout-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="layout-footer">
+      <div class="footer-content">
+        <span>&copy; 2026 VyaparPOS. All rights reserved.</span>
+      </div>
+    </footer>
+  </div>
+</div>

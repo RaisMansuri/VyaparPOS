@@ -1,0 +1,144 @@
+<p-toast></p-toast>
+
+<div class="product-listing-container">
+  <!-- Modern Header -->
+  <div class="listing-header glass-card">
+    <div class="search-box">
+      <i class="pi pi-search"></i>
+      <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Search products, categories or scan barcode..." />
+      @if (searchQuery) {
+        <button class="p-button-text p-button-rounded" (click)="searchQuery = ''; applyFilters()">
+          <i class="pi pi-times"></i>
+        </button>
+      }
+    </div>
+    
+    <div class="header-actions">
+      <button pButton icon="pi pi-filter" [label]="'Filters (' + activeFilterCount + ')'" 
+              class="p-button-outlined p-button-secondary" (click)="showFilterPanel = !showFilterPanel"></button>
+      <div class="view-toggle">
+        <button pButton icon="pi pi-th-large" class="p-button-text" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'"></button>
+        <button pButton icon="pi pi-list" class="p-button-text" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Quick Select -->
+  <div class="category-scroll-nav">
+    <button class="cat-pill" [class.active]="selectedCategory === 'all'" (click)="selectedCategory = 'all'; applyFilters()">All</button>
+    @for (cat of categories; track cat) {
+      <button class="cat-pill" [class.active]="selectedCategory === cat" (click)="selectedCategory = cat; applyFilters()">{{ cat }}</button>
+    }
+  </div>
+
+  <!-- Products Content -->
+  <div class="products-content">
+    @if (products.length === 0) {
+      <div class="empty-state glass-card">
+        <div class="empty-illustration">
+          <i class="pi pi-search"></i>
+        </div>
+        <h3>No matches found</h3>
+        <p>We couldn't find any products matching your current filters.</p>
+        <button pButton label="Clear All Filters" class="p-button-primary" (click)="clearFilters()"></button>
+      </div>
+    } @else {
+      @for (group of groupedProducts | keyvalue; track group.key) {
+        <section class="category-section">
+          <div class="section-title">
+            <h2>{{ group.key }}</h2>
+            <span class="count-badge">{{ group.value.length }} items</span>
+          </div>
+
+          <div [class]="'product-' + viewMode">
+            @for (product of group.value; track product.id) {
+              <div class="glass-card product-card" [class.low-stock]="product.stock <= product.minStockLevel">
+                <div class="card-image">
+                  <img [src]="product.imageUrl" [alt]="product.name" />
+                  @if (product.discount) {
+                    <div class="discount-tag">{{ product.discount.value }}% OFF</div>
+                  }
+                  @if (product.stock <= product.minStockLevel) {
+                    <div class="stock-tag">{{ product.stock === 0 ? 'Out of Stock' : 'Low Stock' }}</div>
+                  }
+                </div>
+                
+                <div class="card-body">
+                  <div class="card-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-desc">{{ product.description }}</p>
+                  </div>
+                  
+                  <div class="card-footer">
+                    <div class="price-box">
+                      <span class="current-price">{{ (product.discount ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
+                      @if (product.discount) {
+                        <span class="original-price">{{ product.price | currency:'INR' }}</span>
+                      }
+                    </div>
+                    
+                    <div class="card-actions">
+                      @if (product.quantity > 0) {
+                        <div class="qty-selector">
+                          <button (click)="decreaseQuantity(product)"><i class="pi pi-minus"></i></button>
+                          <span>{{ product.quantity }}</span>
+                          <button (click)="increaseQuantity(product)" [disabled]="product.stock <= product.quantity"><i class="pi pi-plus"></i></button>
+                        </div>
+                      } @else {
+                        <button pButton icon="pi pi-shopping-cart" label="Add" 
+                                class="p-button-sm p-button-rounded shadow-1"
+                                [disabled]="product.stock === 0"
+                                (click)="addToCart(product)"></button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+  </div>
+</div>
+
+<!-- Filter Sidebar (Redesigned) -->
+<p-sidebar [(visible)]="showFilterPanel" position="right" styleClass="modern-sidebar" [baseZIndex]="10000">
+  <ng-template pTemplate="header">
+    <div class="sidebar-header-content">
+      <i class="pi pi-filter"></i>
+      <span>Refine Selection</span>
+    </div>
+  </ng-template>
+  
+  <div class="filter-body">
+    <!-- Filter sections as before but with better styling -->
+    <div class="filter-group">
+      <h4>Price Range</h4>
+      <div class="pill-grid">
+        <button class="filter-pill" [class.active]="priceRange === 'all'" (click)="priceRange = 'all'; applyFilters()">All</button>
+        <button class="filter-pill" [class.active]="priceRange === 'under50'" (click)="priceRange = 'under50'; applyFilters()">Under ₹50</button>
+        <button class="filter-pill" [class.active]="priceRange === '50to100'" (click)="priceRange = '50to100'; applyFilters()">₹50 - ₹100</button>
+        <button class="filter-pill" [class.active]="priceRange === '100to200'" (click)="priceRange = '100to200'; applyFilters()">₹100 - ₹200</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <h4>Sort Order</h4>
+      <p-dropdown [options]="sortOptions" [(ngModel)]="sortBy" (onChange)="applyFilters()" 
+                  styleClass="w-full modern-dropdown" appendTo="body"></p-dropdown>
+    </div>
+
+    <div class="filter-group">
+      <div class="flex-between">
+        <h4>Special Offers</h4>
+        <p-inputSwitch [(ngModel)]="showDiscountOnly" (onChange)="applyFilters()"></p-inputSwitch>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Clear All" icon="pi pi-filter-slash" 
+            class="p-button-text p-button-danger w-full" (click)="clearFilters()"></button>
+  </ng-template>
+</p-sidebar>

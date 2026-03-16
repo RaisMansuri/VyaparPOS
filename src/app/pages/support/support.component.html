@@ -1,0 +1,126 @@
+<div class="support-page">
+  <p-toast></p-toast>
+  <div class="header">
+    <h2>Customer Support Tickets</h2>
+    <button pButton label="New Ticket" icon="pi pi-plus" (click)="openNew()"></button>
+  </div>
+
+  <p-table [value]="tickets" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Subject</th>
+        <th>Customer</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ticket>
+      <tr>
+        <td>{{ticket.id}}</td>
+        <td>{{ticket.subject}}</td>
+        <td>{{ticket.customerName}}</td>
+        <td>
+          <p-tag [value]="ticket.priority" [severity]="getPrioritySeverity(ticket.priority)"></p-tag>
+        </td>
+        <td>
+          <p-tag [value]="ticket.status" [severity]="getStatusSeverity(ticket.status)"></p-tag>
+        </td>
+        <td>{{ticket.createdAt | date:'short'}}</td>
+        <td>
+          <button pButton icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="viewTicket(ticket)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteTicket(ticket)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- New Ticket Dialog -->
+  <p-dialog [(visible)]="showDialog" header="Create Support Ticket" [modal]="true" styleClass="p-fluid" [style]="{width: '500px'}">
+    <ng-template pTemplate="content">
+      <form [formGroup]="ticketForm" class="support-form">
+        <div class="field mt-4">
+          <p-floatlabel>
+            <input pInputText id="customerName" formControlName="customerName" />
+            <label for="customerName">Customer Name</label>
+          </p-floatlabel>
+        </div>
+        
+        <div class="field mt-4">
+          <p-floatlabel>
+            <input pInputText id="customerEmail" formControlName="customerEmail" />
+            <label for="customerEmail">Customer Email</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="field mt-4">
+          <p-floatlabel>
+            <input pInputText id="subject" formControlName="subject" />
+            <label for="subject">Subject</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="field mt-4">
+          <p-floatlabel>
+            <p-dropdown [options]="priorityOptions" formControlName="priority" inputId="priority" appendTo="body"></p-dropdown>
+            <label for="priority">Priority</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="field mt-4">
+          <p-floatlabel>
+            <textarea pInputTextarea id="description" formControlName="description" rows="4"></textarea>
+            <label for="description">Description</label>
+          </p-floatlabel>
+        </div>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
+      <button pButton label="Create" icon="pi pi-check" class="p-button-text" (click)="saveTicket()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- View Ticket Dialog -->
+  <p-dialog [(visible)]="viewTicketDialog" [header]="'Ticket: ' + selectedTicket?.id" [modal]="true" [style]="{width: '600px'}">
+    <ng-template pTemplate="content" *ngIf="selectedTicket">
+      <div class="ticket-details">
+        <div class="detail-row">
+          <span class="label">Subject:</span>
+          <span class="value">{{selectedTicket.subject}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Customer:</span>
+          <span class="value">{{selectedTicket.customerName}} ({{selectedTicket.customerEmail}})</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Description:</span>
+          <p class="description">{{selectedTicket.description}}</p>
+        </div>
+        <div class="detail-row mt-3">
+          <span class="label">Status:</span>
+          <p-dropdown [options]="statusOptions" [(ngModel)]="selectedTicket.status" (onChange)="updateStatus(selectedTicket.id, $event.value)" appendTo="body"></p-dropdown>
+        </div>
+
+        <div class="comments-section mt-4">
+          <h3>Comments</h3>
+          <div class="comments-list">
+            <div *ngFor="let comment of selectedTicket.comments" class="comment-item">
+              <div class="comment-header">
+                <span class="author">{{comment.author}}</span>
+                <span class="date">{{comment.createdAt | date:'short'}}</span>
+              </div>
+              <p class="message">{{comment.message}}</p>
+            </div>
+          </div>
+          <div class="add-comment mt-3">
+            <textarea pInputTextarea [(ngModel)]="newComment" placeholder="Add a comment..." rows="2"></textarea>
+            <button pButton label="Send" icon="pi pi-send" class="mt-2" (click)="addComment()"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

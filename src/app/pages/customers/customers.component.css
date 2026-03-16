@@ -1,0 +1,79 @@
+.customers-page {
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.header p {
+  margin: 0.25rem 0 0;
+  color: var(--text-color-secondary);
+}
+
+.customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.id {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+}
+
+.contact-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.mr-1 { margin-right: 0.25rem; }
+.mr-2 { margin-right: 0.5rem; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 700; }
+
+:host ::ng-deep .modern-table .p-datatable-thead > tr > th {
+  background: transparent;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+:host ::ng-deep .p-dialog .field {
+  margin-bottom: 1.5rem;
+}

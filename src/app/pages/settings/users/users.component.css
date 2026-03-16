@@ -1,0 +1,55 @@
+.card {
+    padding: 2rem;
+    border-radius: 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-caption {
+    border: none;
+    padding-bottom: 1.5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.gap-1 {
+    gap: 0.25rem;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+:host ::ng-deep .custom-table .p-datatable-thead > tr > th {
+    border: none;
+    font-weight: bold;
+    color: var(--text-color-secondary);
+}
+
+:host ::ng-deep .custom-table .p-datatable-tbody > tr {
+    border-top: 1px solid var(--surface-border);
+}
+
+:host ::ng-deep .custom-table .p-datatable-tbody > tr > td {
+    border: none;
+    padding: 1rem;
+}
+
+/* Adjust tag margins for permissions */
+:host ::ng-deep .p-tag {
+    margin-bottom: 2px;
+}

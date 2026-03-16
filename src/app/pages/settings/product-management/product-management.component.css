@@ -1,0 +1,94 @@
+.product-mgmt-container {
+  padding: 1rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.page-header p {
+  margin: 0.25rem 0 0;
+  color: var(--text-color-secondary);
+}
+
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--surface-border);
+}
+
+.product-info-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name-text {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.barcode-text {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+}
+
+.stock-status {
+  display: flex;
+  flex-direction: column;
+}
+
+.stock-badge {
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.status-in {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.min-stock {
+  color: var(--text-color-secondary);
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+
+.text-center { text-align: center; }
+.font-bold { font-weight: 700; }
+.mr-2 { margin-right: 0.5rem; }
+
+:host ::ng-deep .modern-table .p-datatable-thead > tr > th {
+  background: transparent;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+:host ::ng-deep .p-dialog .p-floatlabel {
+  margin-top: 1.5rem;
+}

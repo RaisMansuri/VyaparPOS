@@ -1,0 +1,321 @@
+﻿
+> vyapar-pos@0.0.0 build
+> ng build
+
+node.exe : - Generating 
+browser application 
+bundles (phase: setup)...
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (- Generating br...h   
+ ase: setup)...:Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+Γ£ö Browser application 
+bundle generation 
+complete.
+Γ£ö Browser application 
+bundle generation 
+complete.
+[1m[33m
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.in
+dex-of.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.it
+erator.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.re
+duce.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.array.re
+verse.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.promise.
+js'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.regexp.t
+o-string.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.e
+nds-with.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.i
+ncludes.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.m
+atch.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.r
+eplace.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.s
+plit.js'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.s
+tarts-with.js'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/es.string.t
+rim.js'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 'co
+re-js/modules/web.dom-col
+lections.iterator.js'. 
+CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 
+'raf'. CommonJS or AMD 
+dependencies can cause 
+optimization bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\node_modules\canvg\lib\i
+ndex.es.js depends on 
+'rgbcolor'. CommonJS or 
+AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+Warning: D:\POS\VyaparPOS
+\src\app\pages\orders\inv
+oice\invoice.component.ts
+ depends on 
+'html2canvas'. CommonJS 
+or AMD dependencies can 
+cause optimization 
+bailouts.
+For more info see: https:
+//angular.dev/tools/cli/b
+uild#configuring-commonjs
+-dependencies
+
+[39m[22m
+[1m[31m
+Error: [96msrc/app/pages
+/settings/products/produc
+ts.component.html[0m:[9
+3m89[0m:[93m75[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'user' does not exist on 
+type 'ProductsComponent'.
+
+[7m89[0m         <div c
+lass="image-preview-conta
+iner mb-4" 
+*ngIf="uploadedImage || 
+user?.image">
+[7m  [0m [91m         
+                         
+                         
+               ~~~~[0m
+
+  [96msrc/app/pages/sett
+ings/products/products.co
+mponent.ts[0m:[93m44[0
+m:[93m18[0m
+    [7m44[0m     
+templateUrl: './products.
+component.html',
+    [7m  [0m [96m     
+            ~~~~~~~~~~~~~
+~~~~~~~~~~~~~~[0m
+    Error occurs in the 
+template of component 
+ProductsComponent.
+
+
+Error: [96msrc/app/pages
+/settings/products/produc
+ts.component.html[0m:[9
+3m90[0m:[93m67[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'user' does not exist on 
+type 'ProductsComponent'.
+
+[7m90[0m             
+<img 
+[src]="uploadedImage ? 
+uploadedImage.objectURL 
+: user?.image" 
+class="block m-auto 
+shadow-4"
+[7m  [0m [91m         
+                         
+                         
+       ~~~~[0m
+
+  [96msrc/app/pages/sett
+ings/products/products.co
+mponent.ts[0m:[93m44[0
+m:[93m18[0m
+    [7m44[0m     
+templateUrl: './products.
+component.html',
+    [7m  [0m [96m     
+            ~~~~~~~~~~~~~
+~~~~~~~~~~~~~~[0m
+    Error occurs in the 
+template of component 
+ProductsComponent.
+
+
+[39m[22m
