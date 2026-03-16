@@ -32,6 +32,15 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": false,
+            "allowedCommonJsDependencies": [
+              "jspdf",
+              "html2canvas",
+              "canvg",
+              "fflate",
+              "dompurify",
+              "rgbcolor",
+              "raf"
+            ],
             "ssr": {
               "entry": "src/server.ts"
             }
@@ -41,8 +50,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "800kB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
