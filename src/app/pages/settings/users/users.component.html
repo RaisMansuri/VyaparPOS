@@ -83,44 +83,78 @@
     </p-table>
 </div>
 
-<p-dialog [(visible)]="userDialog" [style]="{ width: '450px' }" header="User Details" [modal]="true"
-    styleClass="p-fluid">
+<p-dialog [(visible)]="userDialog" [style]="{ width: '90vw', maxWidth: '500px' }" [modal]="true"
+    styleClass="p-fluid modern-dialog" [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-3 w-full custom-header-container">
+            <div class="header-icon-box">
+                <i class="pi pi-user text-success"></i>
+            </div>
+            <div class="header-text-stack">
+                <span class="dialog-title">Add User</span>
+                <span class="dialog-subtitle">Configure user profile and access levels</span>
+            </div>
+        </div>
+    </ng-template>
+
     <ng-template pTemplate="content">
-        <div class="field" style="margin-bottom: 1.5rem;">
-            <label for="name">Name</label>
-            <input type="text" pInputText id="name" [(ngModel)]="user.name" required autofocus />
-            <small class="p-error block" *ngIf="submitted && !user.name">Name is required.</small>
-        </div>
+        <div class="premium-form">
+            <!-- User Info Section -->
+            <h6 class="section-title">USER INFO</h6>
 
-        <div class="field" style="margin-bottom: 1.5rem;">
-            <label for="email">Email</label>
-            <input type="email" pInputText id="email" [(ngModel)]="user.email" required />
-            <small class="p-error block" *ngIf="submitted && !user.email">Email is required.</small>
-        </div>
+            <div class="field mb-4 full-width-field">
+                <label for="name" class="premium-label">Full name <span class="required-mark">*</span></label>
+                <input type="text" pInputText id="name" [(ngModel)]="user.name" placeholder="e.g. John Doe"
+                    [class.p-invalid]="submitted && !user.name" required autofocus />
+                <small class="p-error block mt-1" *ngIf="submitted && !user.name">Name is required.</small>
+            </div>
 
-        <div class="field" style="margin-bottom: 1.5rem;">
-            <label for="role">Role</label>
-            <p-dropdown [(ngModel)]="user.role" inputId="role" [options]="roles" placeholder="Select a Role">
-            </p-dropdown>
-            <small class="p-error block" *ngIf="submitted && !user.role">Role is required.</small>
-        </div>
+            <div class="field mb-4 full-width-field">
+                <label for="email" class="premium-label">Email address <span class="required-mark">*</span></label>
+                <input type="email" pInputText id="email" [(ngModel)]="user.email" placeholder="e.g. john@example.com"
+                    [class.p-invalid]="submitted && !user.email" required />
+                <small class="p-error block mt-1" *ngIf="submitted && !user.email">Email is required.</small>
+            </div>
 
-        <div class="field" style="margin-bottom: 1.5rem;">
-            <label for="permissions">Permissions</label>
-            <p-multiSelect [options]="availablePermissions" [(ngModel)]="user.permissions"
-                defaultLabel="Select Permissions" display="chip" [filter]="false" [showClear]="true">
-            </p-multiSelect>
-        </div>
+            <div class="divider-hr"></div>
 
-        <div class="field flex items-center gap-2" style="margin-bottom: 1.5rem;">
-            <label for="status" class="mb-0">Active Status</label>
-            <p-inputSwitch [(ngModel)]="user.status" trueValue="Active" falseValue="Inactive"></p-inputSwitch>
+            <!-- Access Control Section -->
+            <h6 class="section-title">ACCESS CONTROL</h6>
+
+            <div class="premium-grid mb-4">
+                <div class="premium-col field">
+                    <label for="role" class="premium-label">System role <span class="required-mark">*</span></label>
+                    <p-dropdown [(ngModel)]="user.role" inputId="role" [options]="roles" placeholder="Select role"
+                        appendTo="body" [class.p-invalid]="submitted && !user.role">
+                    </p-dropdown>
+                </div>
+
+                <div class="premium-col field">
+                    <label class="premium-label">Active status</label>
+                    <div class="status-field-container">
+                        <span class="status-label">{{ user.status }}</span>
+                        <p-inputSwitch [(ngModel)]="user.status" trueValue="Active"
+                            falseValue="Inactive"></p-inputSwitch>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field full-width-field">
+                <label for="permissions" class="premium-label">Permissions</label>
+                <p-multiSelect [options]="availablePermissions" [(ngModel)]="user.permissions"
+                    defaultLabel="Select permissions" display="chip" [filter]="false" [showClear]="true" appendTo="body"
+                    class="premium-multiselect">
+                </p-multiSelect>
+            </div>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveUser()"></button>
+        <div class="flex justify-content-end gap-3 p-4">
+            <button pButton pRipple label="Cancel" class="p-button-outlined p-button-secondary premium-footer-btn"
+                (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" class="premium-footer-btn-save" (click)="saveUser()"></button>
+        </div>
     </ng-template>
 </p-dialog>
 

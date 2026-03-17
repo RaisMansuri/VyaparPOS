@@ -149,6 +149,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'mobile-pos',
+        loadComponent: () =>
+          import('./pages/mobile-pos/mobile-pos.component').then(
+            (m) => m.MobilePosComponent
+          ),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'products',

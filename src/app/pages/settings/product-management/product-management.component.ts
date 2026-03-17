@@ -15,7 +15,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextarea } from 'primeng/inputtextarea';
 @Component({
   selector: 'app-product-management',
   standalone: true,
@@ -33,7 +34,9 @@ import { InputIconModule } from 'primeng/inputicon';
     FloatLabelModule,
     TagModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    DropdownModule,
+    InputTextarea
   ],
   providers: [MessageService],
   templateUrl: './product-management.component.html',
@@ -49,7 +52,7 @@ export class ProductManagementComponent implements OnInit {
   productForm: FormGroup;
   submitted: boolean = false;
   isEditMode: boolean = false;
-
+  categories: any[] = [];
   constructor() {
     this.productForm = this.fb.group({
       id: [null],
@@ -67,6 +70,13 @@ export class ProductManagementComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.categories = [
+      { name: 'Electronics', code: 'ELE' },
+      { name: 'Groceries', code: 'GRO' },
+      { name: 'Clothing', code: 'CLO' },
+      { name: 'Home Appliances', code: 'HAPP' },
+      { name: 'Beverages', code: 'BEV' }
+    ];
     this.loadProducts();
   }
 

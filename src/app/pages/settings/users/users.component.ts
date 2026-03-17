@@ -14,6 +14,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 interface User {
     id: number;
@@ -42,7 +43,8 @@ interface User {
         ToastModule,
         ConfirmDialogModule,
         IconFieldModule,
-        InputIconModule
+        InputIconModule,
+        FloatLabelModule
     ],
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.css']

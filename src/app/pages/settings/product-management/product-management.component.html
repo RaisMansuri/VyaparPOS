@@ -1,32 +1,36 @@
 <div class="product-mgmt-container">
   <p-toast></p-toast>
-  
+
   <div class="page-header">
     <div class="title-group">
       <h1>Inventory Management</h1>
       <p>Add, edit and track your bakery products.</p>
     </div>
-    <button pButton label="Add New Product" icon="pi pi-plus" class="p-button-primary shadow-2" (click)="openNew()"></button>
+    <button pButton label="Add New Product" icon="pi pi-plus" class="p-button-primary shadow-2"
+      (click)="openNew()"></button>
   </div>
 
   <div class="card-modern">
-    <p-table #dt [value]="products" [rows]="10" [paginator]="true" [globalFilterFields]="['name', 'category', 'barcode']"
-      [rowHover]="true" dataKey="id" styleClass="p-datatable-sm modern-table"
+    <p-table #dt [value]="products" [rows]="10" [paginator]="true"
+      [globalFilterFields]="['name', 'category', 'barcode']" [rowHover]="true" dataKey="id"
+      styleClass="p-datatable-sm modern-table"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-      
+
       <ng-template #caption>
-        <div class="flex flex-row justify-content-between align-items-center w-full">
-            <h3 class="m-0">Bakery Inventory</h3>
+        <div class="flex justify-content-between align-items-center w-full">
+          <!-- <h3 class="m-0">Bakery Inventory</h3> -->
+          <div class="flex align-items-center gap-2">
             <div class="search-action-group">
-                <p-iconfield>
-                    <p-inputicon class="pi pi-search"></p-inputicon>
-                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                        placeholder="Search items..." />
-                </p-iconfield>
+              <p-iconfield>
+                <p-inputicon class="pi pi-search"></p-inputicon>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                  placeholder="Search items..." />
+              </p-iconfield>
             </div>
+          </div>
         </div>
       </ng-template>
-      
+
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="name">Product <p-sortIcon field="name"></p-sortIcon></th>
@@ -37,7 +41,7 @@
           <th class="text-center">Actions</th>
         </tr>
       </ng-template>
-      
+
       <ng-template pTemplate="body" let-product>
         <tr>
           <td>
@@ -69,92 +73,95 @@
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="productDialog" [style]="{ width: '600px' }" header="Product Details" [modal]="true"
-    styleClass="p-fluid modern-dialog">
+  <p-dialog [(visible)]="productDialog" [style]="{ maxWidth: '600px' }" [modal]="true"
+    styleClass="p-fluid modern-dialog" [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-3 w-full custom-header-container">
+        <div class="header-icon-box">
+          <i class="pi pi-desktop text-success"></i>
+        </div>
+        <div class="header-text-stack">
+          <span class="dialog-title">Add Product</span>
+          <span class="dialog-subtitle">Fill in the product information below</span>
+        </div>
+      </div>
+      <div class="divider-hr"></div>
+
+    </ng-template>
+
+
     <ng-template pTemplate="content">
-      <form [formGroup]="productForm" class="product-form">
-        <div class="field mb-5">
-          <p-floatlabel>
-            <input type="text" pInputText id="name" formControlName="name" required autofocus />
-            <label for="name">Product Name</label>
-          </p-floatlabel>
-          <small class="p-error" *ngIf="submitted && !productForm.get('name')?.valid">Name is required.</small>
+      <form [formGroup]="productForm" class="premium-form">
+        <!-- Basic Info Section -->
+        <h6 class="section-title">BASIC INFO</h6>
+
+        <div class="field mb-4 full-width-field">
+          <label for="name" class="premium-label">Product name <span class="required-mark">*</span></label>
+          <input type="text" pInputText id="name" formControlName="name" placeholder="e.g. Basmati Rice 1kg"
+            [class.p-invalid]="submitted && productForm.get('name')?.invalid" />
+          <small class="p-error block mt-1" *ngIf="submitted && productForm.get('name')?.errors?.['required']">
+            Product name is required.
+          </small>
         </div>
 
-        <div class="formgrid grid">
-            <div class="field col-12 md:col-6 mb-5">
-              <p-floatlabel>
-                <input type="text" pInputText id="category" formControlName="category" required />
-                <label for="category">Category</label>
-              </p-floatlabel>
-            </div>
-            <div class="field col-12 md:col-6 mb-5">
-              <p-floatlabel>
-                <input type="text" pInputText id="barcode" formControlName="barcode" />
-                <label for="barcode">Barcode</label>
-              </p-floatlabel>
-            </div>
-        </div>
-
-        <div class="field mb-5">
-          <p-floatlabel>
-            <textarea id="description" pInputTextarea formControlName="description" rows="2"></textarea>
-            <label for="description">Description (Optional)</label>
-          </p-floatlabel>
-        </div>
-
-        <div class="formgrid grid">
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <p-inputNumber id="price" formControlName="price" mode="currency" currency="INR" locale="en-IN">
-              </p-inputNumber>
-              <label for="price">Selling Price</label>
-            </p-floatlabel>
+        <div class="premium-grid mb-4 mt-2">
+          <div class="premium-col field">
+            <label for="category" class="premium-label">Category</label>
+            <p-dropdown formControlName="category" [options]="categories" optionLabel="name"
+              placeholder="Select a category" appendTo="body" />
           </div>
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <p-inputNumber id="costPrice" formControlName="costPrice" mode="currency" currency="INR" locale="en-IN">
-              </p-inputNumber>
-              <label for="costPrice">Cost Price</label>
-            </p-floatlabel>
+          <div class="premium-col field">
+            <label for="barcode" class="premium-label">Barcode / SKU</label>
+            <input type="text" pInputText id="barcode" formControlName="barcode" placeholder="Scan or enter" />
           </div>
         </div>
 
-        <div class="formgrid grid">
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <p-inputNumber id="stock" formControlName="stock"></p-inputNumber>
-              <label for="stock">Current Stock</label>
-            </p-floatlabel>
+        <div class="field mb-4 full-width-field">
+          <label for="description" class="premium-label">Description <span
+              class="optional-mark">(optional)</span></label>
+          <textarea id="description" pInputTextarea formControlName="description" rows="4"
+            placeholder="Short product description..." class="premium-textarea"></textarea>
+        </div>
+
+        <div class="divider-hr"></div>
+
+        <!-- Pricing Section -->
+        <h6 class="section-title">PRICING</h6>
+
+        <div class="premium-grid mb-4">
+          <div class="premium-col field">
+            <label for="price" class="premium-label">Selling price <span class="required-mark">*</span></label>
+            <p-inputNumber id="price" formControlName="price" mode="currency" currency="INR" locale="en-IN"
+              placeholder="₹ 0.00" [class.p-invalid]="submitted && productForm.get('price')?.invalid">
+            </p-inputNumber>
           </div>
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <p-inputNumber id="minStockLevel" formControlName="minStockLevel"></p-inputNumber>
-              <label for="minStockLevel">Min Stock Alert</label>
-            </p-floatlabel>
+          <div class="premium-col field">
+            <label for="costPrice" class="premium-label">Cost price</label>
+            <p-inputNumber id="costPrice" formControlName="costPrice" mode="currency" currency="INR" locale="en-IN"
+              placeholder="₹ 0.00">
+            </p-inputNumber>
           </div>
         </div>
 
-        <div class="formgrid grid">
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <p-inputNumber id="gstRate" formControlName="gstRate" suffix="%"></p-inputNumber>
-              <label for="gstRate">GST Rate</label>
-            </p-floatlabel>
+        <div class="premium-grid">
+          <div class="premium-col field">
+            <label for="gstRate" class="premium-label">Tax / GST %</label>
+            <p-inputNumber id="gstRate" formControlName="gstRate" placeholder="0"></p-inputNumber>
           </div>
-          <div class="field col-12 md:col-6 mb-5">
-            <p-floatlabel>
-              <input type="text" pInputText id="imageUrl" formControlName="imageUrl" />
-              <label for="imageUrl">Image URL</label>
-            </p-floatlabel>
+          <div class="premium-col field">
+            <label for="stock" class="premium-label">Opening stock</label>
+            <p-inputNumber id="stock" formControlName="stock" placeholder="0"></p-inputNumber>
           </div>
         </div>
       </form>
     </ng-template>
 
     <ng-template pTemplate="footer">
-      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+      <div class="flex justify-content-end gap-3 p-4">
+        <button pButton pRipple label="Cancel" class="p-button-outlined p-button-secondary premium-footer-btn"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" class="premium-footer-btn-save" (click)="saveProduct()"></button>
+      </div>
     </ng-template>
   </p-dialog>
 </div>

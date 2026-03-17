@@ -30,8 +30,18 @@
                 <!-- Address Type -->
                 <div class="form-row">
                     <label class="form-label">Address Type</label>
-                    <p-selectButton [options]="addressTypes" formControlName="addressType" optionLabel="label"
-                        optionValue="value" />
+                    <div class="address-type-toggle">
+                        <div class="toggle-option" [class.active]="addressForm.get('addressType')?.value === 'home'" 
+                             (click)="addressForm.get('addressType')?.setValue('home')">
+                            <i class="pi pi-home"></i>
+                            <span>Home</span>
+                        </div>
+                        <div class="toggle-option" [class.active]="addressForm.get('addressType')?.value === 'office'" 
+                             (click)="addressForm.get('addressType')?.setValue('office')">
+                            <i class="pi pi-building"></i>
+                            <span>Office</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Full Name -->

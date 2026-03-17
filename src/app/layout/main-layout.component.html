@@ -18,6 +18,9 @@
       <a (click)="navigate('/dashboard')" routerLinkActive="active" class="nav-item">
         <i class="pi pi-home"></i> {{ translationService.translate('DASHBOARD') }}
       </a>
+      <a (click)="navigate('/mobile-pos')" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-camera"></i> Mobile POS
+      </a>
       <a (click)="navigate('/customers')" routerLinkActive="active" class="nav-item">
         <i class="pi pi-users"></i> {{ translationService.translate('CUSTOMERS') }}
       </a>
@@ -83,10 +86,12 @@
           <div class="toolbar-separator"></div>
 
           <!-- Notification Button -->
-          <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text notification-btn"
-            (click)="op.toggle($event)">
-            <p-badge *ngIf="lowStockItems.length > 0" [value]="lowStockItems.length" severity="danger"></p-badge>
-          </button>
+          <div class="badge-wrapper" (click)="op.toggle($event)">
+            <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text"></button>
+            @if (lowStockItems.length > 0) {
+              <span class="badge-count">{{ lowStockItems.length }}</span>
+            }
+          </div>
 
           <!-- Notification Overlay -->
           <p-overlayPanel #op>
@@ -107,11 +112,11 @@
             </div>
           </p-overlayPanel>
 
-          <div class="cart-wrapper" (click)="navigate('/cart')">
+          <div class="badge-wrapper" (click)="navigate('/cart')">
             <button pButton type="button" icon="pi pi-shopping-cart"
-              class="p-button-rounded p-button-text cart-toolbar-btn"></button>
+              class="p-button-rounded p-button-text"></button>
             @if (cartService.cartCount() > 0) {
-            <span class="cart-badge">{{ cartService.cartCount() }}</span>
+              <span class="badge-count">{{ cartService.cartCount() }}</span>
             }
           </div>
 
