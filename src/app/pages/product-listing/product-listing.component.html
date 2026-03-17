@@ -55,12 +55,12 @@
             @for (product of group.value; track product.id) {
               <div class="glass-card product-card" [class.low-stock]="product.stock <= product.minStockLevel">
                 <div class="card-image">
+                  <div class="stock-badge" [class.low-stock]="getAvailableStock(product) <= product.minStockLevel" [class.out-of-stock]="getAvailableStock(product) <= 0">
+                     {{ getAvailableStock(product) }} left
+                  </div>
                   <img [src]="product.imageUrl" [alt]="product.name" />
                   @if (product.discount) {
                     <div class="discount-tag">{{ product.discount.value }}% OFF</div>
-                  }
-                  @if (product.stock <= product.minStockLevel) {
-                    <div class="stock-tag">{{ product.stock === 0 ? 'Out of Stock' : 'Low Stock' }}</div>
                   }
                 </div>
                 
@@ -79,18 +79,18 @@
                     </div>
                     
                     <div class="card-actions">
-                      @if (product.quantity > 0) {
-                        <div class="qty-selector">
-                          <button (click)="decreaseQuantity(product)"><i class="pi pi-minus"></i></button>
-                          <span>{{ product.quantity }}</span>
-                          <button (click)="increaseQuantity(product)" [disabled]="product.stock <= product.quantity"><i class="pi pi-plus"></i></button>
+                      @if (getCartQuantity(product.id) > 0) {
+                        <div class="quantity-stepper">
+                          <button class="stepper-btn" (click)="decrementQuantity(product.id, $event)"><i class="pi pi-minus"></i></button>
+                          <span class="stepper-value">{{ getCartQuantity(product.id) }}</span>
+                          <button class="stepper-btn" (click)="addToCart(product, $event)" [disabled]="getAvailableStock(product) <= 0"><i class="pi pi-plus"></i></button>
                         </div>
                       } @else {
-                        <button pButton [icon]="addedProductId === product.id ? 'pi pi-check' : 'pi pi-shopping-cart'" 
-                                [label]="addedProductId === product.id ? 'Added' : 'Add'" 
-                                [class]="addedProductId === product.id ? 'p-button-sm p-button-rounded p-button-success' : 'p-button-sm p-button-rounded shadow-1'"
-                                [disabled]="product.stock === 0"
-                                (click)="addToCart(product)"></button>
+                        <button pButton icon="pi pi-plus" 
+                                label="Add" 
+                                class="p-button-sm p-button-rounded shadow-1 p-button-outlined"
+                                [disabled]="getAvailableStock(product) <= 0"
+                                (click)="addToCart(product, $event)"></button>
                       }
                     </div>
                   </div>

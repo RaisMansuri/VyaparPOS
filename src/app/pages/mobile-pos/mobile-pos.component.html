@@ -71,17 +71,34 @@
 
     <div class="quick-add-grid">
       @for (product of quickAddProducts; track product.id) {
-        <div class="quick-card ripple" (click)="addToCart(product)" [class.in-cart]="isInCart(product.id)">
-          @if (getCartQuantity(product.id) > 0) {
-              <div class="item-qty-badge">{{ getCartQuantity(product.id) }}</div>
-          }
+        <div class="quick-card ripple" (click)="addToCart(product, $event)" [class.in-cart]="isInCart(product.id)">
+          
+          <div class="stock-badge" [class.low-stock]="getAvailableStock(product) <= product.minStockLevel" [class.out-of-stock]="getAvailableStock(product) <= 0">
+             {{ getAvailableStock(product) }} left
+          </div>
+
           <div class="quick-icon">
             <img [src]="product.imageUrl" [alt]="product.name" />
           </div>
           <span class="quick-name">{{ product.name }}</span>
           <div class="price-row">
             <span class="quick-price">{{ (product.discount ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
-            <button class="add-btn"><i class="pi pi-plus"></i></button>
+            
+            @if (getCartQuantity(product.id) === 0) {
+                <button class="add-btn modern-add" (click)="addToCart(product, $event)" [disabled]="getAvailableStock(product) <= 0">
+                    <i class="pi pi-plus"></i> <span class="add-txt">Add</span>
+                </button>
+            } @else {
+                <div class="quantity-stepper" (click)="$event.stopPropagation()">
+                    <button class="stepper-btn" (click)="decrementQuantity(product.id, $event)">
+                        <i class="pi pi-minus"></i>
+                    </button>
+                    <span class="stepper-value">{{ getCartQuantity(product.id) }}</span>
+                    <button class="stepper-btn" (click)="addToCart(product, $event)" [disabled]="getAvailableStock(product) <= 0">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                </div>
+            }
           </div>
         </div>
       }

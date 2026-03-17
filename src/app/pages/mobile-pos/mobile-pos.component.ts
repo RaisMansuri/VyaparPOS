@@ -100,8 +100,29 @@ export class MobilePosComponent implements OnInit {
     this.hasPermission = hasPermission;
   }
 
-  addToCart(product: Product): void {
-    this.cartService.addToCart(product, 1);
+  addToCart(product: Product, event?: Event): void {
+    if (event) {
+        event.stopPropagation();
+    }
+    // Check stock limit before adding
+    if (this.getAvailableStock(product) > 0) {
+        this.cartService.addToCart(product, 1);
+    } else {
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Out of Stock',
+            detail: `Cannot add more ${product.name}. Stock limit reached.`,
+            life: 2000
+        });
+    }
+  }
+
+  decrementQuantity(productId: number, event: Event): void {
+      event.stopPropagation();
+      const currentQty = this.getCartQuantity(productId);
+      if (currentQty > 0) {
+          this.cartService.updateQuantity(productId, currentQty - 1);
+      }
   }
 
   goToCheckout(): void {
@@ -150,5 +171,9 @@ export class MobilePosComponent implements OnInit {
   getCartQuantity(productId: number): number {
       const item = this.cartService.items().find(i => i.product.id === productId);
       return item ? item.quantity : 0;
+  }
+
+  getAvailableStock(product: Product): number {
+      return product.stock - this.getCartQuantity(product.id);
   }
 }

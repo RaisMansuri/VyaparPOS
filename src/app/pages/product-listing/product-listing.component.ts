@@ -47,7 +47,6 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private messageService = inject(MessageService);
-  addedProductId: number | null = null;
 
   allProducts: Product[] = [];
   products: Product[] = [];
@@ -302,28 +301,39 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
     this.scrollIntervals = [];
   }
 
-  increaseQuantity(product: Product): void {
-    product.quantity++;
-  }
-
-  decreaseQuantity(product: Product): void {
-    if (product.quantity > 0) {
-      product.quantity--;
+  addToCart(product: Product, event?: Event): void {
+    if (event) {
+        event.stopPropagation();
+    }
+    if (this.getAvailableStock(product) > 0) {
+        this.cartService.addToCart(product, 1);
+    } else {
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Out of Stock',
+            detail: `Cannot add more ${product.name}. Stock limit reached.`,
+            life: 2000
+        });
     }
   }
 
-  addToCart(product: Product): void {
-    if (product.quantity <= 0) {
-      product.quantity = 1;
-    }
-    this.cartService.addToCart(product, product.quantity);
-    this.addedProductId = product.id;
-    product.quantity = 0;
-    setTimeout(() => {
-      if (this.addedProductId === product.id) {
-        this.addedProductId = null;
+  decrementQuantity(productId: number, event?: Event): void {
+      if (event) {
+          event.stopPropagation();
       }
-    }, 1500);
+      const currentQty = this.getCartQuantity(productId);
+      if (currentQty > 0) {
+          this.cartService.updateQuantity(productId, currentQty - 1);
+      }
+  }
+
+  getCartQuantity(productId: number): number {
+      const item = this.cartService.items().find(i => i.product.id === productId);
+      return item ? item.quantity : 0;
+  }
+
+  getAvailableStock(product: Product): number {
+      return product.stock - this.getCartQuantity(product.id);
   }
 
   getDiscountedPrice(product: Product): number {
