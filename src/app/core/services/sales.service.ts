@@ -43,24 +43,42 @@ export class SalesService {
     });
   }
 
-  getDailySalesReport(): Observable<any[]> {
+  getDailySalesReport(category?: any, productId?: any): Observable<any[]> {
     const today = new Date();
     const reports = [];
     
+    // Simulating filtered data
+    const multiplier = (category || productId) ? 0.4 : 1;
+
     for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      
-      reports.push({
-        date: date,
-        orders: Math.floor(Math.random() * 50) + 20,
-        revenue: Math.floor(Math.random() * 20000) + 10000,
-        taxable: Math.floor(Math.random() * 15000) + 8000,
-        gst: Math.floor(Math.random() * 3000) + 1000,
-        profit: Math.floor(Math.random() * 5000) + 2000
-      });
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        
+        reports.push({
+            date: date,
+            orders: Math.floor((Math.random() * 50 + 20) * multiplier),
+            revenue: Math.floor((Math.random() * 20000 + 10000) * multiplier),
+            taxable: Math.floor((Math.random() * 15000 + 8000) * multiplier),
+            gst: Math.floor((Math.random() * 3000 + 1000) * multiplier),
+            profit: Math.floor((Math.random() * 5000 + 2000) * multiplier)
+        });
     }
     
     return of(reports);
+  }
+
+  getProducts(): Observable<any[]> {
+    return of([
+        { id: 1, name: 'Fresh White Bread', category: 'Breads' },
+        { id: 2, name: 'Whole Wheat Bread', category: 'Breads' },
+        { id: 3, name: 'French Baguette', category: 'Breads' },
+        { id: 6, name: 'Chocolate Cake', category: 'Cakes' },
+        { id: 7, name: 'Vanilla Sponge Cake', category: 'Cakes' },
+        { id: 11, name: 'Butter Croissant', category: 'Pastries' }
+    ]);
+  }
+
+  getCategories(): Observable<string[]> {
+      return of(['Breads', 'Cakes', 'Pastries', 'Cookies', 'Drinks']);
   }
 }

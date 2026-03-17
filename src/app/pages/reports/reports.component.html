@@ -1,72 +1,197 @@
 <div class="reports-page">
-  <div class="header">
-    <h2>Sales Reports & Analytics</h2>
-  </div>
 
-  <div class="grid">
-    <div class="col-12 lg:col-8">
-      <p-card header="Weekly Revenue">
-        <p-chart type="line" [data]="lineData" [options]="chartOptions"></p-chart>
-      </p-card>
-    </div>
-    <div class="col-12 lg:col-4">
-      <p-card header="Sales by Category">
-        <p-chart type="pie" [data]="pieData"></p-chart>
-      </p-card>
-    </div>
-  </div>
+  <!-- ===== DARK DASHBOARD HEADER ===== -->
+  <div class="dashboard-header">
+    <div class="header-content">
 
-  <div class="grid mt-4">
-    <div class="col-12">
-      <p-card header="Daily Sales Report">
-        <p-table [value]="dailyReports" [rows]="10" [paginator]="true" responsiveLayout="scroll">
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Date</th>
-              <th class="text-right">Orders</th>
-              <th class="text-right">Taxable Value</th>
-              <th class="text-right">GST Collected</th>
-              <th class="text-right">Total Revenue</th>
-              <th class="text-right">Profit</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-report>
-            <tr>
-              <td>{{ report.date | date:'mediumDate' }}</td>
-              <td class="text-right">{{ report.orders }}</td>
-              <td class="text-right">{{ report.taxable | currency:'INR' }}</td>
-              <td class="text-right">{{ report.gst | currency:'INR' }}</td>
-              <td class="text-right"><strong>{{ report.revenue | currency:'INR' }}</strong></td>
-              <td class="text-right"><span class="text-success">{{ report.profit | currency:'INR' }}</span></td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-card>
+      <!-- Filter Trigger Button -->
+      <div class="header-filters">
+        <button type="button" pButton pRipple
+                class="filter-btn"
+                [class.filter-btn-active]="selectedCategory || selectedProduct"
+                (click)="filterDrawerVisible = true">
+          <i class="pi pi-filter"></i>
+          <span>Filter</span>
+          <span *ngIf="selectedCategory || selectedProduct" class="filter-count">
+            {{ (selectedCategory ? 1 : 0) + (selectedProduct ? 1 : 0) }}
+          </span>
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <button pButton pRipple icon="pi pi-refresh" class="header-btn header-btn-icon" (click)="loadData()" pTooltip="Refresh"></button>
+        <button pButton pRipple icon="pi pi-file-pdf" class="header-btn header-btn-icon" (click)="exportToPDF()" pTooltip="Export PDF"></button>
+        <button pButton pRipple icon="pi pi-download" label="Export" class="header-btn header-btn-primary" (click)="exportToExcel()"></button>
+      </div>
     </div>
   </div>
 
-  <div class="grid mt-4">
-    <div class="col-12">
-      <p-card header="Performance Summary">
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="label">Total Revenue</span>
-            <span class="value">₹1,28,000</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">Total Orders</span>
-            <span class="value">490</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">Average Order Value</span>
-            <span class="value">₹261</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">Top Category</span>
-            <span class="value">Breads</span>
-          </div>
+  <!-- ===== FILTER DRAWER SIDEBAR ===== -->
+  <p-sidebar [(visible)]="filterDrawerVisible" position="right" styleClass="filter-drawer" [modal]="true">
+    <ng-template pTemplate="header">
+      <div class="drawer-header">
+        <i class="pi pi-filter drawer-header-icon"></i>
+        <span>Filter Reports</span>
+      </div>
+    </ng-template>
+
+    <div class="drawer-body">
+      <div class="drawer-field">
+        <label>Period</label>
+        <p-dropdown
+          [options]="[{label:'This Week', value:'week'},{label:'This Month', value:'month'},{label:'This Year', value:'year'}]"
+          [(ngModel)]="currentPeriod" styleClass="w-full drawer-dd" placeholder="Select Period">
+        </p-dropdown>
+      </div>
+
+      <div class="drawer-field">
+        <label>Category</label>
+        <p-dropdown [options]="categories" [(ngModel)]="selectedCategory"
+                    (onChange)="onCategoryChange()" placeholder="All Categories"
+                    styleClass="w-full drawer-dd">
+        </p-dropdown>
+      </div>
+
+      <div class="drawer-field">
+        <label>Product</label>
+        <p-dropdown [options]="filteredProducts" [(ngModel)]="selectedProduct"
+                    (onChange)="onProductChange()" placeholder="All Products"
+                    styleClass="w-full drawer-dd" [disabled]="!filteredProducts.length">
+        </p-dropdown>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="drawer-footer">
+        <button pButton label="Reset Filters" icon="pi pi-times"
+                class="p-button-outlined p-button-secondary w-full"
+                (click)="selectedCategory=null; selectedProduct=null; loadData()">
+        </button>
+        <button pButton label="Apply Filters" icon="pi pi-check"
+                class="p-button w-full mt-2"
+                (click)="filterDrawerVisible = false; loadData()">
+        </button>
+      </div>
+    </ng-template>
+  </p-sidebar>
+
+  <!-- ===== METRIC CARDS ===== -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon revenue-bg"><i class="pi pi-dollar"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Total Revenue</span>
+        <div class="metric-value">{{ summaryStats.totalRevenue | currency:'INR':'symbol':'1.0-0' }}</div>
+        <div class="metric-trend positive">
+          <i class="pi pi-arrow-up"></i> {{ summaryStats.revenueTrend }} <span>vs last week</span>
         </div>
-      </p-card>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon orders-bg"><i class="pi pi-shopping-cart"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Total Orders</span>
+        <div class="metric-value">{{ summaryStats.totalOrders }}</div>
+        <div class="metric-trend positive">
+          <i class="pi pi-arrow-up"></i> {{ summaryStats.ordersTrend }} <span>vs last week</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon avg-bg"><i class="pi pi-chart-line"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Avg Order Value</span>
+        <div class="metric-value">{{ summaryStats.avgOrderValue | currency:'INR':'symbol':'1.0-0' }}</div>
+        <div class="metric-trend negative">
+          <i class="pi pi-arrow-down"></i> {{ summaryStats.avgTrend }} <span>vs last week</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon filter-bg"><i class="pi pi-tag"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Active Filter</span>
+        <div class="metric-value">{{ summaryStats.topCategory }}</div>
+        <div class="metric-trend neutral"><span>Category filter on</span></div>
+      </div>
     </div>
   </div>
+
+  <!-- ===== CHARTS ROW ===== -->
+  <div class="charts-row">
+    <!-- Line Chart -->
+    <div class="chart-card chart-wide">
+      <div class="chart-header">
+        <h3>Weekly Revenue</h3>
+        <p-selectButton
+          [options]="[{label:'Week', value:'week'}, {label:'Month', value:'month'}, {label:'Year', value:'year'}]"
+          [(ngModel)]="currentPeriod" styleClass="period-toggle">
+        </p-selectButton>
+      </div>
+      <div class="chart-body">
+        <p-chart type="line" [data]="lineData" [options]="chartOptions"></p-chart>
+      </div>
+    </div>
+
+    <!-- Doughnut Chart -->
+    <div class="chart-card chart-narrow">
+      <div class="chart-header">
+        <h3>Sales by Category</h3>
+      </div>
+      <div class="chart-body doughnut-wrapper">
+        <p-chart type="doughnut" [data]="pieData" [options]="doughnutOptions"></p-chart>
+        <div class="doughnut-center">
+          <span class="dc-label">Total</span>
+          <span class="dc-value">{{ summaryStats.totalOrders }}</span>
+          <span class="dc-sub">orders</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DAILY SALES TABLE ===== -->
+  <div class="table-card">
+    <div class="table-header">
+      <h3>Daily Sales Report</h3>
+      <div class="table-actions">
+        <button pButton icon="pi pi-filter" label="Filter"
+          class="p-button-outlined p-button-secondary table-action-btn"></button>
+        <button pButton icon="pi pi-upload" label="Export" class="p-button-outlined p-button-secondary table-action-btn"
+          (click)="exportToExcel()"></button>
+      </div>
+    </div>
+
+    <p-table [value]="dailyReports" [rows]="7" [paginator]="true" responsiveLayout="scroll" styleClass="reports-table"
+      [showCurrentPageReport]="false">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="date">DATE <p-sortIcon field="date"></p-sortIcon></th>
+          <th pSortableColumn="orders" class="col-center">ORDERS <p-sortIcon field="orders"></p-sortIcon></th>
+          <!-- Hidden on mobile -->
+          <th pSortableColumn="taxable" class="col-right col-desktop">TAXABLE VALUE <p-sortIcon
+              field="taxable"></p-sortIcon></th>
+          <th pSortableColumn="gst" class="col-right col-desktop">GST COLLECTED <p-sortIcon field="gst"></p-sortIcon>
+          </th>
+          <th pSortableColumn="revenue" class="col-right">TOTAL REVENUE <p-sortIcon field="revenue"></p-sortIcon></th>
+          <th pSortableColumn="profit" class="col-right">PROFIT <p-sortIcon field="profit"></p-sortIcon></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-report>
+        <tr>
+          <td class="col-date">{{ report.date | date:'mediumDate' }}</td>
+          <td class="col-center">{{ report.orders }}</td>
+          <!-- Hidden on mobile -->
+          <td class="col-right col-desktop">{{ report.taxable | currency:'INR':'symbol':'1.0-0' }}</td>
+          <td class="col-right col-desktop">{{ report.gst | currency:'INR':'symbol':'1.0-0' }}</td>
+          <td class="col-right col-bold">{{ report.revenue | currency:'INR':'symbol':'1.0-0' }}</td>
+          <td class="col-right"><span class="profit-badge">{{ report.profit | currency:'INR':'symbol':'1.0-0' }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
 </div>
