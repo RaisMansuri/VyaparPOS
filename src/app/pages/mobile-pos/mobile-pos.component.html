@@ -5,15 +5,22 @@
   <div class="scanner-section">
     <div class="scanner-header">
       <div class="scanner-title">
-        <i class="pi pi-camera"></i>
-        <span>Scan Barcode</span>
+        <div class="icon-box">
+            <i class="pi pi-qrcode"></i>
+        </div>
+        <div class="title-stack">
+            <span>Scan Barcode</span>
+            <small>Point camera at product</small>
+        </div>
       </div>
-      <button pButton icon="pi pi-refresh" class="p-button-text p-button-rounded" 
-              (click)="scannerEnabled = !scannerEnabled" 
-              [label]="scannerEnabled ? 'Pause' : 'Resume'"></button>
+      <button class="pause-badge" (click)="scannerEnabled = !scannerEnabled">
+        <span class="status-dot" [class.paused]="!scannerEnabled"></span>
+        {{ scannerEnabled ? 'Pause' : 'Resume' }}
+      </button>
     </div>
 
-    <div class="scanner-viewport">
+    <!-- Scanner functionality visually hidden to match the single card design, but active if needed, or we just represent it via the card -->
+     <div class="scanner-viewport-hidden" style="display: none;">
       @if (scannerEnabled) {
         <zxing-scanner
           [formats]="allowedFormats"
@@ -21,39 +28,29 @@
           (hasDevices)="onHasDevices($event)"
           (permissionResponse)="onPermissionResponse($event)">
         </zxing-scanner>
-      } @else {
-        <div class="scanner-paused">
-          <i class="pi pi-pause"></i>
-          <p>Scanner Paused</p>
-        </div>
       }
-      
-      @if (!hasDevices) {
-        <div class="scanner-overlay danger">
-          <i class="pi pi-exclamation-triangle"></i>
-          <p>No camera found</p>
-        </div>
-      } @else if (!hasPermission) {
-        <div class="scanner-overlay info">
-          <i class="pi pi-lock"></i>
-          <p>Camera permission required</p>
-        </div>
-      }
-
-      <div class="scanner-guide"></div>
     </div>
   </div>
 
   <!-- Search & Quick Add Section -->
   <div class="actions-section">
-    <div class="search-box glass-card">
+    <div class="search-box">
       <i class="pi pi-search"></i>
-      <input type="text" pInputText [(ngModel)]="searchQuery" 
+      <input type="text" [(ngModel)]="searchQuery" 
              placeholder="Search by name or category..." />
     </div>
 
+    <!-- Category Chips -->
+    <div class="category-chips">
+      @for (cat of categories; track cat) {
+          <button class="chip-btn" [class.active]="selectedCategory === cat" (click)="selectCategory(cat)">
+              {{ cat }}
+          </button>
+      }
+    </div>
+
     @if (filteredProducts.length > 0) {
-      <div class="search-results glass-card animate-slide-up">
+      <div class="search-results animate-slide-up">
         @for (product of filteredProducts; track product.id) {
           <div class="result-item" (click)="addToCart(product); searchQuery = ''">
             <span class="item-name">{{ product.name }}</span>
@@ -65,38 +62,46 @@
     }
 
     <div class="section-title">
-      <i class="pi pi-bolt"></i>
-      <span>Quick Add Items</span>
+      <div class="title-with-icon">
+        <span class="lightning-icon">⚡</span>
+        <span>Quick Add Items</span>
+      </div>
+      <a class="see-all-link">See all</a>
     </div>
 
     <div class="quick-add-grid">
       @for (product of quickAddProducts; track product.id) {
-        <div class="quick-card glass-card ripple" (click)="addToCart(product)">
+        <div class="quick-card ripple" (click)="addToCart(product)" [class.in-cart]="isInCart(product.id)">
+          @if (getCartQuantity(product.id) > 0) {
+              <div class="item-qty-badge">{{ getCartQuantity(product.id) }}</div>
+          }
           <div class="quick-icon">
             <img [src]="product.imageUrl" [alt]="product.name" />
           </div>
           <span class="quick-name">{{ product.name }}</span>
-          <span class="quick-price">{{ (product.discount ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
+          <div class="price-row">
+            <span class="quick-price">{{ (product.discount ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
+            <button class="add-btn"><i class="pi pi-plus"></i></button>
+          </div>
         </div>
       }
     </div>
   </div>
 
-  <!-- Bottom Cart Status (Simplified for Mobile) -->
+  <!-- Bottom Cart Status -->
   <div class="bottom-action-bar animate-slide-up">
-    <div class="cart-summary">
-      <div class="cart-icon">
-        <i class="pi pi-shopping-cart"></i>
-        @if (cartService.cartCount() > 0) {
-          <span class="cart-badge">{{ cartService.cartCount() }}</span>
-        }
-      </div>
-      <div class="total-info">
+    <div class="cart-icon-btn">
+      <i class="pi pi-shopping-cart"></i>
+    </div>
+    
+    <div class="total-info">
         <span class="label">Balance Total</span>
         <span class="value">{{ cartService.cartTotal() | currency:'INR' }}</span>
-      </div>
     </div>
-    <button pButton label="Checkout" class="p-button-primary p-button-rounded checkout-btn" 
-            [disabled]="cartService.cartCount() === 0" (click)="goToCheckout()"></button>
+    
+    <button class="checkout-modern-btn" 
+            [disabled]="cartService.cartCount() === 0" (click)="goToCheckout()">
+            Checkout
+    </button>
   </div>
 </div>

@@ -54,6 +54,9 @@ export class MobilePosComponent implements OnInit {
   allProducts: Product[] = [];
   quickAddProducts: Product[] = [];
   lastScannedProduct: Product | null = null;
+  
+  categories = ['All', 'Breads', 'Cakes', 'Pastries', 'Drinks'];
+  selectedCategory = 'All';
 
   ngOnInit(): void {
     this.productService.getProductsByCategory('all').subscribe(products => {
@@ -106,12 +109,30 @@ export class MobilePosComponent implements OnInit {
   }
 
   get filteredProducts(): Product[] {
-    if (!this.searchQuery.trim()) return [];
-    const query = this.searchQuery.toLowerCase().trim();
-    return this.allProducts.filter(p => 
-      p.name.toLowerCase().includes(query) || 
-      p.category.toLowerCase().includes(query)
-    ).slice(0, 5);
+    let filtered = this.allProducts;
+    
+    if (this.selectedCategory !== 'All') {
+        filtered = filtered.filter(p => p.category.toLowerCase().includes(this.selectedCategory.toLowerCase()));
+    }
+
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      return filtered.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query)
+      ).slice(0, 5);
+    }
+    
+    return [];
+  }
+  
+  selectCategory(category: string): void {
+      this.selectedCategory = category;
+      if(category === 'All') {
+          this.quickAddProducts = this.allProducts.slice(0, 6);
+      } else {
+          this.quickAddProducts = this.allProducts.filter(p => p.category.toLowerCase().includes(category.toLowerCase())).slice(0,6);
+      }
   }
 
   getDiscountedPrice(product: Product): number {
@@ -120,5 +141,14 @@ export class MobilePosComponent implements OnInit {
       return product.price - discountAmount;
     }
     return product.price;
+  }
+
+  isInCart(productId: number): boolean {
+    return this.cartService.items().some(item => item.product.id === productId);
+  }
+
+  getCartQuantity(productId: number): number {
+      const item = this.cartService.items().find(i => i.product.id === productId);
+      return item ? item.quantity : 0;
   }
 }
