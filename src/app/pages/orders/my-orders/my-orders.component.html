@@ -49,9 +49,14 @@
                         <span class="total-label">Total</span>
                         <span class="total-value">{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
                     </div>
-                    <button pButton label="View Details" icon="pi pi-arrow-right" iconPos="right"
-                        class="p-button-outlined p-button-rounded p-button-sm view-btn"
-                        (click)="viewOrder(order); $event.stopPropagation()"></button>
+                    <div class="flex gap-2">
+                        <button *ngIf="isManager" pButton label="Cancel" icon="pi pi-times"
+                            class="p-button-outlined p-button-danger p-button-rounded p-button-sm flex-1"
+                            (click)="cancelOrder(order, $event)"></button>
+                        <button pButton label="View" icon="pi pi-arrow-right" iconPos="right"
+                            class="p-button-outlined p-button-rounded p-button-sm view-btn flex-1"
+                            (click)="viewOrder(order); $event.stopPropagation()"></button>
+                    </div>
                 </div>
             </div>
         </div>

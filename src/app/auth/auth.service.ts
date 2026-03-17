@@ -69,6 +69,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  hasRole(role: string): boolean {
+    const user = this.getCurrentUser();
+    return user?.role?.toLowerCase() === role.toLowerCase();
+  }
+
+  isManager(): boolean {
+    return this.hasRole('manager');
+  }
+
+  isCashier(): boolean {
+    return this.hasRole('cashier');
+  }
+
   login(credentials: { email: string; password: string }): Observable<any> {
     this.loader.show();
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(

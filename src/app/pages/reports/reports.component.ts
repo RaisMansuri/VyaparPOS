@@ -11,6 +11,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { RippleModule } from 'primeng/ripple';
 import { SidebarModule } from 'primeng/sidebar';
 import { SalesService } from '../../core/services/sales.service';
+import { AuthService } from '../../auth/auth.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -36,6 +37,9 @@ import * as XLSX from 'xlsx';
 })
 export class ReportsComponent implements OnInit {
   private salesService = inject(SalesService);
+  private auth = inject(AuthService);
+
+  isManager = this.auth.isManager();
 
   lineData: any;
   pieData: any;

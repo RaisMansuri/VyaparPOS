@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { OrderService } from '../../../core/services/order.service';
+import { AuthService } from '../../../auth/auth.service';
 import { Order } from '../../../models/order.model';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -18,10 +19,19 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 export class MyOrdersComponent {
     orderService = inject(OrderService);
+    private auth = inject(AuthService);
     private router = inject(Router);
+
+    isManager = this.auth.isManager();
 
     viewOrder(order: Order): void {
         this.router.navigate(['/orders', order.id]);
+    }
+
+    cancelOrder(order: Order, event: Event): void {
+        event.stopPropagation();
+        // Logically we would call orderService.deleteOrder(order.id) here
+        console.log('Order cancelled:', order.id);
     }
 
     continueShopping(): void {

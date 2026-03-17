@@ -176,7 +176,7 @@
           <th pSortableColumn="gst" class="col-right col-desktop">GST COLLECTED <p-sortIcon field="gst"></p-sortIcon>
           </th>
           <th pSortableColumn="revenue" class="col-right">TOTAL REVENUE <p-sortIcon field="revenue"></p-sortIcon></th>
-          <th pSortableColumn="profit" class="col-right">PROFIT <p-sortIcon field="profit"></p-sortIcon></th>
+          <th pSortableColumn="profit" class="col-right" *ngIf="isManager">PROFIT <p-sortIcon field="profit"></p-sortIcon></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-report>
@@ -187,7 +187,8 @@
           <td class="col-right col-desktop">{{ report.taxable | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="col-right col-desktop">{{ report.gst | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="col-right col-bold">{{ report.revenue | currency:'INR':'symbol':'1.0-0' }}</td>
-          <td class="col-right"><span class="profit-badge">{{ report.profit | currency:'INR':'symbol':'1.0-0' }}</span>
+          <td class="col-right" *ngIf="isManager">
+            <span class="profit-badge">{{ report.profit | currency:'INR':'symbol':'1.0-0' }}</span>
           </td>
         </tr>
       </ng-template>
