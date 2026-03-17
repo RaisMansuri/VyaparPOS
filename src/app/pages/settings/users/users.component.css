@@ -239,7 +239,8 @@
     width: 100%;
 }
 
-::ng-deep .p-paginator .p-select {
+::ng-deep .p-paginator .p-select,
+::ng-deep .p-paginator .p-dropdown {
     width: auto !important;
 }
 

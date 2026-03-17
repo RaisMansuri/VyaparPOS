@@ -183,6 +183,11 @@
   flex: 1;
 }
 
+.premium-col p-iconfield {
+  display: block;
+  width: 100%;
+}
+
 .full-width-field {
   width: 100% !important;
   margin-top: 11px;
@@ -308,7 +313,8 @@
   width: 100%;
 }
 
-:host ::ng-deep .p-paginator .p-select {
+:host ::ng-deep .p-paginator .p-select,
+:host ::ng-deep .p-paginator .p-dropdown {
     width: auto !important;
 }
 
