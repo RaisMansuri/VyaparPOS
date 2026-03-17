@@ -60,6 +60,12 @@
       <a (click)="navigate('/settings/users')" routerLinkActive="active" class="nav-item">
         <i class="pi pi-users"></i> Users
       </a>
+      
+      <!-- Mobile Only Logout -->
+      <div class="nav-section-title mobile-only-item">Security</div>
+      <a (click)="logout()" class="nav-item mobile-only-item text-danger">
+        <i class="pi pi-power-off"></i> Logout
+      </a>
     </nav>
     <!-- <div class="sidebar-footer">
       <button pButton type="button" label="Logout" class="p-button-text logout-btn" (click)="logout()"></button>
@@ -73,7 +79,7 @@
         <div class="toolbar-left">
           <button pButton type="button" icon="pi pi-bars" class="p-button-text p-button-plain menu-button"
             (click)="toggleSidebar()"></button>
-          <span class="toolbar-title">VyaparPOS</span>
+          <span class="toolbar-title">{{ pageTitle }}</span>
         </div>
       </ng-template>
 

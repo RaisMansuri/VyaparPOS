@@ -17,10 +17,6 @@
     <div class="header-actions">
       <button pButton icon="pi pi-filter" [label]="'Filters (' + activeFilterCount + ')'" 
               class="p-button-outlined p-button-secondary" (click)="showFilterPanel = !showFilterPanel"></button>
-      <div class="view-toggle">
-        <button pButton icon="pi pi-th-large" class="p-button-text" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'"></button>
-        <button pButton icon="pi pi-list" class="p-button-text" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'"></button>
-      </div>
     </div>
   </div>
 

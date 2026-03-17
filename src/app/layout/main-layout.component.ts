@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -41,6 +42,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   categories: string[] = [];
   profileMenuItems: MenuItem[] | undefined;
   lowStockItems: any[] = [];
+  pageTitle = 'Dashboard';
   private checkInterval: any;
 
   languages = [
@@ -50,6 +52,15 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   selectedLang = 'en';
 
   ngOnInit() {
+    // Listen to route changes to update page title
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.updatePageTitle(event.urlAfterRedirects);
+    });
+    // Set initial title
+    this.updatePageTitle(this.router.url);
+
     this.productService.getCategories().subscribe(cats => {
       this.categories = cats;
     });
@@ -114,6 +125,26 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  updatePageTitle(url: string): void {
+    if (url.includes('/dashboard')) this.pageTitle = this.translationService.translate('DASHBOARD') || 'Dashboard';
+    else if (url.includes('/mobile-pos')) this.pageTitle = 'Mobile POS';
+    else if (url.includes('/customers')) this.pageTitle = this.translationService.translate('CUSTOMERS') || 'Customers';
+    else if (url.includes('/reports')) this.pageTitle = this.translationService.translate('REPORTS') || 'Reports';
+    else if (url.includes('/support')) this.pageTitle = 'Customer Support';
+    else if (url.includes('/products')) this.pageTitle = this.translationService.translate('PRODUCTS') || 'Products';
+    else if (url.includes('/category/')) {
+        const cat = url.split('/').pop();
+        // Capitalize first letter
+        this.pageTitle = cat ? cat.charAt(0).toUpperCase() + cat.slice(1) : 'Category';
+    }
+    else if (url.includes('/cart')) this.pageTitle = 'Cart';
+    else if (url.includes('/orders')) this.pageTitle = 'My Orders';
+    else if (url.includes('/profile')) this.pageTitle = 'My Profile';
+    else if (url.includes('/settings/products')) this.pageTitle = 'Product Settings';
+    else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';
+    else this.pageTitle = 'VyaparPOS';
   }
 }
 

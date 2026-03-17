@@ -1,17 +1,30 @@
 <p-toast></p-toast>
 
-<div class="mobile-pos-container animate-fade-in">
-  <!-- Scanner Section -->
-  <div class="scanner-section">
-    <div class="scanner-header">
-      <div class="scanner-title">
-        <div class="icon-box">
-            <i class="pi pi-qrcode"></i>
-        </div>
-        <div class="title-stack">
-            <span>Scan Barcode</span>
-            <small>Point camera at product</small>
-        </div>
+<div class="pos-layout-wrapper animate-fade-in">
+  <div class="pos-left-pane">
+    <div class="mobile-pos-container">
+      
+      <!-- Desktop Header (1024px+) -->
+      <div class="desktop-pos-header hidden-mobile">
+         <h1>Point of Sale</h1>
+         <div class="search-box desktop-search">
+            <i class="pi pi-search"></i>
+            <input type="text" [(ngModel)]="searchQuery" placeholder="Search products..." />
+         </div>
+      </div>
+
+      <!-- Scanner Section -->
+      <div class="scanner-section">
+        <div class="scanner-header">
+          <div class="scanner-title">
+            <div class="icon-box">
+                <i class="pi pi-qrcode"></i>
+            </div>
+            <div class="title-stack">
+                <span>Scan Barcode</span>
+                <small>Point camera at product</small>
+            </div>
+
       </div>
       <button class="pause-badge" (click)="scannerEnabled = !scannerEnabled">
         <span class="status-dot" [class.paused]="!scannerEnabled"></span>
@@ -34,10 +47,13 @@
 
   <!-- Search & Quick Add Section -->
   <div class="actions-section">
-    <div class="search-box">
-      <i class="pi pi-search"></i>
-      <input type="text" [(ngModel)]="searchQuery" 
-             placeholder="Search by name or category..." />
+    <!-- Mobile/Tablet Search -->
+    <div class="mobile-search-wrapper hidden-desktop">
+        <div class="search-box">
+          <i class="pi pi-search"></i>
+          <input type="text" [(ngModel)]="searchQuery" 
+                 placeholder="Search by name or category..." />
+        </div>
     </div>
 
     <!-- Category Chips -->
@@ -106,7 +122,7 @@
   </div>
 
   <!-- Bottom Cart Status -->
-  <div class="bottom-action-bar animate-slide-up">
+  <div class="bottom-action-bar mobile-only-footer animate-slide-up">
     <div class="cart-icon-btn">
       <i class="pi pi-shopping-cart"></i>
     </div>
@@ -121,4 +137,62 @@
             Checkout
     </button>
   </div>
+    </div>
+  </div>
+
+  <!-- Right Pane for Tablet / Desktop -->
+  <div class="pos-right-pane">
+    <div class="order-panel-header">
+       <div class="order-title">
+          <i class="pi pi-receipt"></i>
+          <span>Current Order</span>
+       </div>
+       <span class="items-count-badge">{{ cartService.cartCount() }} items</span>
+    </div>
+
+    <div class="order-items-list">
+       @if (cartService.cartCount() === 0) {
+           <div class="empty-cart-msg">Your cart is empty</div>
+       }
+       @for (item of cartService.items(); track item.product.id) {
+           <div class="order-item">
+              <img [src]="item.product.imageUrl" class="order-item-img" />
+              <div class="order-item-details">
+                 <span class="order-item-name">{{ item.product.name }}</span>
+                 <span class="order-item-price">{{ (item.product.discount ? getDiscountedPrice(item.product) : item.product.price) | currency:'INR' }} each</span>
+              </div>
+              <div class="quantity-stepper order-stepper">
+                  <button class="stepper-btn" (click)="decrementQuantity(item.product.id, $event)">
+                      <i class="pi pi-minus"></i>
+                  </button>
+                  <span class="stepper-value">{{ item.quantity }}</span>
+                  <button class="stepper-btn" (click)="addToCart(item.product, $event)" [disabled]="getAvailableStock(item.product) <= 0">
+                      <i class="pi pi-plus"></i>
+                  </button>
+              </div>
+           </div>
+       }
+    </div>
+
+    <div class="order-summary-box">
+       <div class="summary-line text-muted">
+          <span>Subtotal</span>
+          <span>{{ cartService.cartTotal() | currency:'INR' }}</span>
+       </div>
+       <div class="summary-line text-muted">
+          <span>CGST (5%)</span>
+          <span>{{ (cartService.cartTotal() * 0.05) | currency:'INR' }}</span>
+       </div>
+       <div class="summary-divider"></div>
+       <div class="summary-line total-line">
+          <span>Total</span>
+          <span>{{ (cartService.cartTotal() * 1.05) | currency:'INR' }}</span>
+       </div>
+       <button class="checkout-modern-btn w-full mt-3" 
+               [disabled]="cartService.cartCount() === 0" (click)="goToCheckout()">
+            Proceed to Checkout
+       </button>
+    </div>
+  </div>
+
 </div>

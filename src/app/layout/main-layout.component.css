@@ -141,6 +141,18 @@
   border-top: 1px solid var(--surface-border);
 }
 
+.mobile-only-item {
+  display: none;
+}
+
+.text-danger {
+  color: #ef4444 !important;
+}
+
+.text-danger:hover {
+  background: #fef2f2 !important;
+}
+
 /* Main Content Area */
 .layout-main {
   flex: 1;
@@ -150,12 +162,16 @@
   overflow: hidden;
 }
 
-.layout-toolbar {
+:host ::ng-deep .layout-toolbar.p-toolbar {
   height: 70px;
   background: var(--surface-card);
+  border: none;
   border-bottom: 1px solid var(--surface-border);
+  border-radius: 0;
+  margin: 0;
   padding: 0 1.5rem;
   z-index: 100;
+  width: 100%;
 }
 
 .toolbar-left {
@@ -179,8 +195,7 @@
 .toolbar-title {
   font-size: 1.25rem;
   font-weight: 700;
-  display: none;
-  /* Only show in mobile */
+  margin-left: 0.5rem;
 }
 
 .layout-content {
@@ -277,11 +292,52 @@
 }
 
 @media (max-width: 768px) {
+  .layout-root {
+    overflow-x: hidden;
+  }
+
+  :host ::ng-deep .layout-toolbar.p-toolbar {
+    padding: 0 0.5rem;
+  }
+
+  .layout-content {
+    padding: 0;
+  }
+
+  .toolbar-left {
+    gap: 0.25rem;
+  }
+
+  .toolbar-right {
+    gap: 0.25rem;
+  }
+
+  .toolbar-separator {
+    display: none;
+  }
+
   .toolbar-title {
-    display: block;
+    font-size: 0.95rem;
+    margin-left: 0;
   }
 
   .sidebar-badge {
     display: none;
+  }
+
+  .mobile-only-item {
+    display: flex;
+  }
+  
+  div.mobile-only-item {
+    display: block;
+  }
+
+  ::ng-deep .language-dropdown {
+    display: none !important;
+  }
+
+  .profile-btn {
+    display: none !important;
   }
 }
