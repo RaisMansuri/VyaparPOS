@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -17,12 +17,16 @@ import { InputTextModule } from 'primeng/inputtext';
     templateUrl: './my-orders.component.html',
     styleUrl: './my-orders.component.css'
 })
-export class MyOrdersComponent {
+export class MyOrdersComponent implements OnInit {
     orderService = inject(OrderService);
     private auth = inject(AuthService);
     private router = inject(Router);
 
     isManager = this.auth.isManager();
+
+    ngOnInit(): void {
+        this.orderService.fetchOrders().subscribe();
+    }
 
     viewOrder(order: Order): void {
         this.router.navigate(['/orders', order.id]);

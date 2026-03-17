@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { finalize, tap, catchError } from 'rxjs/operators';
 import { LoaderService } from '../core/loader.service';
+import { environment } from '../../environments/environment';
 
 export interface AuthUser {
   id: string;
@@ -24,7 +25,7 @@ export interface AuthUser {
 })
 export class AuthService {
   private readonly storageKey = 'vyaparpos_auth_user';
-  private readonly apiUrl = 'http://localhost:5000/api/auth';
+  private readonly apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
   private router = inject(Router);
   private loader = inject(LoaderService);

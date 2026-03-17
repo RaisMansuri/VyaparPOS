@@ -72,9 +72,20 @@ export class CustomersComponent implements OnInit {
 
   deleteCustomer(customer: Customer): void {
     if (confirm(`Are you sure you want to delete ${customer.name}?`)) {
-      this.customerService.deleteCustomer(customer.id);
-      this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Customer removed' });
+      this.customerService.deleteCustomer(customer.id).subscribe(() => {
+        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Customer removed' });
+        // Re-fetch implicitly handled if customers$ is a polling observable or if we trigger it
+        // CustomersComponent ngOninit subscribes to customers$ which is a get request.
+        // We need to re-fetch manually here since it's not a BehaviorSubject anymore in the service.
+        this.loadCustomers();
+      });
     }
+  }
+
+  loadCustomers(): void {
+    this.customerService.getCustomersObservable().subscribe(data => {
+        this.customers = data;
+    });
   }
 
   saveCustomer(): void {
@@ -82,12 +93,17 @@ export class CustomersComponent implements OnInit {
 
     const val = this.customerForm.value;
     if (this.editingCustomerId) {
-      this.customerService.updateCustomer(this.editingCustomerId, val);
-      this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Customer info saved' });
+      this.customerService.updateCustomer(this.editingCustomerId, val).subscribe(() => {
+        this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Customer info saved' });
+        this.loadCustomers();
+        this.showDialog = false;
+      });
     } else {
-      this.customerService.addCustomer(val);
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'New customer added' });
+      this.customerService.addCustomer(val).subscribe(() => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'New customer added' });
+        this.loadCustomers();
+        this.showDialog = false;
+      });
     }
-    this.showDialog = false;
   }
 }

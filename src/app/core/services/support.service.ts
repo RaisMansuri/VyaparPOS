@@ -1,107 +1,33 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { SupportTicket, TicketComment } from '../../models/support.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupportService {
-  private ticketsSubject = new BehaviorSubject<SupportTicket[]>([
-    {
-      id: 'TKT-1001',
-      subject: 'Order Delay - Fresh White Bread',
-      description: 'The white bread order for this morning hasn\'t arrived yet.',
-      status: 'Open',
-      priority: 'High',
-      customerName: 'Rahul Sharma',
-      customerEmail: 'rahul.sharma@example.com',
-      createdAt: new Date('2024-03-12T08:00:00'),
-      comments: [
-        {
-          id: 'CMT-1',
-          author: 'System',
-          message: 'Ticket created automatically.',
-          createdAt: new Date('2024-03-12T08:00:00')
-        }
-      ]
-    },
-    {
-      id: 'TKT-1002',
-      subject: 'Refund Request',
-      description: 'Customer wants a refund for a stale croissant.',
-      status: 'In Progress',
-      priority: 'Medium',
-      customerName: 'Anjali Gupta',
-      customerEmail: 'anjali.gupta@example.com',
-      createdAt: new Date('2024-03-11T14:30:00'),
-      assignedTo: 'Store Manager',
-      comments: [
-        {
-          id: 'CMT-2',
-          author: 'Store Manager',
-          message: 'Checking the batch number.',
-          createdAt: new Date('2024-03-11T15:00:00')
-        }
-      ]
-    }
-  ]);
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/tickets`;
 
   get tickets$(): Observable<SupportTicket[]> {
-    return this.ticketsSubject.asObservable();
+    return this.http.get<SupportTicket[]>(this.apiUrl);
   }
 
-  createTicket(ticket: Partial<SupportTicket>): void {
-    const current = this.ticketsSubject.getValue();
-    const newTicket: SupportTicket = {
-      id: `TKT-${(1001 + current.length).toString()}`,
-      subject: ticket.subject || 'No Subject',
-      description: ticket.description || 'No Description',
-      status: 'Open',
-      priority: ticket.priority || 'Medium',
-      customerName: ticket.customerName || 'Guest',
-      customerEmail: ticket.customerEmail || 'guest@example.com',
-      createdAt: new Date(),
-      comments: [
-        {
-          id: `CMT-${Date.now()}`,
-          author: 'System',
-          message: 'Ticket created.',
-          createdAt: new Date()
-        }
-      ]
-    };
-    this.ticketsSubject.next([...current, newTicket]);
+  createTicket(ticket: Partial<SupportTicket>): Observable<SupportTicket> {
+    return this.http.post<SupportTicket>(this.apiUrl, ticket);
   }
 
-  updateTicketStatus(id: string, status: SupportTicket['status']): void {
-    const current = this.ticketsSubject.getValue();
-    const index = current.findIndex(t => t.id === id);
-    if (index !== -1) {
-      current[index] = { ...current[index], status, updatedAt: new Date() };
-      this.ticketsSubject.next([...current]);
-    }
+  updateTicketStatus(id: string, status: SupportTicket['status']): Observable<SupportTicket> {
+    return this.http.put<SupportTicket>(`${this.apiUrl}/${id}/status`, { status });
   }
 
-  addComment(id: string, author: string, message: string): void {
-    const current = this.ticketsSubject.getValue();
-    const index = current.findIndex(t => t.id === id);
-    if (index !== -1) {
-      const newComment: TicketComment = {
-        id: `CMT-${Date.now()}`,
-        author,
-        message,
-        createdAt: new Date()
-      };
-      const ticket = current[index];
-      ticket.comments = [...(ticket.comments || []), newComment];
-      ticket.updatedAt = new Date();
-      current[index] = { ...ticket };
-      this.ticketsSubject.next([...current]);
-    }
+  addComment(id: string, author: string, message: string): Observable<SupportTicket> {
+      return this.http.post<SupportTicket>(`${this.apiUrl}/${id}/comments`, { author, message });
   }
 
-  deleteTicket(id: string): void {
-    const current = this.ticketsSubject.getValue();
-    this.ticketsSubject.next(current.filter(t => t.id !== id));
+  deleteTicket(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

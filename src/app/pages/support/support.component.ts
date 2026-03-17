@@ -85,31 +85,46 @@ export class SupportComponent implements OnInit {
     this.viewTicketDialog = true;
   }
 
+  loadTickets(): void {
+    this.supportService.tickets$.subscribe(data => {
+      this.tickets = data;
+    });
+  }
+
   saveTicket(): void {
     if (this.ticketForm.invalid) return;
 
-    this.supportService.createTicket(this.ticketForm.value);
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Support ticket created' });
-    this.showDialog = false;
+    this.supportService.createTicket(this.ticketForm.value).subscribe(() => {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Support ticket created' });
+      this.loadTickets();
+      this.showDialog = false;
+    });
   }
 
   updateStatus(id: string, status: TicketStatus): void {
-    this.supportService.updateTicketStatus(id, status);
-    this.messageService.add({ severity: 'info', summary: 'Status Updated', detail: `Ticket status set to ${status}` });
+    this.supportService.updateTicketStatus(id, status).subscribe(() => {
+      this.messageService.add({ severity: 'info', summary: 'Status Updated', detail: `Ticket status set to ${status}` });
+      this.loadTickets();
+    });
   }
 
   addComment(): void {
     if (!this.newComment.trim() || !this.selectedTicket) return;
 
-    this.supportService.addComment(this.selectedTicket.id, 'Agent', this.newComment);
-    this.newComment = '';
-    this.messageService.add({ severity: 'success', summary: 'Comment Added', detail: 'Your message has been sent' });
+    this.supportService.addComment(this.selectedTicket.id, 'Agent', this.newComment).subscribe(updatedTicket => {
+        this.selectedTicket = updatedTicket;
+        this.newComment = '';
+        this.messageService.add({ severity: 'success', summary: 'Comment Added', detail: 'Your message has been sent' });
+        this.loadTickets();
+    });
   }
 
   deleteTicket(ticket: SupportTicket): void {
     if (confirm(`Are you sure you want to delete ticket ${ticket.id}?`)) {
-      this.supportService.deleteTicket(ticket.id);
-      this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Ticket removed' });
+      this.supportService.deleteTicket(ticket.id).subscribe(() => {
+        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Ticket removed' });
+        this.loadTickets();
+      });
     }
   }
 

@@ -1,4 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import { Order, PaymentMethod } from '../../models/order.model';
 import { CartItem } from '../../models/cart.model';
 import { Address } from '../../models/address.model';
@@ -7,7 +10,8 @@ import { Address } from '../../models/address.model';
     providedIn: 'root'
 })
 export class OrderService {
-
+    private http = inject(HttpClient);
+    private apiUrl = `${environment.apiUrl}/sales`;
     private orders = signal<Order[]>([]);
     private currentAddress = signal<Address | null>(null);
 
@@ -22,7 +26,7 @@ export class OrderService {
         return this.currentAddress();
     }
 
-    placeOrder(items: CartItem[], address: Address, paymentMethod: PaymentMethod, totalAmount: number, deliveryFee: number): Order {
+    placeOrder(items: CartItem[], address: Address, paymentMethod: PaymentMethod, totalAmount: number, deliveryFee: number): Observable<Order> {
         let taxableAmount = 0;
         let totalGST = 0;
         let subTotal = 0;
@@ -39,25 +43,34 @@ export class OrderService {
             totalGST += itemTax;
         });
 
-        const order: Order = {
-            id: 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(),
-            items: [...items],
-            address: { ...address },
-            paymentMethod,
+        const orderData = {
+            items: items.map(i => ({
+                productId: i.product.id,
+                name: i.product.name,
+                quantity: i.quantity,
+                price: i.product.price,
+                total: i.subtotal,
+                category: i.product.category
+            })),
             totalAmount,
-            subTotal,
-            taxableAmount,
-            totalGST,
-            cgst: totalGST / 2,
-            sgst: totalGST / 2,
-            igst: 0, // Assuming intra-state for now
-            deliveryFee,
-            status: 'confirmed',
-            orderDate: new Date()
+            tax: totalGST,
+            paymentMethod,
+            processedBy: 'Current User', // Placeholder
+            paymentStatus: 'Paid',
+            amountPaid: totalAmount
         };
 
-        this.orders.set([order, ...this.orders()]);
-        return order;
+        return this.http.post<Order>(this.apiUrl, orderData).pipe(
+            tap(savedOrder => {
+                this.orders.set([savedOrder, ...this.orders()]);
+            })
+        );
+    }
+
+    fetchOrders(): Observable<Order[]> {
+        return this.http.get<Order[]>(this.apiUrl).pipe(
+            tap(orders => this.orders.set(orders))
+        );
     }
 
     getLastOrder(): Order | null {

@@ -71,7 +71,7 @@ export class PaymentComponent implements OnInit {
 
         this.isProcessing = true;
 
-        // Simulate payment processing
+        // Simulate payment processing (kept for UX feedback)
         setTimeout(() => {
             const address = this.orderService.getAddress()!;
             this.orderService.placeOrder(
@@ -80,10 +80,17 @@ export class PaymentComponent implements OnInit {
                 this.selectedMethod,
                 this.cartService.grandTotal(),
                 this.cartService.deliveryFee()
-            );
-            this.cartService.clearCart();
-            this.isProcessing = false;
-            this.router.navigate(['/checkout/confirmation']);
+            ).subscribe({
+                next: (savedOrder) => {
+                    this.cartService.clearCart();
+                    this.isProcessing = false;
+                    this.router.navigate(['/checkout/confirmation']);
+                },
+                error: (err) => {
+                    console.error('Order placement failed', err);
+                    this.isProcessing = false;
+                }
+            });
         }, 2000);
     }
 

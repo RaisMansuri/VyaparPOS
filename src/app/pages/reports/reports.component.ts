@@ -185,7 +185,7 @@ export class ReportsComponent implements OnInit {
     if (this.selectedCategory) doc.text(`Category: ${this.selectedCategory}`, 14, 28);
     
     const tableData = this.dailyReports.map(r => [
-        new Date(r.date).toLocaleDateString(),
+        new Date(r._id).toLocaleDateString(),
         r.orders,
         `Rs. ${r.taxable}`,
         `Rs. ${r.gst}`,
@@ -204,7 +204,7 @@ export class ReportsComponent implements OnInit {
 
   exportToExcel() {
     const data = this.dailyReports.map(r => ({
-        Date: new Date(r.date).toLocaleDateString(),
+        Date: new Date(r._id).toLocaleDateString(),
         Orders: r.orders,
         'Taxable Value': r.taxable,
         'GST Collected': r.gst,
