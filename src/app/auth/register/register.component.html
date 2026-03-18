@@ -1,86 +1,131 @@
-<div class="auth-wrapper">
-  <p-card class="auth-card">
-    <div class="auth-logo">
-      <i class="pi pi-shopping-cart logo-icon"></i>
-      <h1 class="logo-text">VyaparPOS</h1>
+<div class="auth-container">
+  <div class="auth-box">
+    <!-- Left Side: Visual/Branding -->
+    <div class="auth-visual">
+      <div class="visual-overlay"></div>
+      <div class="visual-content">
+        <div class="brand">
+          <i class="pi pi-shopping-cart brand-icon"></i>
+          <span class="brand-name">VyaparPOS</span>
+        </div>
+        <div class="promo-text">
+          <h1>Grow Your Business with VyaparPOS</h1>
+          <p>Join thousands of retailers who trust us for their daily operations.</p>
+        </div>
+        <div class="visual-footer">
+          <span>&copy; 2026 VyaparPOS. All rights reserved.</span>
+        </div>
+      </div>
     </div>
 
-    <div class="auth-header">
-      <h2>Create account</h2>
-      <p>Enter your details to register for an account.</p>
+    <!-- Right Side: Register Form -->
+    <div class="auth-form-container">
+      <div class="auth-form-header">
+        <h2>Create Account</h2>
+        <p>Start your 30-day free trial today. No credit card required.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <div class="input-wrapper">
+              <i class="pi pi-user input-icon"></i>
+              <input
+                id="name"
+                type="text"
+                pInputText
+                formControlName="name"
+                placeholder="John Doe"
+                class="modern-input"
+              />
+            </div>
+            <div class="field-error" *ngIf="name?.touched && name?.invalid">
+              Full name is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="pi pi-envelope input-icon"></i>
+            <input
+              id="email"
+              type="email"
+              pInputText
+              formControlName="email"
+              placeholder="name@company.com"
+              class="modern-input"
+            />
+          </div>
+          <div class="field-error" *ngIf="email?.touched && email?.invalid">
+            <span *ngIf="email?.errors?.['required']">Email is required.</span>
+            <span *ngIf="email?.errors?.['email']">Please enter a valid email.</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <div class="input-wrapper">
+              <i class="pi pi-phone input-icon"></i>
+              <input
+                id="phone"
+                type="tel"
+                pInputText
+                formControlName="phone"
+                placeholder="0000000000"
+                class="modern-input"
+              />
+            </div>
+            <div class="field-error" *ngIf="phone?.touched && phone?.invalid">
+              Mobile number is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="pi pi-lock input-icon"></i>
+            <input
+              id="password"
+              type="password"
+              pInputText
+              formControlName="password"
+              placeholder="••••••••"
+              class="modern-input"
+            />
+          </div>
+          <div class="field-error" *ngIf="password?.touched && password?.invalid">
+            <span *ngIf="password?.errors?.['required']">Password is required.</span>
+            <span *ngIf="password?.errors?.['minlength']">Must be at least 6 characters.</span>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <div class="terms-check">
+            <p-checkbox [binary]="true" inputId="terms" [required]="true"></p-checkbox>
+            <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+        </div>
+
+        <button pButton type="submit" [disabled]="form.invalid" class="submit-btn highlight-btn">
+          <span>Create My Account</span>
+          <i class="pi pi-user-plus"></i>
+        </button>
+
+        <div class="auth-switch">
+          <span>Already have an account?</span>
+          <a routerLink="/auth/login">Sign in here</a>
+        </div>
+      </form>
+
+      <div class="auth-error" *ngIf="error">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ error }}</span>
+      </div>
     </div>
-
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="field">
-        <label for="name">Full name</label>
-        <input
-          id="name"
-          type="text"
-          pInputText
-          formControlName="name"
-          placeholder="Enter full name"
-        />
-        <div class="field-error" *ngIf="name?.touched && name?.invalid">
-          Full name is required.
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="email">Email address</label>
-        <input
-          id="email"
-          type="email"
-          pInputText
-          formControlName="email"
-          placeholder="Enter email address"
-        />
-        <div class="field-error" *ngIf="email?.touched && email?.invalid">
-          <span *ngIf="email?.errors?.['required']">Email is required.</span>
-          <span *ngIf="email?.errors?.['email']">Invalid email format.</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          pInputText
-          formControlName="password"
-          placeholder="Enter password"
-        />
-        <div class="field-error" *ngIf="password?.touched && password?.invalid">
-          <span *ngIf="password?.errors?.['required']">Password is required.</span>
-          <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="phone">Mobile number</label>
-        <input
-          id="phone"
-          type="tel"
-          pInputText
-          formControlName="phone"
-          placeholder="Enter mobile number"
-        />
-        <div class="field-error" *ngIf="phone?.touched && phone?.invalid">
-          Mobile number is required.
-        </div>
-      </div>
-
-      <div class="auth-actions">
-        <button pButton type="submit" label="Register" [disabled]="form.invalid"></button>
-      </div>
-
-      <div class="auth-footer">
-        <span>Already have an account?</span>
-        <a routerLink="/auth/login">Login</a>
-      </div>
-    </form>
-
-    <div class="auth-error" *ngIf="error">
-      {{ error }}
-    </div>
-  </p-card>
+  </div>
 </div>

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Product } from '../../models/product.model';
 import { Transaction, DashboardStats } from '../../models/transaction.model';
-import { Observable, map } from 'rxjs';
+import { Observable, map, shareReplay, BehaviorSubject, switchMap, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -12,15 +12,47 @@ export class ProductService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/products`;
 
+  private productsSubject = new BehaviorSubject<void>(undefined);
+  
+  public products$: Observable<Product[]> = this.productsSubject.pipe(
+    switchMap(() => this.http.get<any>(this.apiUrl)),
+    map(res => Array.isArray(res) ? res : (res.data || res.products || [])),
+    shareReplay(1)
+  );
+
+  private lowStockSubject = new BehaviorSubject<void>(undefined);
+  public lowStockProducts$: Observable<Product[]> = this.lowStockSubject.pipe(
+    switchMap(() => this.http.get<any>(`${this.apiUrl}/low-stock`)),
+    map(res => Array.isArray(res) ? res : (res.data || res.products || [])),
+    shareReplay(1)
+  );
+
+  private categoriesSubject = new BehaviorSubject<void>(undefined);
+  public categories$: Observable<string[]> = this.categoriesSubject.pipe(
+    switchMap(() => this.http.get<any>(`${this.apiUrl}/categories`)),
+    map(res => Array.isArray(res) ? res : (res.data || res.categories || [])),
+    shareReplay(1)
+  );
+
+  refreshProducts(): void {
+    this.productsSubject.next();
+    this.lowStockSubject.next();
+    this.categoriesSubject.next();
+  }
+
+  refreshCategories(): void {
+    this.categoriesSubject.next();
+  }
+
   getCategories(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/categories`);
+    return this.categories$;
   }
 
   getProductsByCategory(category: string): Observable<Product[]> {
     if (category === 'all') {
-      return this.http.get<Product[]>(this.apiUrl);
+      return this.products$;
     }
-    return this.http.get<Product[]>(this.apiUrl).pipe(
+    return this.products$.pipe(
       map(products => products.filter(p => p.category.toLowerCase() === category.toLowerCase()))
     );
   }
@@ -44,20 +76,25 @@ export class ProductService {
   }
 
   getLowStockProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/low-stock`);
+    return this.lowStockProducts$;
   }
 
   addProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product);
+    return this.http.post<Product>(this.apiUrl, product).pipe(
+      tap(() => this.refreshProducts())
+    );
   }
 
   updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${(product as any)._id || product.id}`, product);
+    return this.http.put<Product>(`${this.apiUrl}/${(product as any)._id || product.id}`, product).pipe(
+      tap(() => this.refreshProducts())
+    );
   }
 
   deleteProduct(id: any): Observable<boolean> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(
-        map(() => true)
+      tap(() => this.refreshProducts()),
+      map(() => true)
     );
   }
 }

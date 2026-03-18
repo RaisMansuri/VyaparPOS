@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { InputOtpModule } from 'primeng/inputotp';
+import { CheckboxModule } from 'primeng/checkbox';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { AuthService } from '../auth.service';
     CardModule,
     InputTextModule,
     ButtonModule,
-    InputOtpModule,
+    CheckboxModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -45,12 +45,17 @@ export class LoginComponent {
       return;
     }
     this.error = '';
+    const email = this.form.get('email')?.value;
     this.auth.login(this.form.value).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.error = err.error?.message || 'Invalid credentials. Please try again.';
+        if (err.error?.unverified || err.error?.message?.toLowerCase().includes('verify')) {
+          this.router.navigate(['/auth/verify-email'], { queryParams: { email } });
+        } else {
+          this.error = err.error?.message || 'Invalid credentials. Please try again.';
+        }
       },
     });
   }

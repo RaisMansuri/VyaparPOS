@@ -83,9 +83,7 @@ export class CustomersComponent implements OnInit {
   }
 
   loadCustomers(): void {
-    this.customerService.getCustomersObservable().subscribe(data => {
-        this.customers = data;
-    });
+    this.customerService.refreshCustomers();
   }
 
   saveCustomer(): void {

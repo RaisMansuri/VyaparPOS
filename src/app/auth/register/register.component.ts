@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { InputOtpModule } from 'primeng/inputotp';
+import { CheckboxModule } from 'primeng/checkbox';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { AuthService } from '../auth.service';
     CardModule,
     InputTextModule,
     ButtonModule,
-    InputOtpModule,
+    CheckboxModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -49,9 +49,10 @@ export class RegisterComponent {
       return;
     }
     this.error = '';
+    const email = this.form.get('email')?.value;
     this.auth.register(this.form.value).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/auth/verify-email'], { queryParams: { email } });
       },
       error: (err) => {
         this.error = err.error?.message || 'Registration failed. Please try again.';

@@ -18,6 +18,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'verify-email',
+        loadComponent: () =>
+          import('./auth/verify-email/verify-email.component').then(
+            (m) => m.VerifyEmailComponent
+          ),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'login',

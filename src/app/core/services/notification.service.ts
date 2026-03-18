@@ -15,11 +15,8 @@ export class NotificationService {
   }
 
   checkStockLevels(): void {
-    this.productService.getProductsByCategory('all').subscribe((products) => {
-      const lowStockItems = products.filter(
-        (p) => p.stock <= (p.minStockLevel || 5)
-      );
-      this.lowStockAlertsSubject.next(lowStockItems);
+    this.productService.getLowStockProducts().subscribe((products) => {
+      this.lowStockAlertsSubject.next(products);
     });
   }
 }

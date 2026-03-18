@@ -85,7 +85,7 @@ export class AuthService {
 
   login(credentials: { email: string; password: string }): Observable<any> {
     this.loader.show();
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
         const user: AuthUser = {
           ...response.user,
@@ -102,17 +102,35 @@ export class AuthService {
 
   register(payload: any): Observable<any> {
     this.loader.show();
-    return this.http.post(`${this.apiUrl}/register`, payload).pipe(
+    return this.http.post(`${this.apiUrl}/auth/register`, payload).pipe(
       tap((response: any) => {
-        const user: AuthUser = {
-          ...response.user,
-          token: response.token
-        };
-        this.saveUser(user);
+        if (response.token) {
+          const user: AuthUser = {
+            ...response.user,
+            token: response.token
+          };
+          this.saveUser(user);
+        }
       }),
       catchError(err => {
         return throwError(() => err);
       }),
+      finalize(() => this.loader.hide())
+    );
+  }
+
+  verifyEmail(email: string, code: string): Observable<any> {
+    this.loader.show();
+    return this.http.post(`${this.apiUrl}/auth/verify-email`, { email, code }).pipe(
+      catchError(err => throwError(() => err)),
+      finalize(() => this.loader.hide())
+    );
+  }
+
+  resendVerification(email: string): Observable<any> {
+    this.loader.show();
+    return this.http.post(`${this.apiUrl}/auth/resend-verification`, { email }).pipe(
+      catchError(err => throwError(() => err)),
       finalize(() => this.loader.hide())
     );
   }

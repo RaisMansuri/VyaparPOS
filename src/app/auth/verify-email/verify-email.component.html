@@ -1,0 +1,44 @@
+<p-toast></p-toast>
+
+<div class="auth-container">
+  <div class="auth-box miniaturized">
+    <div class="auth-form-container">
+      <div class="auth-form-header">
+        <div class="header-icon">
+            <i class="pi pi-envelope"></i>
+        </div>
+        <h2>Verify Your Email</h2>
+        <p>We've sent a 6-digit verification code to <br><strong>{{ email }}</strong></p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group center-items">
+          <label for="otp">Enter Verification Code</label>
+          <p-inputOtp formControlName="otp" [length]="6" styleClass="modern-otp"></p-inputOtp>
+          <div class="field-error" *ngIf="form.get('otp')?.touched && form.get('otp')?.invalid">
+            Please enter the full 6-digit code.
+          </div>
+          <div class="timer-container" *ngIf="!canResend">
+            <i class="pi pi-clock"></i>
+            <span>Code valid for: <strong>{{ timerDisplay }}</strong></span>
+          </div>
+        </div>
+
+        <button pButton type="submit" [disabled]="form.invalid || loading" class="submit-btn highlight-btn">
+          <span *ngIf="!loading">Verify Email</span>
+          <i *ngIf="loading" class="pi pi-spin pi-spinner"></i>
+          <i *ngIf="!loading" class="pi pi-check-circle"></i>
+        </button>
+
+        <div class="auth-switch">
+          <span>Didn't receive the code?</span>
+          <a href="javascript:void(0)" (click)="resendCode()" [class.disabled]="!canResend">Resend Code</a>
+        </div>
+
+        <div class="auth-switch mt-2">
+            <a routerLink="/auth/login" class="back-link"><i class="pi pi-arrow-left"></i> Back to Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

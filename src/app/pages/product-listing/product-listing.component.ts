@@ -148,7 +148,7 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   private loadProducts(): void {
-    this.productService.getProductsByCategory('all').subscribe(products => {
+    this.productService.products$.subscribe(products => {
       this.allProducts = products;
       this.categories = [...new Set(products.map(p => p.category))];
 

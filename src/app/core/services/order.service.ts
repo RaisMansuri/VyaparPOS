@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 import { Order, PaymentMethod } from '../../models/order.model';
 import { CartItem } from '../../models/cart.model';
 import { Address } from '../../models/address.model';
@@ -68,7 +68,8 @@ export class OrderService {
     }
 
     fetchOrders(): Observable<Order[]> {
-        return this.http.get<Order[]>(this.apiUrl).pipe(
+        return this.http.get<any>(this.apiUrl).pipe(
+            map(res => Array.isArray(res) ? res : (res.data || res.orders || [])),
             tap(orders => this.orders.set(orders))
         );
     }

@@ -15,15 +15,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { FloatLabelModule } from 'primeng/floatlabel';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-    permissions: string[];
-}
+import { UserService, User } from '../../../core/services/user.service';
 
 @Component({
     selector: 'app-users',
@@ -62,7 +54,11 @@ export class UsersComponent implements OnInit {
     user!: User;
     submitted: boolean = false;
 
-    constructor(private messageService: MessageService, private confirmationService: ConfirmationService) { }
+    constructor(
+        private messageService: MessageService, 
+        private confirmationService: ConfirmationService,
+        private userService: UserService
+    ) { }
 
     ngOnInit() {
         this.roles = [
@@ -85,16 +81,26 @@ export class UsersComponent implements OnInit {
             { label: 'Manage Settings', value: 'Manage Settings' }
         ];
 
-        // Dummy data
-        this.users = [
-            { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active', permissions: ['Manage Users', 'View Sales', 'Manage Products'] },
-            { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Manager', status: 'Active', permissions: ['View Sales', 'Manage Products'] },
-            { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Cashier', status: 'Inactive', permissions: ['Process Sales'] },
-            { id: 4, name: 'Alice Williams', email: 'alice@example.com', role: 'Cashier', status: 'Active', permissions: ['Process Sales'] },
-            { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', role: 'Manager', status: 'Active', permissions: ['View Sales', 'Manage Products'] },
-        ];
+        this.loadUsers();
+    }
 
-        this.loading = false;
+    loadUsers() {
+        this.loading = true;
+        this.userService.getUsers().subscribe({
+            next: (data) => {
+                this.users = data;
+                this.loading = false;
+            },
+            error: () => {
+                // Fallback to dummy data if API fails to maintain functionality
+                this.users = [
+                    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active', permissions: ['Manage Users', 'View Sales', 'Manage Products'] },
+                    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Manager', status: 'Active', permissions: ['View Sales', 'Manage Products'] },
+                    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Cashier', status: 'Inactive', permissions: ['Process Sales'] },
+                ];
+                this.loading = false;
+            }
+        });
     }
 
     getSeverity(status: string) {
@@ -138,9 +144,16 @@ export class UsersComponent implements OnInit {
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.users = this.users.filter((val) => val.id !== user.id);
-                this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+                this.userService.deleteUser(user.id).subscribe({
+                    next: () => {
+                        this.users = this.users.filter((val) => val.id !== user.id);
+                        this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+                    },
+                    error: () => {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete user', life: 3000 });
+                    }
+                });
             }
         });
     }
@@ -155,21 +168,29 @@ export class UsersComponent implements OnInit {
 
         if (this.user.name?.trim() && this.user.email?.trim() && this.user.role) {
             if (this.user.id) {
-                // Update
-                this.users[this.findIndexById(this.user.id)] = this.user;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
+                this.userService.updateUser(this.user).subscribe({
+                    next: (updatedUser) => {
+                        this.users[this.findIndexById(this.user.id)] = updatedUser;
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
+                        this.closeDialog();
+                    }
+                });
             } else {
-                // Create
-                this.user.id = this.createId();
-                this.users.push(this.user);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                this.userService.createUser(this.user).subscribe({
+                    next: (newUser) => {
+                        this.users.push(newUser);
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                        this.closeDialog();
+                    }
+                });
             }
-
-            // Force refresh array for table detect changes
-            this.users = [...this.users];
-            this.userDialog = false;
-            this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
         }
+    }
+
+    private closeDialog() {
+        this.users = [...this.users];
+        this.userDialog = false;
+        this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
     }
 
     onStatusChange(user: User) {
