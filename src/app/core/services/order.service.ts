@@ -1,10 +1,11 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map } from 'rxjs';
+import { Observable, tap, map, catchError, of } from 'rxjs';
 import { Order, PaymentMethod } from '../../models/order.model';
 import { CartItem } from '../../models/cart.model';
 import { Address } from '../../models/address.model';
+import { cloneOrders } from '../mock-data';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ import { Address } from '../../models/address.model';
 export class OrderService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/sales`;
-    private orders = signal<Order[]>([]);
+    private orders = signal<Order[]>(cloneOrders());
     private currentAddress = signal<Address | null>(null);
 
     readonly allOrders = this.orders.asReadonly();
@@ -63,14 +64,38 @@ export class OrderService {
         return this.http.post<Order>(this.apiUrl, orderData).pipe(
             tap(savedOrder => {
                 this.orders.set([savedOrder, ...this.orders()]);
+            }),
+            catchError(() => {
+                const localOrder: Order = {
+                    id: `ORD-${Date.now()}`,
+                    items,
+                    address,
+                    paymentMethod,
+                    totalAmount,
+                    subTotal,
+                    taxableAmount,
+                    totalGST,
+                    cgst: totalGST / 2,
+                    sgst: totalGST / 2,
+                    igst: 0,
+                    deliveryFee,
+                    status: 'confirmed',
+                    orderDate: new Date()
+                };
+                this.orders.set([localOrder, ...this.orders()]);
+                return of(localOrder);
             })
         );
     }
 
     fetchOrders(): Observable<Order[]> {
         return this.http.get<any>(this.apiUrl).pipe(
-            map(res => Array.isArray(res) ? res : (res.data || res.orders || [])),
-            tap(orders => this.orders.set(orders))
+            map(res => {
+                const orders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
+                return Array.isArray(orders) && orders.length > 0 ? orders : this.orders();
+            }),
+            tap(orders => this.orders.set(orders)),
+            catchError(() => of(this.orders()))
         );
     }
 

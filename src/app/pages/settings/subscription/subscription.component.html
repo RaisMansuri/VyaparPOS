@@ -1,0 +1,122 @@
+<div class="subscription-page">
+  <p-toast></p-toast>
+
+  <section class="hero-card">
+    <div>
+      <p class="eyebrow">Subscription</p>
+      <h1>Manage your plan</h1>
+      <p class="hero-copy">
+        Pick the plan that fits your counters, staff, and reporting needs.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <p-selectbutton
+        [options]="billingOptions"
+        [(ngModel)]="selectedBillingCycle"
+        optionLabel="label"
+        optionValue="value">
+      </p-selectbutton>
+    </div>
+  </section>
+
+  @if (currentSubscription) {
+    <section class="current-plan-card">
+      <div>
+        <p class="eyebrow">Current Plan</p>
+        <div class="current-plan-row">
+          <h2>{{ currentPlan.name }}</h2>
+          <p-tag
+            [severity]="currentSubscription.status === 'active' ? 'success' : 'warn'"
+            [value]="currentSubscription.status | titlecase">
+          </p-tag>
+        </div>
+        <p class="current-description">{{ currentPlan.description }}</p>
+      </div>
+
+      <div class="current-plan-meta">
+        <div class="meta-box">
+          <span class="meta-label">Billing</span>
+          <strong>{{ currentSubscription.billingCycle | titlecase }}</strong>
+        </div>
+        <div class="meta-box">
+          <span class="meta-label">Renewal</span>
+          <strong>{{ currentSubscription.renewsAt | date:'mediumDate' }}</strong>
+        </div>
+        <div class="meta-box">
+          <span class="meta-label">Users</span>
+          <strong>{{ currentPlan.limits.users }}</strong>
+        </div>
+      </div>
+
+      <div class="current-plan-actions">
+        @if (currentSubscription.cancelAtPeriodEnd) {
+          <button pButton type="button" label="Resume Auto Renew" (click)="resumePlan()"></button>
+        } @else {
+          <button
+            pButton
+            type="button"
+            label="Cancel Plan"
+            severity="secondary"
+            [outlined]="true"
+            [disabled]="currentSubscription.planId === 'starter'"
+            (click)="cancelPlan()">
+          </button>
+        }
+      </div>
+    </section>
+  }
+
+  <section class="plan-grid">
+    @for (plan of plans; track plan.id) {
+      <p-card [styleClass]="plan.featured ? 'plan-card featured' : 'plan-card'">
+        <ng-template pTemplate="header">
+          @if (plan.featured) {
+            <div class="featured-badge">Popular</div>
+          }
+        </ng-template>
+
+        <div class="plan-header">
+          <div>
+            <h3>{{ plan.name }}</h3>
+            <p>{{ plan.tagline }}</p>
+          </div>
+          @if (isCurrentPlan(plan.id)) {
+            <p-tag value="Active" severity="success"></p-tag>
+          }
+        </div>
+
+        <div class="price-row">
+          <span class="price">Rs. {{ getPrice(plan) | number:'1.0-0' }}</span>
+          <span class="price-suffix">{{ getPriceSuffix() }}</span>
+        </div>
+
+        <p class="plan-description">{{ plan.description }}</p>
+
+        <div class="plan-limits">
+          <span>{{ plan.limits.users }} users</span>
+          <span>{{ plan.limits.products }} products</span>
+          <span>{{ plan.limits.locations }} locations</span>
+        </div>
+
+        <button
+          pButton
+          type="button"
+          class="plan-action"
+          [label]="getPlanButtonLabel(plan)"
+          [disabled]="isCurrentPlan(plan.id)"
+          (click)="choosePlan(plan)">
+        </button>
+
+        <div class="feature-list">
+          @for (feature of featureKeys; track feature) {
+            <div class="feature-row" [class.muted]="!isFeatureAvailable(plan, feature)">
+              <i class="pi" [ngClass]="isFeatureAvailable(plan, feature) ? 'pi-check-circle' : 'pi-times-circle'"></i>
+              <span>{{ featureLabels[feature] }}</span>
+            </div>
+          }
+        </div>
+      </p-card>
+    }
+  </section>
+</div>

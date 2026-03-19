@@ -43,6 +43,7 @@ import { InputTextarea } from 'primeng/inputtextarea';
   styleUrl: './product-management.component.css'
 })
 export class ProductManagementComponent implements OnInit {
+  private readonly defaultImageUrl = 'https://via.placeholder.com/150';
   private productService = inject(ProductService);
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
@@ -53,6 +54,10 @@ export class ProductManagementComponent implements OnInit {
   submitted: boolean = false;
   isEditMode: boolean = false;
   categories: any[] = [];
+  imagePreviewUrl = this.defaultImageUrl;
+  selectedImageName = '';
+  readonly acceptedImageExtensions = '.jpg,.jpeg,.png,.webp';
+
   constructor() {
     this.productForm = this.fb.group({
       id: [null],
@@ -65,7 +70,7 @@ export class ProductManagementComponent implements OnInit {
       barcode: [''],
       gstRate: [0, [Validators.required, Validators.min(0)]],
       description: [''],
-      imageUrl: ['https://via.placeholder.com/150']
+      imageUrl: [this.defaultImageUrl]
     });
   }
 
@@ -93,8 +98,10 @@ export class ProductManagementComponent implements OnInit {
       stock: 0,
       minStockLevel: 5,
       gstRate: 0,
-      imageUrl: 'https://via.placeholder.com/150'
+      imageUrl: this.defaultImageUrl
     });
+    this.imagePreviewUrl = this.defaultImageUrl;
+    this.selectedImageName = '';
     this.submitted = false;
     this.productDialog = true;
     this.isEditMode = false;
@@ -102,6 +109,8 @@ export class ProductManagementComponent implements OnInit {
 
   editProduct(product: Product) {
     this.productForm.patchValue(product);
+    this.imagePreviewUrl = product.imageUrl || this.defaultImageUrl;
+    this.selectedImageName = this.getFileNameFromUrl(product.imageUrl);
     this.productDialog = true;
     this.isEditMode = true;
   }
@@ -120,6 +129,50 @@ export class ProductManagementComponent implements OnInit {
     this.submitted = false;
   }
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!this.isSupportedImage(file)) {
+      input.value = '';
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Unsupported Image',
+        detail: 'Please upload a JPG, JPEG, PNG, or WEBP image.',
+        life: 3000
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : this.defaultImageUrl;
+      this.imagePreviewUrl = result;
+      this.selectedImageName = file.name;
+      this.productForm.patchValue({
+        imageUrl: result
+      });
+      this.productForm.get('imageUrl')?.markAsDirty();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeSelectedImage(fileInput?: HTMLInputElement): void {
+    this.imagePreviewUrl = this.defaultImageUrl;
+    this.selectedImageName = '';
+    this.productForm.patchValue({
+      imageUrl: this.defaultImageUrl
+    });
+
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
   saveProduct() {
     this.submitted = true;
 
@@ -127,7 +180,10 @@ export class ProductManagementComponent implements OnInit {
       return;
     }
 
-    const productData = this.productForm.value;
+    const productData = {
+      ...this.productForm.value,
+      imageUrl: this.productForm.value.imageUrl || this.defaultImageUrl
+    };
 
     if (this.isEditMode) {
       this.productService.updateProduct(productData).subscribe(() => {
@@ -142,5 +198,18 @@ export class ProductManagementComponent implements OnInit {
         this.productDialog = false;
       });
     }
+  }
+
+  private isSupportedImage(file: File): boolean {
+    return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+  }
+
+  private getFileNameFromUrl(url?: string): string {
+    if (!url || url.startsWith('data:') || url === this.defaultImageUrl) {
+      return '';
+    }
+
+    const segments = url.split('/');
+    return segments[segments.length - 1];
   }
 }

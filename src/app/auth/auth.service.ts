@@ -18,6 +18,10 @@ export interface AuthUser {
   state?: string;
   pincode?: string;
   joinDate?: string;
+  subscriptionPlanId?: string;
+  subscriptionPlanName?: string;
+  subscriptionStatus?: string;
+  subscriptionRenewalDate?: string;
 }
 
 @Injectable({

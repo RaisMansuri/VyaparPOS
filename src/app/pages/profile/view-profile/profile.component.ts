@@ -5,6 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { AuthService, AuthUser } from '../../../auth/auth.service';
 import { OrderService } from '../../../core/services/order.service';
+import { SubscriptionService } from '../../../core/services/subscription.service';
+import { SubscriptionPlan, UserSubscription } from '../../../models/subscription.model';
 
 @Component({
     selector: 'app-profile',
@@ -16,11 +18,14 @@ import { OrderService } from '../../../core/services/order.service';
 export class ProfileComponent implements OnInit {
     private authService = inject(AuthService);
     private orderService = inject(OrderService);
+    private subscriptionService = inject(SubscriptionService);
     private router = inject(Router);
 
     user: AuthUser | null = null;
     totalOrders = 0;
     totalSpent = 0;
+    currentSubscription: UserSubscription | null = null;
+    currentPlan: SubscriptionPlan | null = null;
 
     ngOnInit(): void {
         this.authService.currentUser$.subscribe(user => {
@@ -40,6 +45,11 @@ export class ProfileComponent implements OnInit {
         const orders = this.orderService.getOrders();
         this.totalOrders = orders.length;
         this.totalSpent = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+
+        this.subscriptionService.currentSubscription$.subscribe(subscription => {
+            this.currentSubscription = subscription;
+            this.currentPlan = this.subscriptionService.getPlan(subscription.planId);
+        });
     }
 
     getInitials(): string {
@@ -64,5 +74,21 @@ export class ProfileComponent implements OnInit {
 
     viewOrders(): void {
         this.router.navigate(['/orders']);
+    }
+
+    manageSubscription(): void {
+        this.router.navigate(['/settings/subscription']);
+    }
+
+    getSubscriptionSeverity(): "success" | "warn" | "info" {
+        if (this.currentSubscription?.status === 'active') {
+            return 'success';
+        }
+
+        if (this.currentSubscription?.status === 'canceled') {
+            return 'warn';
+        }
+
+        return 'info';
     }
 }

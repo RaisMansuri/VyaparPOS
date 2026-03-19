@@ -19,6 +19,9 @@ import { MessageService } from 'primeng/api';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { SubscriptionService } from '../core/services/subscription.service';
+import { AuthUser } from '../auth/auth.service';
+import { SubscriptionPlan } from '../models/subscription.model';
 
 @Component({
   selector: 'app-main-layout',
@@ -36,6 +39,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   public cartService = inject(CartService);
   public notificationService = inject(NotificationService);
   public translationService = inject(TranslationService);
+  public subscriptionService = inject(SubscriptionService);
   private messageService = inject(MessageService);
 
   sidebarVisible = false;
@@ -44,6 +48,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   lowStockItems: any[] = [];
   pageTitle = 'Dashboard';
   private checkInterval: any;
+  currentUser: AuthUser | null = null;
+  currentPlan: SubscriptionPlan | null = null;
 
   languages = [
     { label: 'English', value: 'en' },
@@ -69,6 +75,14 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       this.selectedLang = lang;
     });
 
+    this.auth.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    this.subscriptionService.currentPlan$.subscribe(plan => {
+      this.currentPlan = plan;
+    });
+
     this.notificationService.lowStockAlerts$.subscribe(items => {
       this.lowStockItems = items;
       if (items.length > 0) {
@@ -92,6 +106,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
         label: 'My Profile',
         icon: 'pi pi-user',
         command: () => this.navigate('/profile')
+      },
+      {
+        label: 'Manage Subscription',
+        icon: 'pi pi-credit-card',
+        command: () => this.navigate('/settings/subscription')
       },
       {
         separator: true
@@ -143,6 +162,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/orders')) this.pageTitle = 'My Orders';
     else if (url.includes('/profile')) this.pageTitle = 'My Profile';
     else if (url.includes('/settings/products')) this.pageTitle = 'Product Settings';
+    else if (url.includes('/settings/subscription')) this.pageTitle = 'Subscription';
     else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';
     else this.pageTitle = 'VyaparPOS';
   }

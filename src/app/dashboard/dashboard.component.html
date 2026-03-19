@@ -2,71 +2,205 @@
   <div class="dashboard-header">
     <div class="header-content">
       <h1 class="welcome-text">Welcome back, Admin</h1>
-      <p class="subtitle-text">Here's what's happening with your bakery today.</p>
+      <p class="subtitle-text">Track sales, inventory, and performance from one place.</p>
     </div>
     <div class="header-actions">
-      <button pButton icon="pi pi-plus" label="New Sale" class="p-button-primary shadow-2" (click)="navigate('/products')"></button>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-filter"
+        label="Filters"
+        class="p-button-outlined filter-trigger"
+        (click)="filterDrawerVisible = true">
+      </button>
+      <button
+        pButton
+        icon="pi pi-plus"
+        label="New Sale"
+        class="p-button-primary shadow-2"
+        (click)="navigate('/products')">
+      </button>
     </div>
   </div>
+
+  @if (activeFilterLabels.length > 0) {
+    <div class="active-filters">
+      @for (filter of activeFilterLabels; track filter) {
+        <span class="filter-pill">{{ filter }}</span>
+      }
+    </div>
+  }
+
+  <p-sidebar [(visible)]="filterDrawerVisible" position="right" styleClass="dashboard-filter-drawer" [modal]="true">
+    <ng-template pTemplate="header">
+      <div class="drawer-header">
+        <i class="pi pi-sliders-h"></i>
+        <span>Dashboard Filters</span>
+      </div>
+    </ng-template>
+
+    <div class="drawer-body">
+      <div class="drawer-field">
+        <label>Duration</label>
+        <p-dropdown
+          [options]="durationOptions"
+          [(ngModel)]="selectedDuration"
+          optionLabel="label"
+          optionValue="value"
+          appendTo="body">
+        </p-dropdown>
+      </div>
+
+      @if (selectedDuration === 'custom') {
+        <div class="drawer-field">
+          <label>Start Date</label>
+          <input type="date" [(ngModel)]="customStartDate" class="native-date-input" />
+        </div>
+        <div class="drawer-field">
+          <label>End Date</label>
+          <input type="date" [(ngModel)]="customEndDate" class="native-date-input" />
+        </div>
+      }
+
+      <div class="drawer-field">
+        <label>Category</label>
+        <p-dropdown
+          [options]="categoryOptions"
+          [(ngModel)]="selectedCategory"
+          optionLabel="label"
+          optionValue="value"
+          appendTo="body"
+          (onChange)="onCategoryChange()">
+        </p-dropdown>
+      </div>
+
+      <div class="drawer-field">
+        <label>Product</label>
+        <p-dropdown
+          [options]="filteredProductOptions"
+          [(ngModel)]="selectedProduct"
+          optionLabel="label"
+          optionValue="value"
+          appendTo="body">
+        </p-dropdown>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="drawer-footer">
+        <button
+          pButton
+          type="button"
+          label="Reset"
+          class="p-button-outlined p-button-secondary"
+          (click)="resetFilters()">
+        </button>
+        <button
+          pButton
+          type="button"
+          label="Apply"
+          (click)="applyFilters(); filterDrawerVisible = false">
+        </button>
+      </div>
+    </ng-template>
+  </p-sidebar>
 
   @if (stats) {
-  <div class="stats-grid">
-    <div class="glass-card stat-item">
-      <div class="stat-icon-wrapper bg-blue-100">
-        <i class="pi pi-wallet text-blue-600"></i>
+    <div class="stats-grid">
+      <div class="glass-card stat-item">
+        <div class="stat-icon-wrapper bg-blue-100">
+          <i class="pi pi-wallet text-blue-600"></i>
+        </div>
+        <div class="stat-data">
+          <span class="label">Total Revenue</span>
+          <h2 class="value">{{ stats.grossTotal | currency:'INR' }}</h2>
+          <span class="trend up"><i class="pi pi-chart-line"></i> Filtered sales revenue</span>
+        </div>
       </div>
-      <div class="stat-data">
-        <span class="label">Total Revenue</span>
-        <h2 class="value">{{ stats.grossTotal | currency:'INR' }}</h2>
-        <span class="trend up"><i class="pi pi-arrow-up"></i> 12% vs last week</span>
+
+      <div class="glass-card stat-item">
+        <div class="stat-icon-wrapper bg-green-100">
+          <i class="pi pi-chart-line text-green-600"></i>
+        </div>
+        <div class="stat-data">
+          <span class="label">Net Profit</span>
+          <h2 class="value text-green-600">{{ stats.netProfit | currency:'INR' }}</h2>
+          <span class="trend up"><i class="pi pi-arrow-up"></i> Based on selected range</span>
+        </div>
+      </div>
+
+      <div class="glass-card stat-item">
+        <div class="stat-icon-wrapper bg-purple-100">
+          <i class="pi pi-box text-purple-600"></i>
+        </div>
+        <div class="stat-data">
+          <span class="label">Inventory Value</span>
+          <h2 class="value text-purple-600">{{ stats.totalStockValue | currency:'INR' }}</h2>
+          <span class="trend"><i class="pi pi-info-circle"></i> {{ stats.totalItemsInStock }} items in scope</span>
+        </div>
+      </div>
+
+      <div class="glass-card stat-item" [class.alert]="stats.outOfStockCount > 0">
+        <div class="stat-icon-wrapper bg-red-100">
+          <i class="pi pi-bell text-red-600"></i>
+        </div>
+        <div class="stat-data">
+          <span class="label">Stock Alerts</span>
+          <h2 class="value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</h2>
+          <span class="trend down"><i class="pi pi-exclamation-circle"></i> Immediate action</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="analytics-grid">
+    <div class="glass-card chart-card chart-wide">
+      <div class="section-header">
+        <div class="title-group">
+          <h3>Revenue and Profit Trend</h3>
+          <p>Track how sales are moving across the selected date range.</p>
+        </div>
+      </div>
+      <div class="chart-shell">
+        <p-chart type="line" [data]="lineData" [options]="lineOptions"></p-chart>
       </div>
     </div>
 
-    <div class="glass-card stat-item">
-      <div class="stat-icon-wrapper bg-green-100">
-        <i class="pi pi-chart-line text-green-600"></i>
+    <div class="glass-card chart-card">
+      <div class="section-header">
+        <div class="title-group">
+          <h3>Sales by Category</h3>
+          <p>Revenue split across filtered categories.</p>
+        </div>
       </div>
-      <div class="stat-data">
-        <span class="label">Net Profit</span>
-        <h2 class="value text-green-600">{{ stats.netProfit | currency:'INR' }}</h2>
-        <span class="trend up"><i class="pi pi-arrow-up"></i> 8% vs last week</span>
-      </div>
-    </div>
-
-    <div class="glass-card stat-item">
-      <div class="stat-icon-wrapper bg-purple-100">
-        <i class="pi pi-box text-purple-600"></i>
-      </div>
-      <div class="stat-data">
-        <span class="label">Inventory Value</span>
-        <h2 class="value text-purple-600">{{ stats.totalStockValue | currency:'INR' }}</h2>
-        <span class="trend"><i class="pi pi-info-circle"></i> {{ stats.totalItemsInStock }} items</span>
+      <div class="chart-shell chart-shell-small">
+        <p-chart type="doughnut" [data]="categoryChartData" [options]="doughnutOptions"></p-chart>
       </div>
     </div>
 
-    <div class="glass-card stat-item" [class.alert]="stats.outOfStockCount > 0">
-      <div class="stat-icon-wrapper bg-red-100">
-        <i class="pi pi-bell text-red-600"></i>
+    <div class="glass-card chart-card">
+      <div class="section-header">
+        <div class="title-group">
+          <h3>Top Products</h3>
+          <p>Best revenue contributors in the current filter.</p>
+        </div>
       </div>
-      <div class="stat-data">
-        <span class="label">Stock Alerts</span>
-        <h2 class="value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</h2>
-        <span class="trend down"><i class="pi pi-exclamation-circle"></i> Immediate action</span>
+      <div class="chart-shell chart-shell-small">
+        <p-chart type="bar" [data]="productChartData" [options]="barOptions"></p-chart>
       </div>
     </div>
   </div>
-  }
 
   <div class="dashboard-grid">
     <div class="glass-card table-section">
       <div class="section-header">
         <div class="title-group">
           <h3>Low Stock Inventory</h3>
-          <p>Manage items that are running low on stock.</p>
+          <p>Manage items that are running low on stock for the current filter.</p>
         </div>
         <button pButton label="View All" class="p-button-text p-button-sm" (click)="navigate('/products')"></button>
       </div>
-      
+
       <p-table [value]="lowStockProducts" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table">
         <ng-template pTemplate="header">
           <tr>
@@ -91,9 +225,16 @@
             </td>
             <td>{{ product.minStockLevel }}</td>
             <td>
-              <p-tag [value]="product.stock === 0 ? 'Out of Stock' : 'Low Stock'"
-                [severity]="getStockSeverity(product)"></p-tag>
+              <p-tag
+                [value]="product.stock === 0 ? 'Out of Stock' : 'Low Stock'"
+                [severity]="getStockSeverity(product)">
+              </p-tag>
             </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="empty-table">No low-stock items for the selected filters.</td>
           </tr>
         </ng-template>
       </p-table>

@@ -8,7 +8,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .welcome-text {
@@ -18,34 +25,68 @@
   letter-spacing: -0.02em;
 }
 
-.dashboard-grid {
-  margin-top: 3rem;
-}
-
 .subtitle-text {
   color: var(--text-color-secondary);
   margin: 0.25rem 0 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.filter-pill {
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0f3f63;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr) minmax(300px, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.chart-wide {
+  grid-column: span 1;
+}
+
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+
+.dashboard-grid {
+  margin-top: 1.75rem;
 }
 
 .glass-card {
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
 }
 
 .stat-item {
@@ -90,8 +131,13 @@
   gap: 0.25rem;
 }
 
-.trend.up { color: var(--success-color); }
-.trend.down { color: var(--danger-color); }
+.trend.up {
+  color: var(--success-color);
+}
+
+.trend.down {
+  color: var(--danger-color);
+}
 
 .stat-item.alert {
   border-left: 4px solid var(--danger-color);
@@ -101,24 +147,33 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  gap: 1rem;
 }
 
 .section-header h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
 }
 
 .section-header p {
-  margin: 0.25rem 0 0;
+  margin: 0.35rem 0 0;
   font-size: 0.875rem;
   color: var(--text-color-secondary);
 }
 
-.modern-table :host ::ng-deep .p-datatable-thead > tr > th {
-  background: transparent;
-  border-bottom: 1px solid var(--surface-border);
+.chart-shell {
+  position: relative;
+  height: 260px;
+}
+
+.chart-shell-small {
+  height: 240px;
+}
+
+.table-section {
+  overflow: hidden;
 }
 
 .stock-progress {
@@ -151,14 +206,105 @@
   font-weight: 600;
 }
 
+.empty-table {
+  text-align: center;
+  padding: 1.25rem;
+  color: var(--text-color-secondary);
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+}
+
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.drawer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.drawer-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.native-date-input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #dbe3ef;
+  border-radius: 12px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+}
+
+.drawer-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+:host ::ng-deep .dashboard-filter-drawer .p-sidebar-header {
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .dashboard-filter-drawer .p-sidebar-content {
+  padding-top: 1rem;
+}
+
+:host ::ng-deep .dashboard-filter-drawer .p-sidebar-footer {
+  padding-top: 1rem;
+}
+
+:host ::ng-deep .drawer-field .p-dropdown,
+:host ::ng-deep .drawer-field .p-inputtext {
+  width: 100%;
+}
+
+:host ::ng-deep .chart-shell .p-chart {
+  display: block;
+  height: 100%;
+}
+
+:host ::ng-deep .chart-shell canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 1200px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 1rem;
+  }
+
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
   }
-  
-  .dashboard-wrapper {
-    padding: 1.5rem;
+
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .chart-shell,
+  .chart-shell-small {
+    height: 220px;
   }
 }

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard';
+import { planGuard } from './auth/plan.guard';
 
 export const routes: Routes = [
   {
@@ -59,6 +60,10 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
+        canActivate: [authGuard, planGuard],
+        data: {
+          requiredFeature: 'advanced_reports',
+        },
         loadComponent: () =>
           import('./pages/reports/reports.component').then(
             (m) => m.ReportsComponent
@@ -143,9 +148,21 @@ export const routes: Routes = [
       },
       {
         path: 'settings/users',
+        canActivate: [authGuard, planGuard],
+        data: {
+          requiredFeature: 'team_management',
+        },
         loadComponent: () =>
           import('./pages/settings/users/users.component').then(
             (m) => m.UsersComponent
+          ),
+      },
+      {
+        path: 'settings/subscription',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/settings/subscription/subscription.component').then(
+            (m) => m.SubscriptionComponent
           ),
       },
       {
@@ -157,6 +174,10 @@ export const routes: Routes = [
       },
       {
         path: 'mobile-pos',
+        canActivate: [authGuard, planGuard],
+        data: {
+          requiredFeature: 'mobile_pos',
+        },
         loadComponent: () =>
           import('./pages/mobile-pos/mobile-pos.component').then(
             (m) => m.MobilePosComponent

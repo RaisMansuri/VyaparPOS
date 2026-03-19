@@ -96,6 +96,45 @@
         <h6 class="section-title">BASIC INFO</h6>
 
         <div class="field mb-4 full-width-field">
+          <label class="premium-label">Product image</label>
+          <div class="image-upload-panel">
+            <div class="image-preview-card">
+              <img [src]="imagePreviewUrl" [alt]="productForm.get('name')?.value || 'Product preview'" class="image-preview" />
+            </div>
+            <div class="image-upload-content">
+              <input
+                #fileInput
+                type="file"
+                class="native-file-input"
+                [accept]="acceptedImageExtensions"
+                (change)="onImageSelected($event)" />
+              <div class="image-upload-actions">
+                <button
+                  pButton
+                  type="button"
+                  label="Upload Image"
+                  icon="pi pi-upload"
+                  class="p-button-outlined"
+                  (click)="fileInput.click()">
+                </button>
+                <button
+                  pButton
+                  type="button"
+                  label="Remove"
+                  icon="pi pi-trash"
+                  severity="secondary"
+                  class="p-button-text"
+                  [disabled]="!selectedImageName && imagePreviewUrl === productForm.get('imageUrl')?.value && imagePreviewUrl === 'https://via.placeholder.com/150'"
+                  (click)="removeSelectedImage(fileInput)">
+                </button>
+              </div>
+              <span class="upload-file-name">{{ selectedImageName || 'No file selected' }}</span>
+              <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="field mb-4 full-width-field">
           <label for="name" class="premium-label">Product name <span class="required-mark">*</span></label>
           <input type="text" pInputText id="name" formControlName="name" placeholder="e.g. Basmati Rice 1kg"
             [class.p-invalid]="submitted && productForm.get('name')?.invalid" />
