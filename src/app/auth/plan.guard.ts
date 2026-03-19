@@ -13,25 +13,37 @@ export const planGuard: CanActivateFn = (
   const subscriptionService = inject(SubscriptionService);
   const requiredFeature = route.data['requiredFeature'] as SubscriptionFeature | undefined;
   const requiredPlan = route.data['requiredPlan'] as SubscriptionPlanId | undefined;
+  const requiredRole = route.data['requiredRole'] as string | undefined;
 
   if (!auth.isAuthenticated()) {
     router.navigate(['/auth/login'], { queryParams: { redirectTo: state.url } });
     return false;
   }
 
-  if (requiredFeature && subscriptionService.canAccessFeature(requiredFeature)) {
-    return true;
+  // Check Feature
+  if (requiredFeature && !subscriptionService.canAccessFeature(requiredFeature)) {
+    return redirectToSubscription(router, state.url, requiredFeature);
   }
 
-  if (requiredPlan && subscriptionService.canAccessPlan(requiredPlan)) {
-    return true;
+  // Check Plan
+  if (requiredPlan && !subscriptionService.canAccessPlan(requiredPlan)) {
+    return redirectToSubscription(router, state.url, requiredPlan);
   }
 
+  // Check Role
+  if (requiredRole && !auth.hasRole(requiredRole)) {
+    return redirectToSubscription(router, state.url, `role_${requiredRole}`);
+  }
+
+  return true;
+};
+
+function redirectToSubscription(router: Router, url: string, reason: string): boolean {
   router.navigate(['/settings/subscription'], {
     queryParams: {
-      redirectTo: state.url,
-      blocked: requiredFeature || requiredPlan || 'subscription',
+      redirectTo: url,
+      blocked: reason,
     },
   });
   return false;
-};
+}

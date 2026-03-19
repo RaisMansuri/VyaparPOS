@@ -44,10 +44,13 @@
       }
       <div class="nav-section-title">Shopping</div>
       <a (click)="navigate('/cart')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-shopping-cart"></i> Cart
-        @if (cartService.cartCount() > 0) {
-          <span class="sidebar-badge">{{ cartService.cartCount() }}</span>
-        }
+        <div class="nav-icon-wrapper">
+          <i class="pi pi-shopping-cart"></i>
+          @if (cartService.cartCount() > 0) {
+            <span class="sidebar-badge">{{ cartService.cartCount() }}</span>
+          }
+        </div>
+        Cart
       </a>
       <a (click)="navigate('/orders')" routerLinkActive="active" class="nav-item">
         <i class="pi pi-list"></i> My Orders

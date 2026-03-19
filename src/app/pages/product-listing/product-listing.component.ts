@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, QueryList, ElementRef, inject, HostListener } from '@angular/core';
 import { Product } from '../../models/product.model';
-import { CommonModule, CurrencyPipe, KeyValuePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
@@ -22,7 +22,6 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [
     CommonModule, 
     CurrencyPipe, 
-    KeyValuePipe, 
     FormsModule, 
     ToastModule, 
     SidebarModule, 
@@ -51,6 +50,7 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   allProducts: Product[] = [];
   products: Product[] = [];
   groupedProducts: { [key: string]: Product[] } = {};
+  categorySections: Array<{ name: string; products: Product[] }> = [];
   currentCategory: string | null = null;
 
   // UI state
@@ -258,6 +258,18 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
       acc[product.category].push(product);
       return acc;
     }, {} as { [key: string]: Product[] });
+
+    this.categorySections =
+      this.selectedCategory !== 'all'
+        ? this.groupedProducts[this.selectedCategory]
+          ? [{ name: this.selectedCategory, products: this.groupedProducts[this.selectedCategory] }]
+          : []
+        : this.categories
+            .filter((category) => this.groupedProducts[category]?.length)
+            .map((category) => ({
+              name: category,
+              products: this.groupedProducts[category],
+            }));
   }
 
   ngAfterViewInit(): void {
@@ -342,5 +354,32 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
       return product.price - discountAmount;
     }
     return product.price;
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+    this.applyFilters();
+  }
+
+  getCategoryProductCount(category: string): number {
+    return this.allProducts.filter((product) => product.category === category).length;
+  }
+
+  getCategoryAvailabilityLabel(category: string): string {
+    const count = this.getCategoryProductCount(category);
+    return `${count} product${count === 1 ? '' : 's'} available`;
+  }
+
+  getCategoryIcon(category: string): string {
+    const normalizedCategory = category.toLowerCase();
+
+    if (normalizedCategory.includes('bread')) return 'pi pi-box';
+    if (normalizedCategory.includes('pastr')) return 'pi pi-star';
+    if (normalizedCategory.includes('cake')) return 'pi pi-heart';
+    if (normalizedCategory.includes('drink') || normalizedCategory.includes('beverage')) return 'pi pi-shopping-bag';
+    if (normalizedCategory.includes('snack')) return 'pi pi-shopping-bag';
+    if (normalizedCategory.includes('dairy')) return 'pi pi-box';
+
+    return 'pi pi-tag';
   }
 }

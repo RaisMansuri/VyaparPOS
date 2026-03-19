@@ -39,6 +39,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./dashboard/dashboard.component').then(
             (m) => m.DashboardComponent
@@ -46,6 +47,7 @@ export const routes: Routes = [
       },
       {
         path: 'products',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/product-listing/product-listing.component').then(
             (m) => m.ProductListingComponent
@@ -53,6 +55,7 @@ export const routes: Routes = [
       },
       {
         path: 'customers',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/customers/customers.component').then(
             (m) => m.CustomersComponent
@@ -71,6 +74,7 @@ export const routes: Routes = [
       },
       {
         path: 'support',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/support/support.component').then(
             (m) => m.SupportComponent
@@ -78,6 +82,7 @@ export const routes: Routes = [
       },
       {
         path: 'category/:id',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/product-listing/product-listing.component').then(
             (m) => m.ProductListingComponent
@@ -85,6 +90,7 @@ export const routes: Routes = [
       },
       {
         path: 'cart',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/cart/cart.component').then(
             (m) => m.CartComponent
@@ -92,6 +98,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/address',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/checkout/address/address.component').then(
             (m) => m.AddressComponent
@@ -99,6 +106,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/payment',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/checkout/payment/payment.component').then(
             (m) => m.PaymentComponent
@@ -106,6 +114,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/confirmation',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/checkout/confirmation/confirmation.component').then(
             (m) => m.ConfirmationComponent
@@ -113,6 +122,7 @@ export const routes: Routes = [
       },
       {
         path: 'orders',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/orders/my-orders/my-orders.component').then(
             (m) => m.MyOrdersComponent
@@ -120,6 +130,7 @@ export const routes: Routes = [
       },
       {
         path: 'orders/:id',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/orders/order-detail/order-detail.component').then(
             (m) => m.OrderDetailComponent
@@ -127,6 +138,7 @@ export const routes: Routes = [
       },
       {
         path: 'orders/:id/invoice',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/orders/invoice/invoice.component').then(
             (m) => m.InvoiceComponent
@@ -134,6 +146,7 @@ export const routes: Routes = [
       },
       {
         path: 'profile/edit',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/profile/edit-profile/edit-profile.component').then(
             (m) => m.EditProfileComponent
@@ -141,6 +154,7 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/profile/view-profile/profile.component').then(
             (m) => m.ProfileComponent
@@ -151,6 +165,7 @@ export const routes: Routes = [
         canActivate: [authGuard, planGuard],
         data: {
           requiredFeature: 'team_management',
+          requiredRole: 'owner'
         },
         loadComponent: () =>
           import('./pages/settings/users/users.component').then(
@@ -167,6 +182,7 @@ export const routes: Routes = [
       },
       {
         path: 'settings/products',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/settings/product-management/product-management.component').then(
             (m) => m.ProductManagementComponent

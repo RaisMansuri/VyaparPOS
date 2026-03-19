@@ -20,13 +20,46 @@
     </div>
   </div>
 
-  <!-- Category Quick Select -->
-  <div class="category-scroll-nav">
-    <button class="cat-pill" [class.active]="selectedCategory === 'all'" (click)="selectedCategory = 'all'; applyFilters()">All</button>
-    @for (cat of categories; track cat) {
-      <button class="cat-pill" [class.active]="selectedCategory === cat" (click)="selectedCategory = cat; applyFilters()">{{ cat }}</button>
-    }
-  </div>
+  <section class="category-browser">
+    <div class="browser-header">
+      <div>
+        <h2>Browse by Category</h2>
+        <p>Pick a category card to focus the product list below.</p>
+      </div>
+    </div>
+
+    <div class="category-card-grid">
+      <button
+        type="button"
+        class="category-card"
+        [class.active]="selectedCategory === 'all'"
+        (click)="selectCategory('all')">
+        <div class="category-icon-shell all">
+          <i class="pi pi-th-large"></i>
+        </div>
+        <div class="category-copy">
+          <h3>All Products</h3>
+          <p>{{ allProducts.length }} products available</p>
+        </div>
+      </button>
+
+      @for (cat of categories; track cat) {
+        <button
+          type="button"
+          class="category-card"
+          [class.active]="selectedCategory === cat"
+          (click)="selectCategory(cat)">
+          <div class="category-icon-shell">
+            <i [class]="getCategoryIcon(cat)"></i>
+          </div>
+          <div class="category-copy">
+            <h3>{{ cat }}</h3>
+            <p>{{ getCategoryAvailabilityLabel(cat) }}</p>
+          </div>
+        </button>
+      }
+    </div>
+  </section>
 
   <!-- Products Content -->
   <div class="products-content">
@@ -40,30 +73,37 @@
         <button pButton label="Clear All Filters" class="p-button-primary" (click)="clearFilters()"></button>
       </div>
     } @else {
-      @for (group of groupedProducts | keyvalue; track group.key) {
+      @for (group of categorySections; track group.name) {
         <section class="category-section">
           <div class="section-title">
-            <h2>{{ group.key }}</h2>
-            <span class="count-badge">{{ group.value.length }} items</span>
+            <div>
+              <h2>{{ group.name }}</h2>
+              <p>Medium product cards grouped for quick browsing and cart updates.</p>
+            </div>
+            <span class="count-badge">{{ group.products.length }} items</span>
           </div>
 
-          <div [class]="'product-' + viewMode">
-            @for (product of group.value; track product.id) {
+          <div class="product-grid medium-card-grid">
+            @for (product of group.products; track product.id) {
               <div class="glass-card product-card" [class.low-stock]="product.stock <= product.minStockLevel">
+                <div class="stock-badge" [class.low-stock]="getAvailableStock(product) <= product.minStockLevel" [class.out-of-stock]="getAvailableStock(product) <= 0">
+                   {{ getAvailableStock(product) }} left
+                </div>
                 <div class="card-image">
-                  <div class="stock-badge" [class.low-stock]="getAvailableStock(product) <= product.minStockLevel" [class.out-of-stock]="getAvailableStock(product) <= 0">
-                     {{ getAvailableStock(product) }} left
-                  </div>
                   <img [src]="product.imageUrl" [alt]="product.name" />
                   @if (product.discount) {
                     <div class="discount-tag">{{ product.discount.value }}% OFF</div>
                   }
                 </div>
-                
+
                 <div class="card-body">
                   <div class="card-info">
                     <h3 class="product-name">{{ product.name }}</h3>
                     <p class="product-desc">{{ product.description }}</p>
+                    <div class="product-meta">
+                      <span>{{ product.category }}</span>
+                      <span>Stock: {{ getAvailableStock(product) }}</span>
+                    </div>
                   </div>
                   
                   <div class="card-footer">
