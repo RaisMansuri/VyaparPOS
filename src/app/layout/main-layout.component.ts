@@ -22,6 +22,8 @@ import { FormsModule } from '@angular/forms';
 import { SubscriptionService } from '../core/services/subscription.service';
 import { AuthUser } from '../auth/auth.service';
 import { SubscriptionPlan } from '../models/subscription.model';
+import { PermissionService } from '../core/services/permission.service';
+import { RoutePermission } from '../models/permission.model';
 
 @Component({
   selector: 'app-main-layout',
@@ -40,6 +42,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   public notificationService = inject(NotificationService);
   public translationService = inject(TranslationService);
   public subscriptionService = inject(SubscriptionService);
+  public permissionService = inject(PermissionService);
   private messageService = inject(MessageService);
 
   sidebarVisible = false;
@@ -50,6 +53,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   private checkInterval: any;
   currentUser: AuthUser | null = null;
   currentPlan: SubscriptionPlan | null = null;
+  visibleRoutes: RoutePermission[] = [];
 
   languages = [
     { label: 'English', value: 'en' },
@@ -146,6 +150,23 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.auth.logout();
   }
 
+  hasVisibleSection(section: string): boolean {
+    if (section === 'shopping') {
+      return this.visibleRoutes.some(r => r.section === 'shopping' && r.path !== '/products');
+    }
+    return this.visibleRoutes.some(r => r.section === section);
+  }
+
+  getRouteLabel(route: RoutePermission): string {
+    if (route.label.startsWith('DASHBOARD') || 
+        route.label.startsWith('REPORTS') || 
+        route.label.startsWith('CUSTOMERS') ||
+        route.label.startsWith('PRODUCTS')) {
+      return this.translationService.translate(route.label) || route.label;
+    }
+    return route.label;
+  }
+
   updatePageTitle(url: string): void {
     if (url.includes('/dashboard')) this.pageTitle = this.translationService.translate('DASHBOARD') || 'Dashboard';
     else if (url.includes('/mobile-pos')) this.pageTitle = 'Mobile POS';
@@ -154,9 +175,9 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/support')) this.pageTitle = 'Customer Support';
     else if (url.includes('/products')) this.pageTitle = this.translationService.translate('PRODUCTS') || 'Products';
     else if (url.includes('/category/')) {
-        const cat = url.split('/').pop();
-        // Capitalize first letter
-        this.pageTitle = cat ? cat.charAt(0).toUpperCase() + cat.slice(1) : 'Category';
+      const cat = url.split('/').pop();
+      // Capitalize first letter
+      this.pageTitle = cat ? cat.charAt(0).toUpperCase() + cat.slice(1) : 'Category';
     }
     else if (url.includes('/cart')) this.pageTitle = 'Cart';
     else if (url.includes('/orders')) this.pageTitle = 'My Orders';
@@ -164,6 +185,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/settings/products')) this.pageTitle = 'Product Settings';
     else if (url.includes('/settings/subscription')) this.pageTitle = 'Subscription';
     else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';
+    else if (url.includes('/settings/permissions')) this.pageTitle = 'Permission Settings';
     else this.pageTitle = 'VyaparPOS';
   }
 }

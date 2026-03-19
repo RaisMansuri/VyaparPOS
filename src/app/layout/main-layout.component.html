@@ -2,10 +2,7 @@
   <p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="false" styleClass="layout-sidebar">
     <div class="sidebar-profile-section">
       <div class="user-avatar-wrapper">
-        <img
-          src="assets/avatar.png"
-          alt="User"
-          class="user-avatar"
+        <img src="assets/avatar.png" alt="User" class="user-avatar"
           onerror="this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'" />
         <span class="status-indicator"></span>
       </div>
@@ -18,57 +15,71 @@
       <div class="sidebar-title">VyaparPOS</div>
     </div>
     <nav class="sidebar-nav">
-      <a (click)="navigate('/dashboard')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-home"></i> {{ translationService.translate('DASHBOARD') }}
-      </a>
-      <a (click)="navigate('/mobile-pos')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-camera"></i> Mobile POS
-      </a>
-      <a (click)="navigate('/customers')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-users"></i> {{ translationService.translate('CUSTOMERS') }}
-      </a>
-      <a (click)="navigate('/reports')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-chart-bar"></i> {{ translationService.translate('REPORTS') }}
-      </a>
-      <a (click)="navigate('/support')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-question-circle"></i> Customer Support
-      </a>
+      <!-- Main Section -->
+      @for (route of visibleRoutes; track route.path) {
+        @if (route.section === 'main') {
+          <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+            <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+          </a>
+        }
+      }
+
+      <!-- Categories Section -->
       <div class="nav-section-title">{{ translationService.translate('CATEGORIES') }}</div>
-      <a (click)="navigate('/products')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-th-large"></i> {{ translationService.translate('PRODUCTS') }}
-      </a>
+      @for (route of visibleRoutes; track route.path) {
+        @if (route.path === '/products') {
+          <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+            <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+          </a>
+        }
+      }
       @for (category of categories; track category) {
         <a (click)="navigate('/category/' + category.toLowerCase())" routerLinkActive="active" class="nav-item">
           <i class="pi pi-tag"></i> {{ category }}
         </a>
       }
-      <div class="nav-section-title">Shopping</div>
-      <a (click)="navigate('/cart')" routerLinkActive="active" class="nav-item">
-        <div class="nav-icon-wrapper">
-          <i class="pi pi-shopping-cart"></i>
-          @if (cartService.cartCount() > 0) {
-            <span class="sidebar-badge">{{ cartService.cartCount() }}</span>
+
+      <!-- Shopping Section -->
+      @if (hasVisibleSection('shopping')) {
+        <div class="nav-section-title">Shopping</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'shopping' && route.path !== '/products') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <div class="nav-icon-wrapper">
+                <i [class]="route.icon"></i>
+                @if (route.badge && cartService.cartCount() > 0) {
+                  <span class="sidebar-badge">{{ cartService.cartCount() }}</span>
+                }
+              </div>
+              {{ getRouteLabel(route) }}
+            </a>
           }
-        </div>
-        Cart
-      </a>
-      <a (click)="navigate('/orders')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-list"></i> My Orders
-      </a>
-      <div class="nav-section-title">Account</div>
-      <a (click)="navigate('/profile')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-user"></i> My Profile
-      </a>
-      <a (click)="navigate('/settings/subscription')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-credit-card"></i> Subscription
-      </a>
-      <div class="nav-section-title">Settings</div>
-      <a (click)="navigate('/settings/products')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-box"></i> Products
-      </a>
-      <a (click)="navigate('/settings/users')" routerLinkActive="active" class="nav-item">
-        <i class="pi pi-users"></i> Users
-      </a>
+        }
+      }
+
+      <!-- Account Section -->
+      @if (hasVisibleSection('account')) {
+        <div class="nav-section-title">Account</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'account') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
+        }
+      }
+
+      <!-- Settings Section -->
+      @if (hasVisibleSection('settings')) {
+        <div class="nav-section-title">Settings</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'settings') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
+        }
+      }
 
       <div class="nav-section-title mobile-only-item">Security</div>
       <a (click)="logout()" class="nav-item mobile-only-item text-danger">
@@ -82,11 +93,7 @@
     <p-toolbar class="layout-toolbar">
       <ng-template #start>
         <div class="toolbar-left">
-          <button
-            pButton
-            type="button"
-            icon="pi pi-bars"
-            class="p-button-text p-button-plain menu-button"
+          <button pButton type="button" icon="pi pi-bars" class="p-button-text p-button-plain menu-button"
             (click)="toggleSidebar()"></button>
           <span class="toolbar-title">{{ pageTitle }}</span>
         </div>
@@ -94,20 +101,15 @@
 
       <ng-template #end>
         <div class="toolbar-right">
-          <p-dropdown
-            [options]="languages"
-            [(ngModel)]="selectedLang"
-            (onChange)="onLanguageChange($event)"
-            class="language-dropdown"
-            [style]="{'min-width': '100px'}"
-            appendTo="body"></p-dropdown>
+          <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
+            class="language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
 
           <div class="toolbar-separator"></div>
 
           <div class="badge-wrapper" (click)="op.toggle($event)">
             <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text"></button>
             @if (lowStockItems.length > 0) {
-              <span class="badge-count">{{ lowStockItems.length }}</span>
+            <span class="badge-count">{{ lowStockItems.length }}</span>
             }
           </div>
 
@@ -132,17 +134,13 @@
           <div class="badge-wrapper" (click)="navigate('/cart')">
             <button pButton type="button" icon="pi pi-shopping-cart" class="p-button-rounded p-button-text"></button>
             @if (cartService.cartCount() > 0) {
-              <span class="badge-count">{{ cartService.cartCount() }}</span>
+            <span class="badge-count">{{ cartService.cartCount() }}</span>
             }
           </div>
 
           <div class="toolbar-separator"></div>
 
-          <button
-            pButton
-            type="button"
-            icon="pi pi-user"
-            class="p-button-rounded p-button-text profile-btn"
+          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text profile-btn"
             (click)="menu.toggle($event)"></button>
           <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
         </div>

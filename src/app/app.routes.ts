@@ -189,6 +189,17 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'settings/permissions',
+        canActivate: [authGuard, planGuard],
+        data: {
+          requiredRole: 'owner'
+        },
+        loadComponent: () =>
+          import('./pages/settings/permissions/permissions.component').then(
+            (m) => m.PermissionsComponent
+          ),
+      },
+      {
         path: 'mobile-pos',
         canActivate: [authGuard, planGuard],
         data: {
