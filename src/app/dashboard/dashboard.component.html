@@ -107,7 +107,7 @@
 
   @if (stats) {
     <div class="metrics-grid">
-      <div class="metric-card">
+      <div class="metric-card revenue-card">
         <div class="metric-icon revenue-bg"><i class="pi pi-wallet"></i></div>
         <div class="metric-info">
           <span class="metric-label">Total Revenue</span>
@@ -118,18 +118,18 @@
         </div>
       </div>
 
-      <div class="metric-card">
+      <div class="metric-card profit-card">
         <div class="metric-icon profit-bg"><i class="pi pi-chart-line"></i></div>
         <div class="metric-info">
           <span class="metric-label">Net Profit</span>
-          <div class="metric-value text-green-600">{{ stats.netProfit | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="metric-value text-blue-600">{{ stats.netProfit | currency:'INR':'symbol':'1.0-0' }}</div>
           <div class="metric-trend positive">
             <i class="pi pi-arrow-up"></i> <span>Based on selected range</span>
           </div>
         </div>
       </div>
 
-      <div class="metric-card">
+      <div class="metric-card inventory-card">
         <div class="metric-icon inventory-bg"><i class="pi pi-box"></i></div>
         <div class="metric-info">
           <span class="metric-label">Inventory Value</span>
@@ -140,7 +140,7 @@
         </div>
       </div>
 
-      <div class="metric-card" [class.alert-card]="stats.outOfStockCount > 0">
+      <div class="metric-card alert-card">
         <div class="metric-icon alert-bg"><i class="pi pi-bell"></i></div>
         <div class="metric-info">
           <span class="metric-label">Stock Alerts</span>
