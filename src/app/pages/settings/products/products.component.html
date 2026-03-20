@@ -88,7 +88,7 @@
     styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="image-preview-container mb-4" *ngIf="uploadedImage || product.imageUrl">
-            <img [src]="uploadedImage ? uploadedImage?.objectURL : product?.imageUrl" class="block m-auto shadow-4"
+            <img [src]="uploadedImage ? uploadedImage.objectURL : product.imageUrl" class="block m-auto shadow-4"
                 width="100" />
         </div>
 

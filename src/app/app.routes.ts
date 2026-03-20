@@ -69,6 +69,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'reports/payments',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/reports/payment-history/payment-history.component').then(
+            (m) => m.PaymentHistoryComponent
+          ),
+      },
+      {
         path: 'reports',
         canActivate: [authGuard, planGuard],
         data: {

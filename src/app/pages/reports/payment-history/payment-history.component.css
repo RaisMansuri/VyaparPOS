@@ -1,0 +1,251 @@
+.payment-history-page {
+    background: #f0f4f8;
+    min-height: 100vh;
+    padding: 0 0 2rem;
+}
+
+/* --- Premium Header (Matching Reports Page) --- */
+.dashboard-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    margin-bottom: 1.25rem;
+    border-radius: 0 0 16px 16px;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 2.5rem;
+}
+
+.header-title h1 {
+    margin: 0;
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.header-title p {
+    margin: 0.25rem 0 0;
+    color: #93c5fd;
+    font-size: 0.85rem;
+}
+
+.header-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    padding: 0.55rem 1.25rem !important;
+}
+
+.header-btn-icon {
+    padding: 0.55rem 0.85rem !important;
+}
+
+/* --- Metrics Grid (Matching Reports Page) --- */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    padding: 0 2.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.18s ease;
+}
+
+.metric-card:hover { transform: translateY(-3px); }
+
+.metric-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.upi-bg { background: #eff6ff; color: #3b82f6; }
+.orders-bg { background: #ecfdf5; color: #10b981; }
+.avg-bg { background: #fff1f2; color: #e11d48; }
+.filter-bg { background: #f5f3ff; color: #8b5cf6; }
+
+.metric-info { display: flex; flex-direction: column; }
+.metric-label {
+    color: #64748b;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.metric-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0.1rem 0;
+}
+
+.metric-trend {
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.metric-trend.positive { color: #10b981; }
+.metric-trend.negative { color: #ef4444; }
+.metric-trend span { color: #94a3b8; font-weight: 400; }
+
+/* --- Table Card & Filters --- */
+.table-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    margin: 0 2.5rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.filter-belt {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr auto;
+    gap: 1.5rem;
+    align-items: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.filter-item { display: flex; flex-direction: column; gap: 0.5rem; }
+.filter-item label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+:host ::ng-deep .filter-dropdown .p-dropdown,
+:host ::ng-deep .filter-calendar .p-calendar {
+    border-radius: 10px !important;
+    height: 44px !important;
+}
+
+:host ::ng-deep .filter-dropdown .p-dropdown-label,
+:host ::ng-deep .filter-calendar .p-inputtext {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+}
+
+.filter-actions-group { display: flex; gap: 0.75rem; }
+.search-btn {
+    height: 44px !important;
+    border-radius: 10px !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+}
+
+.clear-btn {
+    height: 44px !important;
+    width: 44px !important;
+    border-radius: 10px !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+/* --- Premium Table Styles --- */
+:host ::ng-deep .custom-txn-table .p-datatable-thead > tr > th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1.25rem 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+:host ::ng-deep .custom-txn-table .p-datatable-tbody > tr > td {
+    padding: 1.1rem 1rem;
+    border-bottom: 1px solid #f8fafc;
+    font-size: 0.9rem;
+}
+
+.txn-id-tag {
+    font-family: 'JetBrains Mono', monospace;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.type-chip.sale { background: #ecfdf5; color: #059669; }
+.type-chip.expense { background: #fef2f2; color: #dc2626; }
+
+.txt-positive { color: #059669; font-weight: 800; }
+.txt-negative { color: #dc2626; font-weight: 800; }
+
+.method-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.timestamp-box { display: flex; flex-direction: column; }
+.timestamp-box .date { font-weight: 700; color: #0f172a; }
+.timestamp-box .time { font-size: 0.75rem; color: #94a3b8; }
+
+/* Expansion Detail */
+.expansion-content {
+    background: #f8fafc;
+    border-left: 4px solid #3b82f6;
+    margin: 0.5rem 1rem 1rem;
+    border-radius: 12px;
+}
+
+.info-tile { margin-bottom: 1rem; }
+.info-tile .title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+}
+.info-tile .content { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
+.highlight-blue { color: #2563eb; font-weight: 800; }
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1280px) {
+    .metrics-grid, .table-card { padding: 1rem 1.5rem; margin-left: 1.5rem; margin-right: 1.5rem; }
+    .header-content { padding: 1.25rem 1.5rem; }
+}
+
+@media screen and (max-width: 960px) {
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .filter-belt { grid-template-columns: 1fr; gap: 1rem; }
+    .header-content { flex-direction: column; align-items: flex-start; }
+}

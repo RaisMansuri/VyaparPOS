@@ -18,6 +18,7 @@ export class PermissionService {
     { path: '/mobile-pos', label: 'Mobile POS', icon: 'pi pi-camera', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredFeature: 'mobile_pos', requiredPermission: 'Process Sales' },
     { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'main', allowedRoles: ['owner', 'admin', 'manager'] },
     { path: '/reports', label: 'REPORTS', icon: 'pi pi-chart-bar', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredFeature: 'advanced_reports', requiredPermission: 'View Reports' },
+    { path: '/reports/payments', label: 'Payment History', icon: 'pi pi-history', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'View Reports' },
     // { path: '/marketing', label: 'MARKETING', icon: 'pi pi-megaphone', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'Manage Marketing' },
     { path: '/notifications', label: 'Notifications', icon: 'pi pi-bell', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
     { path: '/support', label: 'Customer Support', icon: 'pi pi-question-circle', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },

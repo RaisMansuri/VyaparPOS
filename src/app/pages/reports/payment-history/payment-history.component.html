@@ -1,0 +1,181 @@
+<div class="payment-history-page">
+    <!-- Premium Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="pi pi-history mr-2"></i> Payment History</h1>
+                <p>Monitor your financial audit trail and transaction logs</p>
+            </div>
+            <div class="header-actions">
+                <button pButton icon="pi pi-file-excel" label="Export CSV" class="header-btn"></button>
+                <button pButton icon="pi pi-refresh" (click)="loadTransactions()" class="header-btn header-btn-icon" pTooltip="Reload Data"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon upi-bg"><i class="pi pi-mobile"></i></div>
+            <div class="metric-info">
+                <span class="metric-label">UPI Payments</span>
+                <span class="metric-value">{{ stats.upiVolume | currency:'INR':'symbol':'1.0-0' }}</span>
+                <div class="metric-trend positive"><i class="pi pi-arrow-up"></i> 12% <span>vs last month</span></div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon orders-bg"><i class="pi pi-money-bill"></i></div>
+            <div class="metric-info">
+                <span class="metric-label">Cash Volume</span>
+                <span class="metric-value">{{ stats.cashVolume | currency:'INR':'symbol':'1.0-0' }}</span>
+                <div class="metric-trend positive"><i class="pi pi-arrow-up"></i> 5% <span>vs last month</span></div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon avg-bg"><i class="pi pi-refresh"></i></div>
+            <div class="metric-info">
+                <span class="metric-label">Refunds</span>
+                <span class="metric-value">₹ 1,250</span>
+                <div class="metric-trend negative"><i class="pi pi-arrow-down"></i> 2% <span>improvement</span></div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon filter-bg"><i class="pi pi-check-circle"></i></div>
+            <div class="metric-info">
+                <span class="metric-label">Settled</span>
+                <span class="metric-value">98.5%</span>
+                <div class="metric-trend neutral"><span>On Track</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="table-card mb-4">
+        <div class="filter-belt">
+            <div class="filter-item">
+                <label>Transaction Type</label>
+                <p-dropdown [options]="typeOptions" [(ngModel)]="selectedType" placeholder="All Types" [showClear]="true" styleClass="w-full filter-dropdown"></p-dropdown>
+            </div>
+            <div class="filter-item">
+                <label>Payment Method</label>
+                <p-dropdown [options]="methodOptions" [(ngModel)]="selectedMethod" placeholder="All Methods" [showClear]="true" styleClass="w-full filter-dropdown"></p-dropdown>
+            </div>
+            <div class="filter-item date-range">
+                <label>Date Range</label>
+                <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" placeholder="Select Dates" [showIcon]="true" styleClass="w-full filter-calendar"></p-calendar>
+            </div>
+            <div class="filter-actions-group">
+                <button pButton icon="pi pi-search" label="Search" (click)="loadTransactions()" class="search-btn"></button>
+                <button pButton icon="pi pi-times" (click)="selectedType=null; selectedMethod=null; dateRange=null; loadTransactions()" class="clear-btn"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-card p-0 overflow-hidden">
+        <p-table 
+            [value]="transactions" 
+            [loading]="loading" 
+            [rows]="10" 
+            [paginator]="true" 
+            [responsiveLayout]="'stack'" 
+            [breakpoint]="'960px'"
+            dataKey="id"
+            styleClass="p-datatable-sm custom-txn-table"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem"></th>
+                    <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="type">Type <p-sortIcon field="type"></p-sortIcon></th>
+                    <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+                    <th>Method</th>
+                    <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-txn let-expanded="expanded">
+                <tr>
+                    <td>
+                        <button type="button" pButton pRipple [pRowToggler]="txn" class="p-button-text p-button-rounded p-button-plain p-button-sm" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                    </td>
+                    <td><span class="txn-id-tag">{{ txn.id }}</span></td>
+                    <td>
+                        <div class="type-chip" [ngClass]="txn.type.toLowerCase()">
+                            <i [class]="getTypeIcon(txn.type)"></i>
+                            <span>{{ txn.type }}</span>
+                        </div>
+                    </td>
+                    <td class="font-bold amount-cell" [class.txt-positive]="txn.type !== 'Expense'" [class.txt-negative]="txn.type === 'Expense'">
+                        {{ txn.amount | currency:'INR':'symbol':'1.0-2' }}
+                    </td>
+                    <td>
+                        <div class="method-indicator">
+                            <i [class]="getMethodIcon(txn.method)"></i>
+                            <span>{{ txn.method }}</span>
+                        </div>
+                    </td>
+                    <td><p-tag [value]="txn.status" [severity]="getStatusSeverity(txn.status)" styleClass="premium-tag"></p-tag></td>
+                    <td>
+                        <div class="timestamp-box">
+                            <span class="date">{{ txn.date | date:'dd/MM/yyyy' }}</span>
+                            <span class="time">{{ txn.date | date:'shortTime' }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="rowexpansion" let-txn>
+                <tr>
+                    <td colspan="7">
+                        <div class="expansion-content p-4">
+                            <div class="grid">
+                                <div class="col-12 md:col-6 lg:col-4">
+                                    <div class="info-tile">
+                                        <span class="title">Reference ID</span>
+                                        <span class="content font-mono">{{ txn.referenceId }}</span>
+                                    </div>
+                                    <div class="info-tile" *ngIf="txn.upiId">
+                                        <span class="title text-primary">UPI ID / VPA</span>
+                                        <span class="content highlight-blue">{{ txn.upiId }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-4">
+                                    <div class="info-tile">
+                                        <span class="title">Customer / Payee</span>
+                                        <span class="content">{{ txn.customerName || 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-tile">
+                                        <span class="title">Handled By</span>
+                                        <span class="content">{{ txn.processedBy || 'System' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-12 lg:col-4">
+                                    <div class="info-tile">
+                                        <span class="title">Notes / Description</span>
+                                        <span class="content text-gray-500 italic">{{ txn.description || 'No additional details provided' }}</span>
+                                    </div>
+                                    <div class="btn-group mt-3 flex gap-2">
+                                        <button pButton icon="pi pi-print" label="Print" class="p-button-sm p-button-outlined"></button>
+                                        <button pButton icon="pi pi-question-circle" label="Support" class="p-button-sm p-button-text p-button-secondary"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center p-8 bg-gray-50">
+                        <i class="pi pi-search text-6xl text-gray-200 mb-4"></i>
+                        <h2 class="text-gray-400 font-bold">No Transactions Found</h2>
+                        <p class="text-gray-300">Try refining your filters or date range above.</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
