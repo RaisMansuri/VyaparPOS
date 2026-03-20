@@ -18,7 +18,7 @@ import { InputIconModule } from 'primeng/inputicon';
 interface Product {
     id: number;
     name: string;
-    image: string;
+    imageUrl: string;
     category: string;
     price: number;
     stock: number;
@@ -71,9 +71,9 @@ export class ProductsComponent implements OnInit {
 
         // Dummy data
         this.products = [
-            { id: 101, name: 'Coca Cola 2L', image: '', category: 'Beverages', price: 2.50, stock: 45, barcode: '890103001234' },
-            { id: 102, name: 'Lays Chips', image: '', category: 'Snacks', price: 1.20, stock: 12, barcode: '890103005678' },
-            { id: 103, name: 'Fresh Milk 1L', image: '', category: 'Dairy', price: 1.80, stock: 8, barcode: '890103009012' }
+            { id: 101, name: 'Coca Cola 2L', imageUrl: '', category: 'Beverages', price: 2.50, stock: 45, barcode: '890103001234' },
+            { id: 102, name: 'Lays Chips', imageUrl: '', category: 'Snacks', price: 1.20, stock: 12, barcode: '890103005678' },
+            { id: 103, name: 'Fresh Milk 1L', imageUrl: '', category: 'Dairy', price: 1.80, stock: 8, barcode: '890103009012' }
         ];
 
         this.loading = false;
@@ -86,7 +86,7 @@ export class ProductsComponent implements OnInit {
     }
 
     openNew() {
-        this.product = { id: 0, name: '', image: '', category: '', price: 0, stock: 0, barcode: this.generateBarcode() };
+        this.product = { id: 0, name: '', imageUrl: '', category: '', price: 0, stock: 0, barcode: this.generateBarcode() };
         this.submitted = false;
         this.productDialog = true;
         this.uploadedImage = null;
@@ -105,7 +105,7 @@ export class ProductsComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.products = this.products.filter((val) => val.id !== prod.id);
-                this.product = { id: 0, name: '', image: '', category: '', price: 0, stock: 0, barcode: '' };
+                this.product = { id: 0, name: '', imageUrl: '', category: '', price: 0, stock: 0, barcode: '' };
                 this.toastService.success('Successful', 'Product Deleted');
             }
         });
@@ -122,7 +122,7 @@ export class ProductsComponent implements OnInit {
         if (this.product.name?.trim() && this.product.category && this.product.price > 0 && this.product.stock >= 0) {
 
             if (this.uploadedImage) {
-                this.product.image = this.uploadedImage.objectURL;
+                this.product.imageUrl = this.uploadedImage.objectURL;
             }
 
             if (this.product.id) {
@@ -137,7 +137,7 @@ export class ProductsComponent implements OnInit {
 
             this.products = [...this.products];
             this.productDialog = false;
-            this.product = { id: 0, name: '', image: '', category: '', price: 0, stock: 0, barcode: '' };
+            this.product = { id: 0, name: '', imageUrl: '', category: '', price: 0, stock: 0, barcode: '' };
         }
     }
 
@@ -175,7 +175,7 @@ export class ProductsComponent implements OnInit {
                     price: parseFloat(data[2].trim()) || 0,
                     stock: parseInt(data[3].trim()) || 0,
                     barcode: data[4] ? data[4].trim() : this.generateBarcode(),
-                    image: ''
+                    imageUrl: ''
                 };
                 this.products.push(newProd);
                 addedCount++;

@@ -68,8 +68,7 @@
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-pencil" class="btn-action-edit"
                             (click)="editProduct(prod)"></button>
-                        <button pButton pRipple icon="pi pi-trash"
-                            class="btn-action-delete"
+                        <button pButton pRipple icon="pi pi-trash" class="btn-action-delete"
                             (click)="deleteProduct(prod)"></button>
                     </div>
                 </td>
@@ -88,8 +87,8 @@
 <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="image-preview-container mb-4" *ngIf="uploadedImage || product?.imageUrl">
-            <img [src]="uploadedImage ? uploadedImage.objectURL : product?.imageUrl" class="block m-auto shadow-4"
+        <div class="image-preview-container mb-4" *ngIf="uploadedImage || product.imageUrl">
+            <img [src]="uploadedImage ? uploadedImage.objectURL : product.imageUrl" class="block m-auto shadow-4"
                 width="100" />
         </div>
 
