@@ -106,48 +106,48 @@
   </p-sidebar>
 
   @if (stats) {
-    <div class="stats-grid">
-      <div class="glass-card stat-item">
-        <div class="stat-icon-wrapper bg-blue-100">
-          <i class="pi pi-wallet text-blue-600"></i>
-        </div>
-        <div class="stat-data">
-          <span class="label">Total Revenue</span>
-          <h2 class="value">{{ stats.grossTotal | currency:'INR' }}</h2>
-          <span class="trend up"><i class="pi pi-chart-line"></i> Filtered sales revenue</span>
-        </div>
-      </div>
-
-      <div class="glass-card stat-item">
-        <div class="stat-icon-wrapper bg-green-100">
-          <i class="pi pi-chart-line text-green-600"></i>
-        </div>
-        <div class="stat-data">
-          <span class="label">Net Profit</span>
-          <h2 class="value text-green-600">{{ stats.netProfit | currency:'INR' }}</h2>
-          <span class="trend up"><i class="pi pi-arrow-up"></i> Based on selected range</span>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon revenue-bg"><i class="pi pi-wallet"></i></div>
+        <div class="metric-info">
+          <span class="metric-label">Total Revenue</span>
+          <div class="metric-value">{{ stats.grossTotal | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="metric-trend positive">
+            <i class="pi pi-chart-line"></i> <span>Filtered sales revenue</span>
+          </div>
         </div>
       </div>
 
-      <div class="glass-card stat-item">
-        <div class="stat-icon-wrapper bg-purple-100">
-          <i class="pi pi-box text-purple-600"></i>
-        </div>
-        <div class="stat-data">
-          <span class="label">Inventory Value</span>
-          <h2 class="value text-purple-600">{{ stats.totalStockValue | currency:'INR' }}</h2>
-          <span class="trend"><i class="pi pi-info-circle"></i> {{ stats.totalItemsInStock }} items in scope</span>
+      <div class="metric-card">
+        <div class="metric-icon profit-bg"><i class="pi pi-chart-line"></i></div>
+        <div class="metric-info">
+          <span class="metric-label">Net Profit</span>
+          <div class="metric-value text-green-600">{{ stats.netProfit | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="metric-trend positive">
+            <i class="pi pi-arrow-up"></i> <span>Based on selected range</span>
+          </div>
         </div>
       </div>
 
-      <div class="glass-card stat-item" [class.alert]="stats.outOfStockCount > 0">
-        <div class="stat-icon-wrapper bg-red-100">
-          <i class="pi pi-bell text-red-600"></i>
+      <div class="metric-card">
+        <div class="metric-icon inventory-bg"><i class="pi pi-box"></i></div>
+        <div class="metric-info">
+          <span class="metric-label">Inventory Value</span>
+          <div class="metric-value text-purple-600">{{ stats.totalStockValue | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="metric-trend neutral">
+            <i class="pi pi-info-circle"></i> <span>{{ stats.totalItemsInStock }} items in scope</span>
+          </div>
         </div>
-        <div class="stat-data">
-          <span class="label">Stock Alerts</span>
-          <h2 class="value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</h2>
-          <span class="trend down"><i class="pi pi-exclamation-circle"></i> Immediate action</span>
+      </div>
+
+      <div class="metric-card" [class.alert-card]="stats.outOfStockCount > 0">
+        <div class="metric-icon alert-bg"><i class="pi pi-bell"></i></div>
+        <div class="metric-info">
+          <span class="metric-label">Stock Alerts</span>
+          <div class="metric-value text-red-600">{{ stats.outOfStockCount }} Out / {{ stats.lowStockCount }} Low</div>
+          <div class="metric-trend negative">
+            <i class="pi pi-exclamation-circle"></i> <span>Immediate action</span>
+          </div>
         </div>
       </div>
     </div>

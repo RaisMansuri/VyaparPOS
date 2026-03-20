@@ -88,8 +88,8 @@
 <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="image-preview-container mb-4" *ngIf="uploadedImage || product?.image">
-            <img [src]="uploadedImage ? uploadedImage.objectURL : product?.image" class="block m-auto shadow-4"
+        <div class="image-preview-container mb-4" *ngIf="uploadedImage || product?.imageUrl">
+            <img [src]="uploadedImage ? uploadedImage.objectURL : product?.imageUrl" class="block m-auto shadow-4"
                 width="100" />
         </div>
 
