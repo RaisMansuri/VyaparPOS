@@ -5,25 +5,11 @@
 }
 
 .dashboard-header {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  padding: 1.5rem 2rem;
-  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1.5rem;
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-header h1 {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: white;
-}
-
-.dashboard-header p {
-  margin: 0.25rem 0 0;
-  color: #93c5fd;
-  font-size: 0.9rem;
 }
 
 .header-actions {

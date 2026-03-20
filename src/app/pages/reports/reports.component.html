@@ -216,7 +216,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-report>
         <tr>
-          <td class="col-date">{{ report.date | date:'mediumDate' }}</td>
+          <td class="col-date">{{ report.date | date:'dd/MM/yyyy' }}</td>
           <td class="col-center">{{ report.orders }}</td>
           <!-- Hidden on mobile -->
           <td class="col-right col-desktop">{{ report.taxable | currency:'INR':'symbol':'1.0-0' }}</td>

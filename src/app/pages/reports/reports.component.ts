@@ -142,9 +142,19 @@ export class ReportsComponent implements OnInit {
 
   loadData() {
     this.salesService.getSalesByDay().subscribe(data => {
-      // Add area fill to line data
+      // Map labels to dd/MM/yyyy format
+      const formattedLabels = (data.labels || []).map((l: any) => {
+        const date = new Date(l);
+        if (isNaN(date.getTime())) return l;
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+      });
+
       this.lineData = {
           ...data,
+          labels: formattedLabels,
           datasets: data.datasets.map((ds: any) => ({
               ...ds,
               fill: true,
@@ -194,14 +204,19 @@ export class ReportsComponent implements OnInit {
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 22);
     if (this.selectedCategory) doc.text(`Category: ${this.selectedCategory}`, 14, 28);
     
-    const tableData = this.dailyReports.map(r => [
-        new Date(r._id).toLocaleDateString(),
-        r.orders,
-        `Rs. ${r.taxable}`,
-        `Rs. ${r.gst}`,
-        `Rs. ${r.revenue}`,
-        `Rs. ${r.profit}`
-    ]);
+    const tableData = this.dailyReports.map(r => {
+        const date = new Date(r._id || r.date);
+        const formattedDate = isNaN(date.getTime()) ? (r._id || r.date) : 
+            `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+        return [
+            formattedDate,
+            r.orders,
+            `Rs. ${r.taxable}`,
+            `Rs. ${r.gst}`,
+            `Rs. ${r.revenue}`,
+            `Rs. ${r.profit}`
+        ];
+    });
 
     autoTable(doc, {
       head: [['Date', 'Orders', 'Taxable', 'GST', 'Revenue', 'Profit']],
@@ -213,14 +228,19 @@ export class ReportsComponent implements OnInit {
   }
 
   exportToExcel() {
-    const data = this.dailyReports.map(r => ({
-        Date: new Date(r._id).toLocaleDateString(),
-        Orders: r.orders,
-        'Taxable Value': r.taxable,
-        'GST Collected': r.gst,
-        Revenue: r.revenue,
-        Profit: r.profit
-    }));
+    const data = this.dailyReports.map(r => {
+        const date = new Date(r._id || r.date);
+        const formattedDate = isNaN(date.getTime()) ? (r._id || r.date) : 
+            `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+        return {
+            Date: formattedDate,
+            Orders: r.orders,
+            'Taxable Value': r.taxable,
+            'GST Collected': r.gst,
+            Revenue: r.revenue,
+            Profit: r.profit
+        };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
