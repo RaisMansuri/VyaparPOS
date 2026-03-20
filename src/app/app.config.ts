@@ -8,6 +8,7 @@ import Aura from '@primeng/themes/aura';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { CurrencyPipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    CurrencyPipe
   ],
 };

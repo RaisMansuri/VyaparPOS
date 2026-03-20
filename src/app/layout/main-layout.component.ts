@@ -26,11 +26,12 @@ import { SubscriptionPlan } from '../models/subscription.model';
 import { PermissionService } from '../core/services/permission.service';
 import { RoutePermission } from '../models/permission.model';
 import { Notification } from '../models/notification.model';
+import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, OverlayPanelModule, DropdownModule, FormsModule],
+  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, OverlayPanelModule, DropdownModule, FormsModule, ChatbotComponent],
   providers: [MessageService],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',

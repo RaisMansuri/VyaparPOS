@@ -1,0 +1,37 @@
+<div class="chatbot-container" [class.open]="isOpen()">
+    <!-- Floating Trigger -->
+    <button pButton icon="pi pi-comment" class="chat-trigger p-button-rounded p-button-primary shadow-6" (click)="toggleChat()" [pTooltip]="isOpen() ? '' : 'Ask Vyapar AI'"></button>
+
+    <!-- Chat Window -->
+    <div class="chat-window shadow-8" *ngIf="isOpen()">
+        <div class="chat-header">
+            <div class="header-info">
+                <i class="pi pi-bolt mr-2"></i>
+                <span>Vyapar AI Assistant</span>
+            </div>
+            <button pButton icon="pi pi-times" class="p-button-text p-button-rounded text-white p-button-sm" (click)="toggleChat()"></button>
+        </div>
+
+        <div class="chat-body">
+            <div *ngFor="let msg of messages()" class="msg-wrapper" [ngClass]="msg.role">
+                <div class="msg-bubble">
+                    {{ msg.content }}
+                    <small class="msg-time">{{ msg.timestamp | date:'shortTime' }}</small>
+                </div>
+            </div>
+            <div *ngIf="isTyping()" class="typing-indicator">AI is thinking...</div>
+        </div>
+
+        <div class="chat-footer">
+            <div class="quick-actions mb-2" *ngIf="messages().length < 4">
+                <button (click)="quickAction('Show today\'s sales')" class="quick-btn">🔥 Revenue</button>
+                <button (click)="quickAction('Go to reports')" class="quick-btn">📊 Reports</button>
+                <button (click)="quickAction('Low stock?')" class="quick-btn">📦 Stock</button>
+            </div>
+            <div class="input-group">
+                <input type="text" pInputText [(ngModel)]="userInput" placeholder="Ask me anything..." (keyup.enter)="sendMessage()" />
+                <button pButton icon="pi pi-send" (click)="sendMessage()" [disabled]="!userInput()"></button>
+            </div>
+        </div>
+    </div>
+</div>
