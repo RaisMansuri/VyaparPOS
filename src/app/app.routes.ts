@@ -26,6 +26,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./auth/forgot-password/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent
+          ),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'login',
@@ -197,6 +204,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/settings/permissions/permissions.component').then(
             (m) => m.PermissionsComponent
+          ),
+      },
+      {
+        path: 'settings/expenses',
+        canActivate: [authGuard, planGuard],
+        loadComponent: () =>
+          import('./pages/settings/expenses/expenses.component').then(
+            (m) => m.ExpensesComponent
           ),
       },
       {

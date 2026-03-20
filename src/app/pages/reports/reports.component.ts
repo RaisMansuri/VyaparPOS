@@ -11,6 +11,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { RippleModule } from 'primeng/ripple';
 import { SidebarModule } from 'primeng/sidebar';
 import { SalesService } from '../../core/services/sales.service';
+import { ReportService, ProfitLossData } from '../../core/services/report.service';
 import { AuthService } from '../../auth/auth.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -37,12 +38,14 @@ import * as XLSX from 'xlsx';
 })
 export class ReportsComponent implements OnInit {
   private salesService = inject(SalesService);
+  private reportService = inject(ReportService);
   private auth = inject(AuthService);
 
   isManager = this.auth.isManager();
 
   lineData: any;
   pieData: any;
+  profitLossData: any;
   chartOptions: any;
   doughnutOptions: any;
   dailyReports: any[] = [];
@@ -69,7 +72,14 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     this.loadFilters();
     this.loadData();
+    this.loadFinancials();
     this.initChartOptions();
+  }
+
+  loadFinancials() {
+    this.reportService.getProfitLoss().subscribe((res: any) => {
+      this.profitLossData = res.data;
+    });
   }
 
   initChartOptions() {

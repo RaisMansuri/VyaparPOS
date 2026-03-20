@@ -179,10 +179,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   getRouteLabel(route: RoutePermission): string {
-    if (route.label.startsWith('DASHBOARD') || 
-        route.label.startsWith('REPORTS') || 
-        route.label.startsWith('CUSTOMERS') ||
-        route.label.startsWith('PRODUCTS')) {
+    if (route.label.startsWith('DASHBOARD') ||
+      route.label.startsWith('REPORTS') ||
+      route.label.startsWith('CUSTOMERS') ||
+      route.label.startsWith('PRODUCTS')) {
       return this.translationService.translate(route.label) || route.label;
     }
     return route.label;
@@ -206,6 +206,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/settings/products')) this.pageTitle = 'Product Settings';
     else if (url.includes('/settings/subscription')) this.pageTitle = 'Subscription';
     else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';
+    else if (url.includes('/settings/expenses')) this.pageTitle = 'Expense Management';
+    // else if (url.includes('/marketing')) this.pageTitle = 'Marketing & Promotions';
     else if (url.includes('/settings/permissions')) this.pageTitle = 'Permission Settings';
     else this.pageTitle = 'VyaparPOS';
   }

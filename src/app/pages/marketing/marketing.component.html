@@ -1,0 +1,107 @@
+<div class="marketing-container p-4 animate-fade-in">
+    <div class="header-section mb-4 flex justify-content-between align-items-center">
+        <div>
+            <h1 class="m-0 text-3xl font-bold">Marketing & Promotions</h1>
+            <p class="text-gray-500">Reach your customers directly via WhatsApp or SMS</p>
+        </div>
+        <div class="stats-pills flex gap-3" *ngIf="stats">
+            <div class="stat-pill">
+                <span class="label">engagement</span>
+                <span class="value">{{ stats.engagementRate }}</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">Sent (Month)</span>
+                <span class="value">{{ stats.messagesSentThisMonth }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-12 lg:col-8">
+            <p-card styleClass="campaign-card">
+                <div class="card-header flex align-items-center gap-3 mb-4">
+                    <div class="icon-circle bg-primary-100 text-primary">
+                        <i class="pi pi-send"></i>
+                    </div>
+                    <div>
+                        <h2 class="m-0 text-xl font-bold">Create Campaign</h2>
+                        <small class="text-gray-500">Target your best customers with ease</small>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field mb-4">
+                        <label class="block font-bold mb-2">Select Channel</label>
+                        <p-selectButton [options]="typeOptions" [(ngModel)]="selectedType" optionLabel="label" optionValue="value">
+                            <ng-template let-item pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <i [class]="item.icon"></i>
+                                    <span>{{item.label}}</span>
+                                </div>
+                            </ng-template>
+                        </p-selectButton>
+                    </div>
+
+                    <div class="field mb-4">
+                        <label class="block font-bold mb-2">Target Customers (Optional)</label>
+                        <p-multiSelect 
+                            [options]="customers" 
+                            [(ngModel)]="selectedCustomers" 
+                            defaultLabel="All Customers" 
+                            styleClass="w-full border-round-lg border-2 border-gray-200"
+                            display="chip">
+                        </p-multiSelect>
+                        <small class="text-gray-400 mt-1 block">Leave empty to target all registered customers.</small>
+                    </div>
+
+                    <div class="field mb-4">
+                        <label class="block font-bold mb-2">Message Content</label>
+                        <textarea 
+                            pInputTextarea 
+                            [(ngModel)]="message" 
+                            rows="6" 
+                            class="w-full border-round-lg border-2 border-gray-200 p-3"
+                            placeholder="Type your promotional message here..."></textarea>
+                        <div class="flex justify-content-between mt-1 px-1">
+                            <small class="text-gray-400">Avoid spammy keywords for better delivery.</small>
+                            <small class="font-bold" [class.text-red-500]="message.length > 160">{{ message.length }} / 160</small>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-content-end mt-4">
+                        <button 
+                            pButton 
+                            label="Launch Campaign" 
+                            icon="pi pi-bolt" 
+                            class="p-button-primary p-button-rounded px-6 h-3rem font-bold shadow-2"
+                            [loading]="isSending"
+                            (click)="sendMessage()"></button>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
+        <div class="col-12 lg:col-4">
+            <p-card header="Campaign Best Practices" styleClass="tips-card mb-4 min-h-full">
+                <ul class="tips-list m-0 p-0">
+                    <li class="mb-3 flex gap-3">
+                        <i class="pi pi-check-circle text-green-500"></i>
+                        <span>Personalize messages with customer names for 3x engagement.</span>
+                    </li>
+                    <li class="mb-3 flex gap-3">
+                        <i class="pi pi-clock text-blue-500"></i>
+                        <span>Send during peak hours (10 AM - 12 PM or 6 PM - 8 PM).</span>
+                    </li>
+                    <li class="mb-3 flex gap-3">
+                        <i class="pi pi-gift text-orange-500"></i>
+                        <span>Include clear CTA (e.g., Use code SAVE20 for discount).</span>
+                    </li>
+                    <li class="mb-3 flex gap-3">
+                        <i class="pi pi-shield text-purple-500"></i>
+                        <span>Ensure you have customer consent before sending.</span>
+                    </li>
+                </ul>
+            </p-card>
+        </div>
+    </div>
+</div>

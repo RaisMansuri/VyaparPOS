@@ -13,6 +13,9 @@ import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CustomerService } from '../../core/services/customer.service';
+import { Customer } from '../../models/customer.model';
 
 @Component({
   selector: 'app-mobile-pos',
@@ -26,6 +29,7 @@ import { TagModule } from 'primeng/tag';
     CardModule,
     InputTextModule,
     TagModule,
+    AutoCompleteModule,
     CurrencyPipe
   ],
   providers: [MessageService],
@@ -36,7 +40,13 @@ export class MobilePosComponent implements OnInit {
   private productService = inject(ProductService);
   public cartService = inject(CartService);
   private messageService = inject(MessageService);
+  private customerService = inject(CustomerService);
   private router = inject(Router);
+
+  // CRM state
+  customers: Customer[] = [];
+  filteredCustomers: Customer[] = [];
+  customerSearchQuery = '';
 
   // Scanner state
   allowedFormats = [
@@ -64,6 +74,27 @@ export class MobilePosComponent implements OnInit {
       // Show top 6 items as "Quick Add" (could be logic-based later)
       this.quickAddProducts = products.slice(0, 6);
     });
+
+    this.customerService.customers$.subscribe(customers => {
+      this.customers = customers;
+    });
+  }
+
+  filterCustomers(event: any): void {
+    const query = event.query.toLowerCase();
+    this.filteredCustomers = this.customers.filter(c => 
+      c.name.toLowerCase().includes(query) || 
+      c.phone.includes(query)
+    );
+  }
+
+  onCustomerSelect(customer: any): void {
+    this.cartService.setCustomer(customer);
+  }
+
+  clearCustomer(): void {
+    this.cartService.clearCustomer();
+    this.customerSearchQuery = '';
   }
 
   onCodeResult(resultString: string): void {

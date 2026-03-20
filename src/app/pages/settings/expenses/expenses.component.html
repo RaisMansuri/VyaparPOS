@@ -1,0 +1,120 @@
+<div class="expenses-container">
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Expense Management</h1>
+      <p class="subtitle">Track and manage your business costs effectively</p>
+    </div>
+    <button pButton label="Add New Expense" icon="pi pi-plus" (click)="showDialog()" class="p-button-success"></button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="stats-grid">
+    <p-card styleClass="stats-card total-card">
+      <div class="stats-content">
+        <div class="stats-info">
+          <span class="stats-label">Total Expenses</span>
+          <span class="stats-value text-red-500">{{ stats.totalAmount | currency:'INR' }}</span>
+        </div>
+        <div class="stats-icon bg-red-100 text-red-500">
+          <i class="pi pi-wallet"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stats-card count-card">
+        <div class="stats-content">
+          <div class="stats-info">
+            <span class="stats-label">Total Transactions</span>
+            <span class="stats-value">{{ expenses.length }}</span>
+          </div>
+          <div class="stats-icon bg-blue-100 text-blue-500">
+            <i class="pi pi-list"></i>
+          </div>
+        </div>
+      </p-card>
+  </div>
+
+  <!-- Expenses Table -->
+  <p-card styleClass="table-card mt-4">
+    <p-table [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
+             responsiveLayout="scroll" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Paid By</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-expense>
+        <tr>
+          <td>{{ expense.date | date:'mediumDate' }}</td>
+          <td>
+            <div class="flex flex-column">
+              <span class="font-bold">{{ expense.title }}</span>
+              <small class="text-gray-500">{{ expense.description }}</small>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="expense.category" [severity]="getSeverity(expense.category)"></p-tag>
+          </td>
+          <td class="font-bold text-red-500">-{{ expense.amount | currency:'INR' }}</td>
+          <td>{{ expense.paidBy }}</td>
+          <td>
+            <div class="flex gap-2">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-info" (click)="showDialog(expense)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteExpense(expense._id)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center p-5">No expenses found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Add/Edit Dialog -->
+  <p-dialog [(visible)]="displayDialog" [header]="editingExpense ? 'Edit Expense' : 'Add Expense'" 
+            [modal]="true" [style]="{width: '450px'}" styleClass="p-fluid">
+    <form [formGroup]="expenseForm" (ngSubmit)="saveExpense()">
+      <div class="field mb-4">
+        <label for="title">Title</label>
+        <input type="text" pInputText id="title" formControlName="title" placeholder="e.g., Monthly Rent" />
+      </div>
+
+      <div class="form-grid flex gap-4 mb-4">
+        <div class="field flex-1">
+          <label for="amount">Amount</label>
+          <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="INR" locale="en-IN"></p-inputNumber>
+        </div>
+        <div class="field flex-1">
+          <label for="date">Date</label>
+          <p-calendar id="date" formControlName="date" [showIcon]="true" appendTo="body"></p-calendar>
+        </div>
+      </div>
+
+      <div class="field mb-4">
+        <label for="category">Category</label>
+        <p-dropdown id="category" [options]="categories" formControlName="category" placeholder="Select Category"></p-dropdown>
+      </div>
+
+      <div class="field mb-4">
+        <label for="description">Description (Optional)</label>
+        <textarea pInputText id="description" formControlName="description" rows="3"></textarea>
+      </div>
+
+      <div class="flex justify-content-end gap-2 mt-4">
+        <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+        <button pButton label="Save" icon="pi pi-check" type="submit" [disabled]="expenseForm.invalid"></button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

@@ -71,6 +71,17 @@ export class PaymentComponent implements OnInit {
                 this.cardForm.markAllAsTouched();
                 return;
             }
+        } else if (this.selectedMethod === 'wallet') {
+            const customer = this.cartService.selectedCustomer();
+            if (!customer) {
+                this.toastService.warn('No Customer Selected', 'Please select a customer to pay via wallet.');
+                return;
+            }
+            const totalAvailable = (customer.walletBalance || 0) + (customer.creditLimit || 0);
+            if (totalAvailable < this.cartService.grandTotal()) {
+                this.toastService.error('Insufficient Balance', 'Customer does not have enough wallet balance or credit limit.');
+                return;
+            }
         }
 
         this.isProcessing = true;

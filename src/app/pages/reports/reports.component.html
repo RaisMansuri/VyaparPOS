@@ -120,6 +120,41 @@
     </div>
   </div>
 
+  <!-- ===== FINANCIAL OVERVIEW (P&L) ===== -->
+  <div class="financial-overview mt-4" *ngIf="profitLossData && isManager">
+    <p-card styleClass="pl-card">
+      <div class="pl-header flex align-items-center gap-3">
+        <i class="pi pi-chart-pie text-2xl text-primary font-bold"></i>
+        <div>
+          <h3 class="m-0 font-bold">Profit & Loss Overview</h3>
+          <small class="text-gray-500">Real-time Financial Health Analytics</small>
+        </div>
+      </div>
+      <div class="pl-grid mt-4">
+        <div class="pl-item">
+          <span class="pl-label text-sm text-gray-500 font-semibold uppercase">Total Revenue</span>
+          <span class="pl-value text-xl font-bold text-green-600">{{ profitLossData.revenue | currency:'INR' }}</span>
+        </div>
+        <div class="pl-item">
+          <span class="pl-label text-sm text-gray-500 font-semibold uppercase">Cost of Goods (COGS)</span>
+          <span class="pl-value text-xl font-bold text-orange-500">-{{ profitLossData.cogs | currency:'INR' }}</span>
+        </div>
+        <div class="pl-item divider-left">
+          <span class="pl-label text-sm text-gray-500 font-semibold uppercase">Gross Profit</span>
+          <span class="pl-value text-xl font-bold text-blue-600">{{ profitLossData.grossProfit | currency:'INR' }}</span>
+        </div>
+        <div class="pl-item">
+          <span class="pl-label text-sm text-gray-500 font-semibold uppercase">Operating Expenses</span>
+          <span class="pl-value text-xl font-bold text-red-500">-{{ profitLossData.totalExpenses | currency:'INR' }}</span>
+        </div>
+        <div class="pl-item highlight-profit" [class.negative]="profitLossData.netProfit < 0">
+          <span class="pl-label text-sm font-bold uppercase">Net Profit (EBITDA)</span>
+          <span class="pl-value text-2xl font-black">{{ profitLossData.netProfit | currency:'INR' }}</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
   <!-- ===== CHARTS ROW ===== -->
   <div class="charts-row">
     <!-- Line Chart -->

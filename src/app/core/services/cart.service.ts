@@ -10,9 +10,12 @@ export class CartService {
 
     private platformId = inject(PLATFORM_ID);
     private readonly CART_KEY = 'vyapar-pos-cart';
+    private readonly CUSTOMER_KEY = 'vyapar-pos-selected-customer';
     private cartItems = signal<CartItem[]>([]);
+    private selectedCustomerSignal = signal<any | null>(null);
 
     readonly items = this.cartItems.asReadonly();
+    readonly selectedCustomer = this.selectedCustomerSignal.asReadonly();
     readonly cartCount = computed(() => this.cartItems().reduce((sum, item) => sum + item.quantity, 0));
     readonly cartTotal = computed(() => this.cartItems().reduce((sum, item) => sum + item.subtotal, 0));
     readonly deliveryFee = computed(() => this.cartTotal() > 500 ? 0 : 40);
@@ -28,15 +31,32 @@ export class CartService {
                     console.error('Failed to parse cart from localStorage', e);
                 }
             }
+
+            const savedCustomer = localStorage.getItem(this.CUSTOMER_KEY);
+            if (savedCustomer) {
+                try {
+                    this.selectedCustomerSignal.set(JSON.parse(savedCustomer));
+                } catch (e) {
+                    console.error('Failed to parse customer from localStorage', e);
+                }
+            }
         }
 
         // Persistence effect
         effect(() => {
-            const items = this.cartItems();
             if (isPlatformBrowser(this.platformId)) {
-                localStorage.setItem(this.CART_KEY, JSON.stringify(items));
+                localStorage.setItem(this.CART_KEY, JSON.stringify(this.cartItems()));
+                localStorage.setItem(this.CUSTOMER_KEY, JSON.stringify(this.selectedCustomerSignal()));
             }
         });
+    }
+
+    setCustomer(customer: any): void {
+        this.selectedCustomerSignal.set(customer);
+    }
+
+    clearCustomer(): void {
+        this.selectedCustomerSignal.set(null);
     }
 
     addToCart(product: Product, quantity: number = 1): void {

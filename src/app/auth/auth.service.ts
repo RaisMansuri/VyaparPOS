@@ -152,6 +152,22 @@ export class AuthService {
     }
   }
 
+  forgotPassword(email: string): Observable<any> {
+    this.loader.show();
+    return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email }).pipe(
+      catchError(err => throwError(() => err)),
+      finalize(() => this.loader.hide())
+    );
+  }
+
+  resetPassword(payload: any): Observable<any> {
+    this.loader.show();
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, payload).pipe(
+      catchError(err => throwError(() => err)),
+      finalize(() => this.loader.hide())
+    );
+  }
+
   logout(): void {
     this.saveUser(null);
     this.router.navigate(['/auth/login']);

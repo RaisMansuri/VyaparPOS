@@ -1,0 +1,64 @@
+.marketing-container {
+    background: #f8fafc;
+    min-height: calc(100vh - 64px);
+}
+
+::ng-deep .campaign-card {
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
+}
+
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-pill {
+    background: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 100px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-pill .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+}
+
+.stat-pill .value {
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.tips-list li {
+    list-style: none;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+::ng-deep .p-selectbutton .p-button {
+    flex: 1;
+    border-radius: 12px !important;
+    margin: 0 4px;
+    font-weight: 600;
+}
+
+::ng-deep .p-multiselect {
+    background: #fff;
+}
+
+::ng-deep .p-inputtextarea:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1) !important;
+}

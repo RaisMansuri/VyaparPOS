@@ -42,10 +42,10 @@
                     <i class="pi pi-wallet"></i>
                     <span>Debit Card</span>
                 </div>
-                <div class="method-tab" [class.active]="selectedMethod === 'cash'"
-                    (click)="selectMethod('cash')">
-                    <i class="pi pi-money-bill"></i>
-                    <span>Cash</span>
+                <div class="method-tab" [class.active]="selectedMethod === 'wallet'"
+                    (click)="selectMethod('wallet')">
+                    <i class="pi pi-briefcase"></i>
+                    <span>Wallet</span>
                 </div>
             </div>
 
@@ -116,13 +116,43 @@
             </div>
             }
 
-            <!-- Cash Form -->
-            @if (selectedMethod === 'cash') {
+            <!-- Wallet Form -->
+            @if (selectedMethod === 'wallet') {
             <div class="payment-form">
-                <div class="cash-info">
-                    <i class="pi pi-check-circle"></i>
-                    <p>Please pay <strong>{{ cartService.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong> to the delivery agent.</p>
+                @if (cartService.selectedCustomer(); as customer) {
+                <div class="wallet-info p-3 border-round bg-gray-50">
+                    <div class="flex justify-content-between mb-2">
+                        <span class="text-gray-600">Wallet Balance:</span>
+                        <span class="font-bold">{{ customer.walletBalance | currency:'INR' }}</span>
+                    </div>
+                    <div class="flex justify-content-between mb-2" *ngIf="customer.creditLimit">
+                        <span class="text-gray-600">Credit Limit:</span>
+                        <span class="font-bold">{{ customer.creditLimit | currency:'INR' }}</span>
+                    </div>
+                    <div class="border-top-1 border-gray-200 my-2"></div>
+                    <div class="flex justify-content-between mb-3">
+                        <span class="font-bold">Total Available:</span>
+                        <span class="font-bold text-green-600">{{ (customer.walletBalance + (customer.creditLimit || 0)) | currency:'INR' }}</span>
+                    </div>
+                    
+                    @if ((customer.walletBalance + (customer.creditLimit || 0)) < cartService.grandTotal()) {
+                    <div class="p-2 bg-red-50 text-red-600 border-round flex align-items-center gap-2">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <span>Insufficient funds</span>
+                    </div>
+                    } @else {
+                    <div class="p-2 bg-green-50 text-green-600 border-round flex align-items-center gap-2">
+                        <i class="pi pi-check-circle"></i>
+                        <span>Transaction ready</span>
+                    </div>
+                    }
                 </div>
+                } @else {
+                <div class="p-4 text-center bg-orange-50 text-orange-700 border-round">
+                    <i class="pi pi-user-plus text-2xl mb-2"></i>
+                    <p>Select a customer to utilize Wallet payment.</p>
+                </div>
+                }
             </div>
             }
 

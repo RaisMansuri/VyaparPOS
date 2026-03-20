@@ -18,6 +18,7 @@ export class PermissionService {
     { path: '/mobile-pos', label: 'Mobile POS', icon: 'pi pi-camera', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredFeature: 'mobile_pos', requiredPermission: 'Process Sales' },
     { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'main', allowedRoles: ['owner', 'admin', 'manager'] },
     { path: '/reports', label: 'REPORTS', icon: 'pi pi-chart-bar', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredFeature: 'advanced_reports', requiredPermission: 'View Reports' },
+    // { path: '/marketing', label: 'MARKETING', icon: 'pi pi-megaphone', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'Manage Marketing' },
     { path: '/notifications', label: 'Notifications', icon: 'pi pi-bell', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
     { path: '/support', label: 'Customer Support', icon: 'pi pi-question-circle', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
     { path: '/products', label: 'PRODUCTS', icon: 'pi pi-th-large', section: 'shopping', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredPermission: 'Manage Products' },
@@ -27,13 +28,14 @@ export class PermissionService {
     { path: '/settings/subscription', label: 'Subscription', icon: 'pi pi-credit-card', section: 'account', allowedRoles: ['owner', 'admin'], requiredPermission: 'Manage Settings' },
     { path: '/settings/products', label: 'Products', icon: 'pi pi-box', section: 'settings', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'Manage Products' },
     { path: '/settings/users', label: 'Users', icon: 'pi pi-users', section: 'settings', allowedRoles: ['owner', 'admin'], requiredFeature: 'team_management', requiredPermission: 'Manage Users' },
+    { path: '/settings/expenses', label: 'Expenses', icon: 'pi pi-wallet', section: 'settings', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'Manage Expenses' },
     { path: '/settings/permissions', label: 'Permissions', icon: 'pi pi-lock', section: 'settings', allowedRoles: ['owner', 'admin'], requiredPermission: 'Manage Settings' },
   ];
 
   private permissionsSubject = new BehaviorSubject<RoutePermission[]>(this.loadPermissions());
   permissions$ = this.permissionsSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   private loadPermissions(): RoutePermission[] {
     if (typeof window === 'undefined' || !window.localStorage) {
