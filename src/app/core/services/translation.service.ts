@@ -21,7 +21,11 @@ export class TranslationService {
       'ADD_TO_CART': 'Add to Cart',
       'PRICE': 'Price',
       'QTY': 'Qty',
-      'TOTAL': 'Total'
+      'TOTAL': 'Total',
+      'NOTIFICATIONS': 'Notifications',
+      'MARK_ALL_READ': 'Mark all as read',
+      'SEE_ALL': 'See all',
+      'NO_NOTIFICATIONS': 'No new notifications'
     },
     hi: {
       'DASHBOARD': 'डैशबोर्ड',
@@ -36,7 +40,11 @@ export class TranslationService {
       'ADD_TO_CART': 'कार्ट में जोड़ें',
       'PRICE': 'कीमत',
       'QTY': 'मात्रा',
-      'TOTAL': 'कुल'
+      'TOTAL': 'कुल',
+      'NOTIFICATIONS': 'सूचनाएं',
+      'MARK_ALL_READ': 'सभी को पढ़ा हुआ मानें',
+      'SEE_ALL': 'सभी देखें',
+      'NO_NOTIFICATIONS': 'कोई नई सूचना नहीं'
     }
   };
 

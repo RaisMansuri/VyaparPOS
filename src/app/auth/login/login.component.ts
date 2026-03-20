@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AuthService } from '../auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -29,12 +30,12 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-  error = '';
 
   get email() { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
@@ -44,17 +45,19 @@ export class LoginComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.error = '';
     const email = this.form.get('email')?.value;
     this.auth.login(this.form.value).subscribe({
       next: () => {
+        this.toastService.success('Login Successful', 'Welcome back to VyaparPOS!');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         if (err.error?.unverified || err.error?.message?.toLowerCase().includes('verify')) {
+          this.toastService.warn('Email Unverified', 'Please verify your email to log in.');
           this.router.navigate(['/auth/verify-email'], { queryParams: { email } });
         } else {
-          this.error = err.error?.message || 'Invalid credentials. Please try again.';
+          const msg = err.error?.message || 'Invalid credentials. Please try again.';
+          this.toastService.error('Login Failed', msg);
         }
       },
     });

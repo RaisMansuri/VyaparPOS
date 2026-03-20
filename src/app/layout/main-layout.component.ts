@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -24,6 +25,7 @@ import { AuthUser } from '../auth/auth.service';
 import { SubscriptionPlan } from '../models/subscription.model';
 import { PermissionService } from '../core/services/permission.service';
 import { RoutePermission } from '../models/permission.model';
+import { Notification } from '../models/notification.model';
 
 @Component({
   selector: 'app-main-layout',
@@ -48,12 +50,14 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   sidebarVisible = false;
   categories: string[] = [];
   profileMenuItems: MenuItem[] | undefined;
-  lowStockItems: any[] = [];
+  notifications: Notification[] = [];
+  unreadCount = 0;
   pageTitle = 'Dashboard';
   private checkInterval: any;
   currentUser: AuthUser | null = null;
   currentPlan: SubscriptionPlan | null = null;
   visibleRoutes: RoutePermission[] = [];
+  private destroy$ = new Subject<void>();
 
   languages = [
     { label: 'English', value: 'en' },
@@ -87,16 +91,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       this.currentPlan = plan;
     });
 
-    this.notificationService.lowStockAlerts$.subscribe(items => {
-      this.lowStockItems = items;
-      if (items.length > 0) {
-        this.messageService.add({
-          severity: 'warn',
-          summary: this.translationService.translate('LOW_STOCK_ALERT'),
-          detail: `You have ${items.length} items with low stock.`,
-          life: 5000
-        });
-      }
+    this.notificationService.notifications$.subscribe(n => {
+      this.notifications = n;
+    });
+
+    this.notificationService.unreadCount$.subscribe(c => {
+      this.unreadCount = c;
     });
 
     // Initial check and set interval
@@ -104,6 +104,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.checkInterval = setInterval(() => {
       this.notificationService.checkStockLevels();
     }, 300000); // Check every 5 minutes
+
+    // Subscribe to visible routes
+    this.permissionService.getVisibleRoutes()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(routes => {
+        this.visibleRoutes = routes;
+      });
 
     this.profileMenuItems = [
       {
@@ -135,6 +142,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleSidebar(): void {
@@ -148,6 +157,18 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  onNotificationClick(notification: Notification, op: any): void {
+    this.notificationService.markAsRead(notification.id);
+    if (notification.link) {
+      this.router.navigate([notification.link]);
+    }
+    op.hide();
+  }
+
+  markAllAsRead(): void {
+    this.notificationService.markAllAsRead();
   }
 
   hasVisibleSection(section: string): boolean {

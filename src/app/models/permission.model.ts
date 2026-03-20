@@ -1,4 +1,4 @@
-export type UserRole = 'owner' | 'manager' | 'cashier' | 'guest';
+export type UserRole = 'owner' | 'admin' | 'manager' | 'cashier' | 'guest';
 
 export interface RoutePermission {
   path: string;
@@ -7,5 +7,6 @@ export interface RoutePermission {
   section?: 'main' | 'shopping' | 'account' | 'settings' | 'security';
   allowedRoles: UserRole[];
   requiredFeature?: string;
+  requiredPermission?: string;
   badge?: boolean;
 }

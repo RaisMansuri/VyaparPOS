@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
-import { MessageService } from 'primeng/api';
+import { ToastService } from '../../core/services/toast.service';
 import { SidebarModule } from 'primeng/sidebar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -23,7 +23,6 @@ import { InputTextModule } from 'primeng/inputtext';
     CommonModule, 
     CurrencyPipe, 
     FormsModule, 
-    ToastModule, 
     SidebarModule, 
     DropdownModule, 
     InputSwitchModule, 
@@ -33,7 +32,6 @@ import { InputTextModule } from 'primeng/inputtext';
     InputIconModule,
     InputTextModule
   ],
-  providers: [MessageService],
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css']
 })
@@ -45,7 +43,7 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
-  private messageService = inject(MessageService);
+  private toastService = inject(ToastService);
 
   allProducts: Product[] = [];
   products: Product[] = [];
@@ -103,20 +101,10 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
       // Play a beep sound (simulated by console log for now)
       console.log('BEEP! Product found via barcode:', product.name);
       
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Barcode Scanned',
-        detail: `${product.name} added to cart`,
-        life: 2000
-      });
+      this.toastService.success('Barcode Scanned', `${product.name} added to cart`);
     } else {
       console.warn('BEEP-BEEP! Barcode not recognized:', barcode);
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Barcode Not Found',
-        detail: `No product matches barcode: ${barcode}`,
-        life: 3000
-      });
+      this.toastService.warn('Barcode Not Found', `No product matches barcode: ${barcode}`);
     }
   }
 
@@ -319,13 +307,9 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
     }
     if (this.getAvailableStock(product) > 0) {
         this.cartService.addToCart(product, 1);
+        this.toastService.success('Added to Cart', `${product.name} added successfully`);
     } else {
-        this.messageService.add({
-            severity: 'warn',
-            summary: 'Out of Stock',
-            detail: `Cannot add more ${product.name}. Stock limit reached.`,
-            life: 2000
-        });
+        this.toastService.warn('Out of Stock', `Cannot add more ${product.name}. Stock limit reached.`);
     }
   }
 

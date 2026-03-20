@@ -200,6 +200,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'notifications',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/notifications/notifications.component').then(
+            (m) => m.NotificationsComponent
+          ),
+      },
+      {
         path: 'mobile-pos',
         canActivate: [authGuard, planGuard],
         data: {

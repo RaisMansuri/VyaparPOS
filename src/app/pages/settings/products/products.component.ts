@@ -7,11 +7,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import { ToastService } from '../../../core/services/toast.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -28,7 +28,7 @@ interface Product {
 @Component({
     selector: 'app-products',
     standalone: true,
-    providers: [MessageService, ConfirmationService],
+    providers: [ConfirmationService],
     imports: [
         CommonModule,
         FormsModule,
@@ -38,7 +38,6 @@ interface Product {
         TagModule,
         DialogModule,
         DropdownModule,
-        ToastModule,
         ConfirmDialogModule,
         FileUploadModule,
         InputNumberModule,
@@ -60,7 +59,7 @@ export class ProductsComponent implements OnInit {
     submitted: boolean = false;
     uploadedImage: any = null;
 
-    constructor(private messageService: MessageService, private confirmationService: ConfirmationService) { }
+    constructor(private toastService: ToastService, private confirmationService: ConfirmationService) { }
 
     ngOnInit() {
         this.categories = [
@@ -107,7 +106,7 @@ export class ProductsComponent implements OnInit {
             accept: () => {
                 this.products = this.products.filter((val) => val.id !== prod.id);
                 this.product = { id: 0, name: '', image: '', category: '', price: 0, stock: 0, barcode: '' };
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+                this.toastService.success('Successful', 'Product Deleted');
             }
         });
     }
@@ -128,12 +127,12 @@ export class ProductsComponent implements OnInit {
 
             if (this.product.id) {
                 this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                this.toastService.success('Successful', 'Product Updated');
             } else {
                 this.product.id = this.createId();
                 if (!this.product.barcode) this.product.barcode = this.generateBarcode();
                 this.products.push(this.product);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                this.toastService.success('Successful', 'Product Created');
             }
 
             this.products = [...this.products];
@@ -145,7 +144,7 @@ export class ProductsComponent implements OnInit {
     onImageSelect(event: any) {
         if (event.files && event.files.length > 0) {
             this.uploadedImage = event.files[0];
-            this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Image ready for upload.' });
+            this.toastService.info('Success', 'Image ready for upload.');
         }
     }
 
@@ -184,7 +183,7 @@ export class ProductsComponent implements OnInit {
         }
 
         this.products = [...this.products];
-        this.messageService.add({ severity: 'success', summary: 'Bulk Upload Complete', detail: `${addedCount} products added.`, life: 3000 });
+        this.toastService.success('Bulk Upload Complete', `${addedCount} products added.`);
     }
 
     findIndexById(id: number): number {

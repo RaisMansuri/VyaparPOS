@@ -22,6 +22,12 @@ export const planGuard: CanActivateFn = (
     return false;
   }
 
+  // Owner and Admin always have full access to all routes/features/plans
+  const userRole = (auth.getCurrentUser()?.role?.toLowerCase() || 'owner');
+  if (userRole === 'owner' || userRole === 'admin') {
+    return true;
+  }
+
   // First check if user has access based on dynamic permission settings
   if (!permissionService.canAccess(state.url)) {
     return redirectToSubscription(router, state.url, 'dynamic_permission');
@@ -38,7 +44,7 @@ export const planGuard: CanActivateFn = (
   }
 
   // Check Role
-  if (requiredRole && !auth.hasRole(requiredRole)) {
+  if (requiredRole && !auth.hasRole(requiredRole) && !auth.isAdmin()) {
     return redirectToSubscription(router, state.url, `role_${requiredRole}`);
   }
 

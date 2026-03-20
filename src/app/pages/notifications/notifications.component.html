@@ -1,0 +1,52 @@
+<div class="notifications-container">
+  <div class="header-section mb-4">
+    <div class="flex justify-between items-center">
+      <h2 class="m-0">{{ translationService.translate('NOTIFICATIONS') }}</h2>
+      <div class="actions">
+        <button pButton type="button" [label]="translationService.translate('MARK_ALL_READ')" 
+          icon="pi pi-check-circle" class="p-button-outlined p-button-sm" 
+          (click)="markAllAsRead()" *ngIf="notifications.length > 0"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="notifications-list flex flex-col gap-3">
+    @if (notifications.length === 0) {
+      <div class="empty-state glass-card p-8 text-center">
+        <i class="pi pi-bell-slash text-4xl mb-4 text-gray-400"></i>
+        <p class="text-gray-500 m-0">{{ translationService.translate('NO_NOTIFICATIONS') }}</p>
+      </div>
+    }
+
+    @for (notification of notifications; track notification.id) {
+      <div class="notification-card glass-card" [class.unread]="!notification.isRead" (click)='markAsRead(notification)'>
+        <div class="flex gap-4 p-4">
+          <div class="type-icon-wrapper" [class]="notification.type">
+            <i [class]="notification.type === 'warn' ? 'pi pi-exclamation-triangle' : 
+                       notification.type === 'success' ? 'pi pi-check-circle' : 
+                       notification.type === 'error' ? 'pi pi-times-circle' : 'pi pi-info-circle'"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="m-0 text-base font-bold">{{ notification.title }}</h3>
+              <p-tag [value]="notification.type.toUpperCase()" [severity]="getSeverity(notification.type)" class="text-xs"></p-tag>
+            </div>
+            <p class="m-0 text-sm text-gray-600 leading-relaxed">{{ notification.message }}</p>
+            <div class="flex justify-between items-center mt-3">
+              <span class="text-xs text-gray-400">
+                <i class="pi pi-clock mr-1"></i>
+                {{ notification.timestamp | date:'medium' }}
+              </span>
+              <button pButton type="button" icon="pi pi-trash" 
+                class="p-button-text p-button-danger p-button-sm p-0 h-auto" 
+                (click)="removeNotification($event, notification.id)"></button>
+            </div>
+          </div>
+          @if (!notification.isRead) {
+            <div class="unread-dot"></div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

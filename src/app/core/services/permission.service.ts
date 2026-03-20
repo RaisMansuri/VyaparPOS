@@ -14,19 +14,20 @@ export class PermissionService {
   private readonly storageKey = 'vyaparpos_route_permissions';
 
   private defaultPermissions: RoutePermission[] = [
-    { path: '/dashboard', label: 'DASHBOARD', icon: 'pi pi-home', section: 'main', allowedRoles: ['owner', 'manager', 'cashier'] },
-    { path: '/mobile-pos', label: 'Mobile POS', icon: 'pi pi-camera', section: 'main', allowedRoles: ['owner', 'manager', 'cashier'], requiredFeature: 'mobile_pos' },
-    { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'main', allowedRoles: ['owner', 'manager'] },
-    { path: '/reports', label: 'REPORTS', icon: 'pi pi-chart-bar', section: 'main', allowedRoles: ['owner', 'manager'], requiredFeature: 'advanced_reports' },
-    { path: '/support', label: 'Customer Support', icon: 'pi pi-question-circle', section: 'main', allowedRoles: ['owner', 'manager', 'cashier'] },
-    { path: '/products', label: 'PRODUCTS', icon: 'pi pi-th-large', section: 'shopping', allowedRoles: ['owner', 'manager', 'cashier'] },
-    { path: '/cart', label: 'Cart', icon: 'pi pi-shopping-cart', section: 'shopping', allowedRoles: ['owner', 'manager', 'cashier'], badge: true },
-    { path: '/orders', label: 'My Orders', icon: 'pi pi-list', section: 'shopping', allowedRoles: ['owner', 'manager', 'cashier'] },
-    { path: '/profile', label: 'My Profile', icon: 'pi pi-user', section: 'account', allowedRoles: ['owner', 'manager', 'cashier'] },
-    { path: '/settings/subscription', label: 'Subscription', icon: 'pi pi-credit-card', section: 'account', allowedRoles: ['owner'] },
-    { path: '/settings/products', label: 'Products', icon: 'pi pi-box', section: 'settings', allowedRoles: ['owner', 'manager'] },
-    { path: '/settings/users', label: 'Users', icon: 'pi pi-users', section: 'settings', allowedRoles: ['owner'], requiredFeature: 'team_management' },
-    { path: '/settings/permissions', label: 'Permissions', icon: 'pi pi-lock', section: 'settings', allowedRoles: ['owner'] },
+    { path: '/dashboard', label: 'DASHBOARD', icon: 'pi pi-home', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredPermission: 'View Sales' },
+    { path: '/mobile-pos', label: 'Mobile POS', icon: 'pi pi-camera', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredFeature: 'mobile_pos', requiredPermission: 'Process Sales' },
+    { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'main', allowedRoles: ['owner', 'admin', 'manager'] },
+    { path: '/reports', label: 'REPORTS', icon: 'pi pi-chart-bar', section: 'main', allowedRoles: ['owner', 'admin', 'manager'], requiredFeature: 'advanced_reports', requiredPermission: 'View Reports' },
+    { path: '/notifications', label: 'Notifications', icon: 'pi pi-bell', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
+    { path: '/support', label: 'Customer Support', icon: 'pi pi-question-circle', section: 'main', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
+    { path: '/products', label: 'PRODUCTS', icon: 'pi pi-th-large', section: 'shopping', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredPermission: 'Manage Products' },
+    { path: '/cart', label: 'Cart', icon: 'pi pi-shopping-cart', section: 'shopping', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], badge: true, requiredPermission: 'Process Sales' },
+    { path: '/orders', label: 'My Orders', icon: 'pi pi-list', section: 'shopping', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
+    { path: '/profile', label: 'My Profile', icon: 'pi pi-user', section: 'account', allowedRoles: ['owner', 'admin', 'manager', 'cashier'] },
+    { path: '/settings/subscription', label: 'Subscription', icon: 'pi pi-credit-card', section: 'account', allowedRoles: ['owner', 'admin'], requiredPermission: 'Manage Settings' },
+    { path: '/settings/products', label: 'Products', icon: 'pi pi-box', section: 'settings', allowedRoles: ['owner', 'admin', 'manager'], requiredPermission: 'Manage Products' },
+    { path: '/settings/users', label: 'Users', icon: 'pi pi-users', section: 'settings', allowedRoles: ['owner', 'admin'], requiredFeature: 'team_management', requiredPermission: 'Manage Users' },
+    { path: '/settings/permissions', label: 'Permissions', icon: 'pi pi-lock', section: 'settings', allowedRoles: ['owner', 'admin'], requiredPermission: 'Manage Settings' },
   ];
 
   private permissionsSubject = new BehaviorSubject<RoutePermission[]>(this.loadPermissions());
@@ -66,10 +67,15 @@ export class PermissionService {
     if (!user) return false;
 
     const role = (user.role?.toLowerCase() || 'owner') as UserRole;
-    if (role === 'owner') return true; // Owner always has access
+    if (role === 'owner' || role === 'admin') return true; // Owner and Admin always have full access
 
     const permission = this.permissionsSubject.value.find(p => p.path === path);
     if (!permission) return true; // If not in list, assume allowed? Or handle fallback
+
+    // Check User-Specific Permission (PRIORITY)
+    if (permission.requiredPermission && user.permissions?.includes(permission.requiredPermission)) {
+      return true;
+    }
 
     // Check Role
     if (!permission.allowedRoles.includes(role)) {

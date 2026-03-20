@@ -2,6 +2,7 @@
   <div class="loader-overlay" *ngIf="loader.loading$ | async">
     <p-progressSpinner strokeWidth="4"></p-progressSpinner>
   </div>
+  <p-toast></p-toast>
   <router-outlet></router-outlet>
 </div>
 <!--

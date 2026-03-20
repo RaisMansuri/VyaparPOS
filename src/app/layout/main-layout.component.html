@@ -89,7 +89,6 @@
   </p-sidebar>
 
   <div class="layout-main">
-    <p-toast></p-toast>
     <p-toolbar class="layout-toolbar">
       <ng-template #start>
         <div class="toolbar-left">
@@ -108,25 +107,51 @@
 
           <div class="badge-wrapper" (click)="op.toggle($event)">
             <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text"></button>
-            @if (lowStockItems.length > 0) {
-            <span class="badge-count">{{ lowStockItems.length }}</span>
+            @if (unreadCount > 0) {
+              <span class="badge-count">{{ unreadCount }}</span>
             }
           </div>
 
-          <p-overlayPanel #op>
+          <p-overlayPanel #op styleClass="notification-overlay">
             <div class="notification-panel">
-              <h4 class="m-0 p-2 border-bottom">Inventory Alerts</h4>
-              <div *ngIf="lowStockItems.length === 0" class="p-3 text-center text-muted">
-                No low stock alerts
+              <div class="panel-header">
+                <h4 class="m-0">{{ translationService.translate('NOTIFICATIONS') }}</h4>
+                @if (unreadCount > 0) {
+                  <button pButton type="button" [label]="translationService.translate('MARK_ALL_READ')" 
+                    class="p-button-text p-button-sm p-0" (click)="markAllAsRead()"></button>
+                }
               </div>
-              <div class="notification-list" *ngIf="lowStockItems.length > 0">
-                <div *ngFor="let item of lowStockItems" class="notification-item p-2 border-bottom">
-                  <div class="d-flex justify-content-between">
-                    <span class="font-bold">{{ item.name }}</span>
-                    <span class="text-danger font-bold">{{ item.stock }} left</span>
+              
+              <div class="notification-list">
+                @if (notifications.length === 0) {
+                  <div class="empty-state">
+                    <i class="pi pi-bell-slash"></i>
+                    <p>{{ translationService.translate('NO_NOTIFICATIONS') }}</p>
                   </div>
-                  <small class="text-muted">Minimum: {{ item.minStockLevel || 5 }}</small>
-                </div>
+                }
+                
+                @for (notification of notifications.slice(0, 5); track notification.id) {
+                  <div class="notification-item" [class.unread]="!notification.isRead" (click)="onNotificationClick(notification, op)">
+                    <div class="item-icon" [class]="notification.type">
+                      <i [class]="notification.type === 'warn' ? 'pi pi-exclamation-triangle' : 
+                                 notification.type === 'success' ? 'pi pi-check-circle' : 
+                                 notification.type === 'error' ? 'pi pi-times-circle' : 'pi pi-info-circle'"></i>
+                    </div>
+                    <div class="item-content">
+                      <div class="item-title">{{ notification.title }}</div>
+                      <div class="item-message">{{ notification.message }}</div>
+                      <div class="item-time">{{ notification.timestamp | date:'shortTime' }}</div>
+                    </div>
+                    @if (!notification.isRead) {
+                      <div class="unread-indicator"></div>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="panel-footer">
+                <button pButton type="button" [label]="translationService.translate('SEE_ALL')" 
+                  class="p-button-text w-full" (click)="navigate('/notifications'); op.hide()"></button>
               </div>
             </div>
           </p-overlayPanel>

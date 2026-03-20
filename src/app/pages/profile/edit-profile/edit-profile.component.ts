@@ -5,22 +5,21 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ToastService } from '../../../core/services/toast.service';
 import { AuthService, AuthUser } from '../../../auth/auth.service';
 
 @Component({
     selector: 'app-edit-profile',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, ToastModule],
-    providers: [MessageService],
+    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule],
+    providers: [],
     templateUrl: './edit-profile.component.html',
     styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
     private authService = inject(AuthService);
     private router = inject(Router);
-    private messageService = inject(MessageService);
+    private toastService = inject(ToastService);
 
     form = {
         name: '',
@@ -78,11 +77,7 @@ export class EditProfileComponent implements OnInit {
 
     saveProfile(): void {
         if (!this.form.name.trim() || !this.form.phone.trim()) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Required',
-                detail: 'Name and Phone are required fields'
-            });
+            this.toastService.warn('Required', 'Name and Phone are required fields');
             return;
         }
 
@@ -100,12 +95,7 @@ export class EditProfileComponent implements OnInit {
             });
 
             this.isSaving = false;
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Profile Updated!',
-                detail: 'Your profile has been saved successfully',
-                life: 3000
-            });
+            this.toastService.success('Profile Updated!', 'Your profile has been saved successfully');
 
             setTimeout(() => {
                 this.router.navigate(['/profile']);

@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AuthService } from '../auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +30,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   form: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
@@ -36,7 +38,6 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
     phone: ['', [Validators.required]],
   });
-  error = '';
 
   get name() { return this.form.get('name'); }
   get email() { return this.form.get('email'); }
@@ -48,14 +49,15 @@ export class RegisterComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.error = '';
     const email = this.form.get('email')?.value;
     this.auth.register(this.form.value).subscribe({
       next: () => {
+        this.toastService.success('Registration Successful', 'Please verify your email to continue.');
         this.router.navigate(['/auth/verify-email'], { queryParams: { email } });
       },
       error: (err) => {
-        this.error = err.error?.message || 'Registration failed. Please try again.';
+        const msg = err.error?.message || 'Registration failed. Please try again.';
+        this.toastService.error('Registration Failed', msg);
       },
     });
   }

@@ -9,6 +9,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { PaymentMethod } from '../../../models/order.model';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
     selector: 'app-payment',
@@ -23,6 +24,7 @@ import { PaymentMethod } from '../../../models/order.model';
 export class PaymentComponent implements OnInit {
     private fb = inject(FormBuilder);
     private router = inject(Router);
+    private toastService = inject(ToastService);
     cartService = inject(CartService);
     orderService = inject(OrderService);
 
@@ -59,11 +61,13 @@ export class PaymentComponent implements OnInit {
         // Validate based on selected method
         if (this.selectedMethod === 'upi') {
             if (this.upiForm.invalid) {
+                this.toastService.warn('Invalid UPI', 'Please enter a valid UPI ID.');
                 this.upiForm.markAllAsTouched();
                 return;
             }
         } else if (this.selectedMethod === 'credit_card' || this.selectedMethod === 'debit_card') {
             if (this.cardForm.invalid) {
+                this.toastService.warn('Invalid Card Details', 'Please check your card information.');
                 this.cardForm.markAllAsTouched();
                 return;
             }
@@ -82,12 +86,13 @@ export class PaymentComponent implements OnInit {
                 this.cartService.deliveryFee()
             ).subscribe({
                 next: (savedOrder) => {
+                    this.toastService.success('Order Placed', 'Your order has been successfully placed!');
                     this.cartService.clearCart();
                     this.isProcessing = false;
                     this.router.navigate(['/checkout/confirmation']);
                 },
                 error: (err) => {
-                    console.error('Order placement failed', err);
+                    this.toastService.error('Order Failed', 'There was an error placing your order. Please try again.');
                     this.isProcessing = false;
                 }
             });

@@ -9,8 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { ToastModule } from 'primeng/toast';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -20,7 +20,7 @@ import { UserService, User } from '../../../core/services/user.service';
 @Component({
     selector: 'app-users',
     standalone: true,
-    providers: [MessageService, ConfirmationService],
+    providers: [ConfirmationService],
     imports: [
         CommonModule,
         FormsModule,
@@ -32,7 +32,6 @@ import { UserService, User } from '../../../core/services/user.service';
         DialogModule,
         InputSwitchModule,
         MultiSelectModule,
-        ToastModule,
         ConfirmDialogModule,
         IconFieldModule,
         InputIconModule,
@@ -55,7 +54,7 @@ export class UsersComponent implements OnInit {
     submitted: boolean = false;
 
     constructor(
-        private messageService: MessageService, 
+        private toastService: ToastService, 
         private confirmationService: ConfirmationService,
         private userService: UserService
     ) { }
@@ -148,10 +147,10 @@ export class UsersComponent implements OnInit {
                     next: () => {
                         this.users = this.users.filter((val) => val.id !== user.id);
                         this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
-                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+                        this.toastService.success('Successful', 'User Deleted');
                     },
                     error: () => {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete user', life: 3000 });
+                        this.toastService.error('Error', 'Failed to delete user');
                     }
                 });
             }
@@ -171,7 +170,7 @@ export class UsersComponent implements OnInit {
                 this.userService.updateUser(this.user).subscribe({
                     next: (updatedUser) => {
                         this.users[this.findIndexById(this.user.id)] = updatedUser;
-                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
+                        this.toastService.success('Successful', 'User Updated');
                         this.closeDialog();
                     }
                 });
@@ -179,7 +178,7 @@ export class UsersComponent implements OnInit {
                 this.userService.createUser(this.user).subscribe({
                     next: (newUser) => {
                         this.users.push(newUser);
-                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                        this.toastService.success('Successful', 'User Created');
                         this.closeDialog();
                     }
                 });
@@ -194,7 +193,7 @@ export class UsersComponent implements OnInit {
     }
 
     onStatusChange(user: User) {
-        this.messageService.add({ severity: 'info', summary: 'Status Updated', detail: `${user.name} is now ${user.status}`, life: 2000 });
+        this.toastService.info('Status Updated', `${user.name} is now ${user.status}`);
     }
 
     findIndexById(id: number): number {

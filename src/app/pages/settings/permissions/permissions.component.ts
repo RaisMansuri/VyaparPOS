@@ -52,9 +52,9 @@ import { TranslationService } from '../../../core/services/translation.service';
           </ng-template>
         </p-table>
 
-        <div class="flex justify-content-end mt-4 gap-2">
+        <div class="flex justify-content-end mt-5 gap-3" style="display: flex; justify-content: flex-end; margin-top: 2rem; gap: 1rem;">
           <button pButton label="Reset Defaults" icon="pi pi-refresh" class="p-button-outlined p-button-secondary" (click)="resetDefaults()"></button>
-          <button pButton label="Save Changes" icon="pi pi-check" (click)="saveChanges()"></button>
+          <button pButton label="Save Changes" icon="pi pi-check" (click)="saveChanges()" class="p-button-success"></button>
         </div>
       </p-card>
     </div>
