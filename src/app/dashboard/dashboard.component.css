@@ -59,7 +59,7 @@
 .analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  align-items: start;
+  align-items: stretch;
   gap: 1.5rem;
   margin-top: 1.75rem;
 }
@@ -71,7 +71,7 @@
 .chart-card {
   display: flex;
   flex-direction: column;
-  align-self: start;
+  height: 100%;
 }
 
 .dashboard-grid {
@@ -218,10 +218,15 @@
 .chart-shell {
   position: relative;
   height: 260px;
+  flex: 1; /* Allow shell to grow and fill vertical space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .chart-shell-small {
   height: 240px;
+  flex: 1;
 }
 
 .table-section {

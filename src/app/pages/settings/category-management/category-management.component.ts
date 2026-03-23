@@ -7,7 +7,6 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/inputtextarea';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -27,7 +26,6 @@ import { InputIconModule } from 'primeng/inputicon';
     ButtonModule,
     DialogModule,
     InputTextModule,
-    InputTextarea,
     ToastModule,
     ToolbarModule,
     TagModule,
