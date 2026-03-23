@@ -149,7 +149,50 @@ export class ChatbotComponent {
       case 'ADD_MULTIPLE_CATEGORIES':
         this.handleAddMultipleCategories(action.payload);
         break;
+      case 'SEND_INVOICE_EMAIL':
+        this.sendInvoiceEmail(action.payload);
+        break;
+      case 'SHOW_PAYMENT_METHODS':
+        // Handled by component template rendering
+        break;
     }
+  }
+
+  private sendInvoiceEmail(payload: any) {
+    if (!payload.email || !payload.orderId) return;
+    
+    this.aiService.sendInvoice(payload.orderId, payload.email).subscribe({
+      next: (res) => {
+        this.messages.update(msgs => [...msgs, { 
+          role: 'assistant', 
+          content: res.message, 
+          timestamp: new Date() 
+        }]);
+        this.scrollToBottom();
+      },
+      error: (err) => console.error('Failed to send invoice email:', err)
+    });
+  }
+
+  downloadInvoice(metadata: any) {
+    const link = metadata.pdfLink || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    window.open(link, '_blank');
+    
+    this.messages.update(msgs => [...msgs, { 
+      role: 'assistant', 
+      content: `Opening PDF for Order ${metadata.orderId}...`, 
+      timestamp: new Date() 
+    }]);
+  }
+
+  printInvoice(metadata: any) {
+    window.print();
+    
+    this.messages.update(msgs => [...msgs, { 
+      role: 'assistant', 
+      content: `Sending Order ${metadata.orderId} to printer...`, 
+      timestamp: new Date() 
+    }]);
   }
 
   private handleAddProduct(product: any): void {
@@ -217,6 +260,26 @@ export class ChatbotComponent {
 
   isConsumer(): boolean {
     return this.authService.isConsumer();
+  }
+
+  formatMessageDate(date: any): string {
+    const d = new Date(date);
+    const now = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const tomorrow = new Date();
+    tomorrow.setDate(now.getDate() + 1);
+
+    if (d.toDateString() === now.toDateString()) return 'Today';
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    if (d.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
+    
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  }
+
+  isQrExpired(timestamp: Date): boolean {
+    const diff = new Date().getTime() - new Date(timestamp).getTime();
+    return diff > 5 * 60 * 1000; // 5 minutes
   }
 
   private scrollToBottom() {

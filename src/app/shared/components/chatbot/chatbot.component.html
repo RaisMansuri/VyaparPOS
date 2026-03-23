@@ -22,11 +22,27 @@
                     <!-- commerce metadata rendering -->
                     <div *ngIf="msg.metadata" class="msg-actions mt-3">
                         <!-- QR Code Card -->
-                        <div *ngIf="msg.metadata.upiId" class="qr-card shadow-1">
+                        <div *ngIf="msg.metadata.upiId" class="qr-card shadow-1" [class.expired]="isQrExpired(msg.timestamp)">
                             <div class="qr-title">Scan to Pay ₹{{ msg.metadata.amount }}</div>
-                            <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + 'upi://pay?pa=' + msg.metadata.upiId + '&pn=' + msg.metadata.name + '&am=' + msg.metadata.amount"
-                                alt="QR Code" class="qr-img" />
+                            <div class="qr-container">
+                                <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + 'upi://pay?pa=' + msg.metadata.upiId + '&pn=' + msg.metadata.name + '&am=' + msg.metadata.amount"
+                                    alt="QR Code" class="qr-img" />
+                                <div class="qr-overlay" *ngIf="isQrExpired(msg.timestamp)">
+                                    <i class="pi pi-clock mb-2"></i>
+                                    <span>EXPIRED</span>
+                                </div>
+                            </div>
                             <div class="qr-footer">{{ msg.metadata.note }}</div>
+                            <div class="mt-2 text-center" *ngIf="!isQrExpired(msg.timestamp)">
+                                <button pButton label="I have Paid" icon="pi pi-check" (click)="quickAction('I have completed the payment')" class="p-button-xs p-button-success"></button>
+                            </div>
+                            <div class="qr-status mt-2 text-center" *ngIf="isQrExpired(msg.timestamp)">
+                                <div class="text-xs text-red-500 font-bold mb-2">This payment code has expired.</div>
+                                <div class="flex justify-content-center gap-2">
+                                    <button pButton label="Regenerate" (click)="quickAction('Regenerate my payment code')" class="p-button-xs p-button-info"></button>
+                                    <button pButton label="Cancel" (click)="quickAction('Cancel payment')" class="p-button-xs p-button-text p-button-secondary"></button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Invoice Card -->
@@ -41,9 +57,42 @@
                             </div>
                             <div class="inv-actions mt-2">
                                 <button pButton label="PDF" icon="pi pi-file-pdf"
+                                    (click)="downloadInvoice(msg.metadata)"
                                     class="p-button-sm p-button-outlined mr-2"></button>
                                 <button pButton label="Print" icon="pi pi-print"
+                                    (click)="printInvoice(msg.metadata)"
                                     class="p-button-sm p-button-outlined"></button>
+                            </div>
+                        </div>
+
+                        <!-- Checkout Progress Card -->
+                        <div *ngIf="msg.metadata.checkoutStep" class="checkout-progress-card shadow-1">
+                            <div class="steps-container">
+                                <div class="step" [class.active]="msg.metadata.checkoutStep >= 1" [class.completed]="msg.metadata.checkoutStep > 1">
+                                    <div class="step-icon"><i class="pi" [ngClass]="msg.metadata.checkoutStep > 1 ? 'pi-check' : 'pi-shopping-cart'"></i></div>
+                                    <div class="step-label">Cart</div>
+                                </div>
+                                <div class="step-line" [class.active]="msg.metadata.checkoutStep > 1"></div>
+                                <div class="step" [class.active]="msg.metadata.checkoutStep >= 2" [class.completed]="msg.metadata.checkoutStep > 2">
+                                    <div class="step-icon"><i class="pi" [ngClass]="msg.metadata.checkoutStep > 2 ? 'pi-check' : 'pi-map-marker'"></i></div>
+                                    <div class="step-label">Address</div>
+                                </div>
+                                <div class="step-line" [class.active]="msg.metadata.checkoutStep > 2"></div>
+                                <div class="step" [class.active]="msg.metadata.checkoutStep >= 3" [class.completed]="msg.metadata.checkoutStep > 3">
+                                    <div class="step-icon"><i class="pi" [ngClass]="msg.metadata.checkoutStep > 3 ? 'pi-check' : 'pi-credit-card'"></i></div>
+                                    <div class="step-label">Payment</div>
+                                </div>
+                                <div class="step-line" [class.active]="msg.metadata.checkoutStep > 3"></div>
+                                <div class="step" [class.active]="msg.metadata.checkoutStep >= 4" [class.completed]="msg.metadata.checkoutStep > 4">
+                                    <div class="step-icon"><i class="pi" [ngClass]="msg.metadata.checkoutStep >= 4 ? 'pi-flag' : 'pi-flag'"></i></div>
+                                    <div class="step-label">Confirm</div>
+                                </div>
+                            </div>
+                            <div class="step-help mt-3 p-2 border-round surface-100 text-sm">
+                                {{ msg.metadata.stepPrompt }}
+                            </div>
+                            <div class="mt-2 flex justify-content-end" *ngIf="msg.metadata.onNext">
+                                <button pButton [label]="msg.metadata.nextLabel || 'Next Step'" (click)="quickAction(msg.metadata.onNext)" class="p-button-sm"></button>
                             </div>
                         </div>
 
@@ -81,15 +130,33 @@
                             </div>
                         </div>
 
+                        <!-- Payment Methods List (SHOW_PAYMENT_METHODS) -->
+                        <div *ngIf="msg.metadata.methods" class="payment-methods-card shadow-1">
+                            <div class="list-title">Select Payment Method</div>
+                            <div class="methods-grid">
+                                <div *ngFor="let m of msg.metadata.methods" class="method-btn shadow-1" (click)="quickAction('Pay via ' + m)">
+                                    <i class="pi" [ngClass]="{
+                                        'pi-credit-card': m === 'Card',
+                                        'pi-wallet': m === 'Cash',
+                                        'pi-bolt': m === 'UPI'
+                                    }"></i>
+                                    <span>{{ m }}</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Product Added Hint (Simple Pills) -->
-                        <div *ngIf="!msg.metadata.title && msg.metadata.products" class="product-pills">
-                            <span *ngFor="let p of msg.metadata.products" class="p-pill">
-                                +{{ p.quantity }} {{ p.name }}
-                            </span>
+                        <div *ngIf="!msg.metadata.title && msg.metadata.products" class="product-pills-container mt-2">
+                            <div class="product-pills">
+                                <span *ngFor="let p of msg.metadata.products" class="p-pill">
+                                    +{{ p.quantity }} {{ p.name }}
+                                </span>
+                            </div>
+                            <button pButton label="Checkout Now" icon="pi pi-shopping-cart" (click)="quickAction('Go to my cart')" class="p-button-xs p-button-text p-button-info mt-1"></button>
                         </div>
                     </div>
 
-                    <small class="msg-time">{{ msg.timestamp | date:'shortTime' }}</small>
+                    <small class="msg-time">{{ formatMessageDate(msg.timestamp) }}, {{ msg.timestamp | date:'shortTime' }}</small>
                 </div>
             </div>
             <div *ngIf="isTyping()" class="typing-container">

@@ -42,6 +42,7 @@ export class ReportsComponent implements OnInit {
   private auth = inject(AuthService);
 
   isManager = this.auth.isManager();
+  isConsumer = this.auth.isConsumer();
 
   lineData: any;
   pieData: any;
@@ -214,12 +215,16 @@ export class ReportsComponent implements OnInit {
             `Rs. ${r.taxable}`,
             `Rs. ${r.gst}`,
             `Rs. ${r.revenue}`,
-            `Rs. ${r.profit}`
+            ...(this.isConsumer ? [] : [`Rs. ${r.profit}`])
         ];
     });
 
+    const headers = this.isConsumer ? 
+        [['Date', 'Orders', 'Taxable', 'GST', 'Total Spent']] : 
+        [['Date', 'Orders', 'Taxable', 'GST', 'Revenue', 'Profit']];
+
     autoTable(doc, {
-      head: [['Date', 'Orders', 'Taxable', 'GST', 'Revenue', 'Profit']],
+      head: headers,
       body: tableData,
       startY: 35
     });
@@ -236,9 +241,9 @@ export class ReportsComponent implements OnInit {
             Date: formattedDate,
             Orders: r.orders,
             'Taxable Value': r.taxable,
-            'GST Collected': r.gst,
-            Revenue: r.revenue,
-            Profit: r.profit
+            'GST Paid': r.gst,
+            [this.isConsumer ? 'Total Spent' : 'Revenue']: r.revenue,
+            ...(this.isConsumer ? {} : { Profit: r.profit })
         };
     });
 

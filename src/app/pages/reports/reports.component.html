@@ -80,7 +80,7 @@
     <div class="metric-card">
       <div class="metric-icon revenue-bg"><i class="pi pi-dollar"></i></div>
       <div class="metric-info">
-        <span class="metric-label">Total Revenue</span>
+        <span class="metric-label">{{ isConsumer ? 'Total Spending' : 'Total Revenue' }}</span>
         <div class="metric-value">{{ summaryStats.totalRevenue | currency:'INR':'symbol':'1.0-0' }}</div>
         <div class="metric-trend positive">
           <i class="pi pi-arrow-up"></i> {{ summaryStats.revenueTrend }} <span>vs last week</span>
@@ -160,7 +160,7 @@
     <!-- Line Chart -->
     <div class="chart-card chart-wide">
       <div class="chart-header">
-        <h3>Weekly Revenue</h3>
+        <h3>{{ isConsumer ? 'Spending Trend' : 'Weekly Revenue' }}</h3>
         <p-selectButton
           [options]="[{label:'Week', value:'week'}, {label:'Month', value:'month'}, {label:'Year', value:'year'}]"
           [(ngModel)]="currentPeriod" styleClass="period-toggle">
@@ -210,8 +210,8 @@
               field="taxable"></p-sortIcon></th>
           <th pSortableColumn="gst" class="col-right col-desktop">GST COLLECTED <p-sortIcon field="gst"></p-sortIcon>
           </th>
-          <th pSortableColumn="revenue" class="col-right">TOTAL REVENUE <p-sortIcon field="revenue"></p-sortIcon></th>
-          <th pSortableColumn="profit" class="col-right" *ngIf="isManager">PROFIT <p-sortIcon field="profit"></p-sortIcon></th>
+          <th pSortableColumn="revenue" class="col-right">{{ isConsumer ? 'TOTAL SPENT' : 'TOTAL REVENUE' }} <p-sortIcon field="revenue"></p-sortIcon></th>
+          <th pSortableColumn="profit" class="col-right" *ngIf="isManager && !isConsumer">PROFIT <p-sortIcon field="profit"></p-sortIcon></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-report>
@@ -222,7 +222,7 @@
           <td class="col-right col-desktop">{{ report.taxable | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="col-right col-desktop">{{ report.gst | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="col-right col-bold">{{ report.revenue | currency:'INR':'symbol':'1.0-0' }}</td>
-          <td class="col-right" *ngIf="isManager">
+          <td class="col-right" *ngIf="isManager && !isConsumer">
             <span class="profit-badge">{{ report.profit | currency:'INR':'symbol':'1.0-0' }}</span>
           </td>
         </tr>
