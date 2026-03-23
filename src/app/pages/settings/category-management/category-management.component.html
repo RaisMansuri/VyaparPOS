@@ -62,7 +62,13 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="4" class="text-center p-4">No categories found.</td>
+                    <td colspan="4" class="text-center" style="padding: 3rem;">
+                        <div class="empty-state flex flex-column align-items-center justify-content-center">
+                            <i class="pi pi-tags" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
+                            <div style="font-size: 1.25rem; color: #64748b; font-weight: 600;">No records available</div>
+                            <p style="color: #94a3b8; margin-top: 0.5rem;">Organize your bakery by adding product categories.</p>
+                        </div>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

@@ -162,6 +162,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.auth.logout();
   }
 
+  isConsumer(): boolean {
+    return this.auth.isConsumer();
+  }
+
   onNotificationClick(notification: Notification, op: any): void {
     this.notificationService.markAsRead(notification.id);
     if (notification.link) {
@@ -175,21 +179,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   hasVisibleSection(section: string): boolean {
-    if (section === 'shopping') {
-      return this.visibleRoutes.some(r => r.section === 'shopping' && r.path !== '/products');
-    }
     return this.visibleRoutes.some(r => r.section === section);
   }
 
   getRouteLabel(route: RoutePermission): string {
-    if (route.label.startsWith('DASHBOARD') ||
-      route.label.startsWith('REPORTS') ||
-      route.label.startsWith('CUSTOMERS') ||
-      route.label.startsWith('PRODUCTS') ||
-      route.label.startsWith('INVENTORY_MANAGEMENT')) {
-      return this.translationService.translate(route.label) || route.label;
-    }
-    return route.label;
+    const translated = this.translationService.translate(route.label);
+    return translated !== route.label ? translated : route.label;
   }
 
   updatePageTitle(url: string): void {

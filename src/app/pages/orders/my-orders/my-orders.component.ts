@@ -34,8 +34,6 @@ export class MyOrdersComponent implements OnInit {
 
     cancelOrder(order: Order, event: Event): void {
         event.stopPropagation();
-        // Logically we would call orderService.deleteOrder(order.id) here
-        console.log('Order cancelled:', order.id);
     }
 
     continueShopping(): void {

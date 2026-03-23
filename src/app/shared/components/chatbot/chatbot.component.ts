@@ -10,6 +10,7 @@ import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
+import { AuthService } from '../../../auth/auth.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -27,6 +28,7 @@ export class ChatbotComponent {
   private orderService = inject(OrderService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  private authService = inject(AuthService);
 
   isOpen = signal(false);
   userInput = signal('');
@@ -187,6 +189,10 @@ export class ChatbotComponent {
         }
       });
     });
+  }
+
+  isConsumer(): boolean {
+    return this.authService.isConsumer();
   }
 
   private scrollToBottom() {

@@ -1,7 +1,7 @@
 <div class="cart-page">
     <div class="cart-header">
         <h1><i class="pi pi-shopping-cart"></i> Shopping Cart</h1>
-        <p-tag [value]="cartService.cartCount() + ' items'" severity="info" />
+        <p-tag [value]="cartService.cartCount() + (cartService.cartCount() === 1 ? ' item' : ' items')" severity="info" />
     </div>
 
     @if (cartService.items().length === 0) {
@@ -52,7 +52,7 @@
             <div class="summary-card">
                 <h3 class="summary-title">Order Summary</h3>
                 <div class="summary-row">
-                    <span>Subtotal ({{ cartService.cartCount() }} items)</span>
+                    <span>Subtotal ({{ cartService.cartCount() }} {{ cartService.cartCount() === 1 ? 'item' : 'items' }})</span>
                     <span>{{ cartService.cartTotal() | currency:'INR':'symbol':'1.0-0' }}</span>
                 </div>
                 <div class="summary-row">

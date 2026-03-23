@@ -36,13 +36,24 @@ export class RegisterComponent {
     name: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    phone: ['', [Validators.required]],
+    phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
   });
 
   get name() { return this.form.get('name'); }
   get email() { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
   get phone() { return this.form.get('phone'); }
+
+  onPhoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Remove non-numeric characters
+    input.value = input.value.replace(/[^0-9]/g, '');
+    // Limit to 10 digits
+    if (input.value.length > 10) {
+      input.value = input.value.slice(0, 10);
+    }
+    this.form.patchValue({ phone: input.value });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {

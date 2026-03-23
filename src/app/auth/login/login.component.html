@@ -27,7 +27,7 @@
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="email">Email Address <span class="required-star">*</span></label>
           <div class="input-wrapper">
             <i class="pi pi-envelope input-icon"></i>
             <input
@@ -47,7 +47,7 @@
 
         <div class="form-group">
           <div class="label-row">
-            <label for="password">Password</label>
+            <label for="password">Password <span class="required-star">*</span></label>
             <a routerLink="/auth/forgot-password" class="forgot-link">Forgot password?</a>
           </div>
           <div class="input-wrapper">

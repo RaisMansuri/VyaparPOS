@@ -85,7 +85,7 @@ export class CartService {
     }
 
     removeFromCart(productId: string | number): void {
-        this.cartItems.set(this.cartItems().filter(item => item.product.id == productId));
+        this.cartItems.set(this.cartItems().filter(item => item.product.id != productId));
     }
 
     updateQuantity(productId: string | number, quantity: number): void {

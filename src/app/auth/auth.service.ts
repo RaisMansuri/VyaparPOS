@@ -23,6 +23,8 @@ export interface AuthUser {
   subscriptionStatus?: string;
   subscriptionRenewalDate?: string;
   permissions?: string[];
+  aiApiKey?: string;
+  aiModel?: string;
 }
 
 @Injectable({
@@ -91,80 +93,78 @@ export class AuthService {
   isCashier(): boolean {
     return this.hasRole('cashier');
   }
+  
+  isConsumer(): boolean {
+    return this.hasRole('consumer');
+  }
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
+        const data = response.data;
         const user: AuthUser = {
-          ...response.user,
-          token: response.token
+          ...data.user,
+          token: data.token
         };
         this.saveUser(user);
       }),
       catchError(err => {
         return throwError(() => err);
-      }),
-      finalize(() => this.loader.hide())
+      })
     );
   }
 
   register(payload: any): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/register`, payload).pipe(
       tap((response: any) => {
-        if (response.token) {
+        const data = response.data;
+        if (data && data.token) {
           const user: AuthUser = {
-            ...response.user,
-            token: response.token
+            ...data.user,
+            token: data.token
           };
           this.saveUser(user);
         }
       }),
       catchError(err => {
         return throwError(() => err);
-      }),
-      finalize(() => this.loader.hide())
+      })
     );
   }
 
   verifyEmail(email: string, code: string): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/verify-email`, { email, code }).pipe(
-      catchError(err => throwError(() => err)),
-      finalize(() => this.loader.hide())
+      catchError(err => throwError(() => err))
     );
   }
 
   resendVerification(email: string): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/resend-verification`, { email }).pipe(
-      catchError(err => throwError(() => err)),
-      finalize(() => this.loader.hide())
+      catchError(err => throwError(() => err))
     );
   }
 
-  updateProfile(updates: Partial<AuthUser>): void {
+  updateProfile(updates: Partial<AuthUser>): Observable<any> {
     const current = this.currentUserSubject.value;
-    if (current) {
-      const updated = { ...current, ...updates };
-      this.saveUser(updated);
-    }
+    if (!current) return throwError(() => new Error('No user logged in'));
+
+    return this.http.put(`${this.apiUrl}/users/me`, updates).pipe(
+      tap((response: any) => {
+        const updatedUser = { ...current, ...response.data };
+        this.saveUser(updatedUser);
+      })
+    );
   }
 
   forgotPassword(email: string): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email }).pipe(
-      catchError(err => throwError(() => err)),
-      finalize(() => this.loader.hide())
+      catchError(err => throwError(() => err))
     );
   }
 
   resetPassword(payload: any): Observable<any> {
-    this.loader.show();
     return this.http.post(`${this.apiUrl}/auth/reset-password`, payload).pipe(
-      catchError(err => throwError(() => err)),
-      finalize(() => this.loader.hide())
+      catchError(err => throwError(() => err))
     );
   }
 

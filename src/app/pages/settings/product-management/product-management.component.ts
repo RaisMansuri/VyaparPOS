@@ -118,11 +118,11 @@ export class ProductManagementComponent implements OnInit {
 
   deleteProduct(product: Product) {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete <b>${product.name}</b>?`,
-      header: 'Delete Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: 'pi pi-check',
-      rejectIcon: 'pi pi-times',
+      message: `<b>${product.name}</b> will be permanently removed from inventory?`,
+      header: 'Delete product?',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Keep it',
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-text',
       accept: () => {

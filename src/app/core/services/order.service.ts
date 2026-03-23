@@ -13,7 +13,7 @@ import { cloneOrders } from '../mock-data';
 export class OrderService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/sales`;
-    private orders = signal<Order[]>(cloneOrders());
+    private orders = signal<Order[]>([]);
     private currentAddress = signal<Address | null>(null);
 
     readonly allOrders = this.orders.asReadonly();
@@ -92,10 +92,10 @@ export class OrderService {
         return this.http.get<any>(this.apiUrl).pipe(
             map(res => {
                 const orders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
-                return Array.isArray(orders) && orders.length > 0 ? orders : this.orders();
+                return Array.isArray(orders) ? orders : [];
             }),
             tap(orders => this.orders.set(orders)),
-            catchError(() => of(this.orders()))
+            catchError(() => of([]))
         );
     }
 

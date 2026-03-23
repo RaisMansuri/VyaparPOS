@@ -10,6 +10,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProductService } from '../core/services/product.service';
 import { SalesService } from '../core/services/sales.service';
+import { AuthService } from '../auth/auth.service';
 import { DashboardStats } from '../models/transaction.model';
 import { Product } from '../models/product.model';
 
@@ -35,7 +36,10 @@ type DurationFilter = '7d' | '30d' | '90d' | 'custom';
 export class DashboardComponent implements OnInit {
   private productService = inject(ProductService);
   private salesService = inject(SalesService);
+  private authService = inject(AuthService);
   private router = inject(Router);
+
+  userName = 'User';
 
   stats: DashboardStats | null = null;
   lowStockProducts: Product[] = [];
@@ -73,6 +77,9 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    this.userName = user?.name || 'User';
+
     this.initChartOptions();
 
     this.productService.getProductsByCategory('all').subscribe((products) => {

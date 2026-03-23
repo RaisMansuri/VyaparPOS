@@ -145,9 +145,13 @@ export class ExpensesComponent implements OnInit {
 
   deleteExpense(id: string): void {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this expense?',
-      header: 'Confirm Delete',
-      icon: 'pi pi-exclamation-triangle',
+      message: 'This expense record will be permanently removed?',
+      header: 'Delete expense?',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Keep it',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
       accept: () => {
         this.expenseService.deleteExpense(id).subscribe({
           next: () => {

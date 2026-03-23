@@ -10,6 +10,7 @@ export class TranslationService {
   private translations: any = {
     en: {
       'DASHBOARD': 'Dashboard',
+      'OVERVIEW': 'Overview',
       'PRODUCTS': 'Products',
       'CUSTOMERS': 'Customers',
       'REPORTS': 'Reports',
@@ -26,10 +27,16 @@ export class TranslationService {
       'MARK_ALL_READ': 'Mark all as read',
       'SEE_ALL': 'See all',
       'NO_NOTIFICATIONS': 'No new notifications',
-      'INVENTORY_MANAGEMENT': 'Inventory Management'
+      'INVENTORY_MANAGEMENT': 'Inventory Management',
+      'SHOPPING': 'Shopping',
+      'MANAGEMENT': 'Management',
+      'HELP': 'Help & Support',
+      'SETTINGS': 'Settings',
+      'ACCOUNT': 'Account'
     },
     hi: {
       'DASHBOARD': 'डैशबोर्ड',
+      'OVERVIEW': 'अवलोकन',
       'PRODUCTS': 'उत्पाद',
       'CUSTOMERS': 'ग्राहक',
       'REPORTS': 'रिपोर्ट',
@@ -46,7 +53,12 @@ export class TranslationService {
       'MARK_ALL_READ': 'सभी को पढ़ा हुआ मानें',
       'SEE_ALL': 'सभी देखें',
       'NO_NOTIFICATIONS': 'कोई नई सूचना नहीं',
-      'INVENTORY_MANAGEMENT': 'इन्वेंट्री प्रबंधन'
+      'INVENTORY_MANAGEMENT': 'इन्वेंट्री प्रबंधन',
+      'SHOPPING': 'खरीदारी',
+      'MANAGEMENT': 'प्रबंधन',
+      'HELP': 'सहायता और समर्थन',
+      'SETTINGS': 'सेटिंग्स',
+      'ACCOUNT': 'खाता'
     }
   };
 

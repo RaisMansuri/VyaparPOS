@@ -61,7 +61,8 @@ export class UsersComponent implements OnInit {
         this.roles = [
             { label: 'Admin', value: 'Admin' },
             { label: 'Manager', value: 'Manager' },
-            { label: 'Cashier', value: 'Cashier' }
+            { label: 'Cashier', value: 'Cashier' },
+            { label: 'Consumer', value: 'Consumer' }
         ];
 
         this.statuses = [
@@ -119,6 +120,8 @@ export class UsersComponent implements OnInit {
                 return 'info';
             case 'Cashier':
                 return 'secondary';
+            case 'Consumer':
+                return 'info';
             default:
                 return 'info';
         }
@@ -137,9 +140,13 @@ export class UsersComponent implements OnInit {
 
     deleteUser(user: User) {
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete ' + user.name + '?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
+            message: `<b>${user.name}</b> will be removed from the system?`,
+            header: 'Remove user?',
+            icon: 'pi pi-trash',
+            acceptLabel: 'Remove',
+            rejectLabel: 'Keep it',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this.userService.deleteUser(user.id).subscribe({
                     next: () => {

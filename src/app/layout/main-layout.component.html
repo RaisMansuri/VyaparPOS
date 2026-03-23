@@ -15,35 +15,57 @@
       <div class="sidebar-title">VyaparPOS</div>
     </div>
     <nav class="sidebar-nav">
-      <!-- Main Section -->
-      @for (route of visibleRoutes; track route.path) {
-        @if (route.section === 'main') {
-          <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
-            <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
-          </a>
+      <!-- Overview Section -->
+      @if (hasVisibleSection('overview')) {
+        <div class="nav-section-title">{{ translationService.translate('OVERVIEW') || 'Overview' }}</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'overview') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
         }
       }
 
-      <!-- Categories Section -->
-      <div class="nav-section-title">{{ translationService.translate('CATEGORIES') }}</div>
-      @for (route of visibleRoutes; track route.path) {
-        @if (route.path === '/products') {
-          <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
-            <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
-          </a>
+      <!-- Management Section -->
+      @if (hasVisibleSection('management')) {
+        <div class="nav-section-title">{{ translationService.translate('MANAGEMENT') }}</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'management') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
         }
       }
-      @for (category of categories; track category) {
-        <a (click)="navigate('/category/' + category.toLowerCase())" routerLinkActive="active" class="nav-item">
-          <i class="pi pi-tag"></i> {{ category }}
-        </a>
+
+      <!-- Inventory Section -->
+      @if (hasVisibleSection('inventory')) {
+        <div class="nav-section-title">{{ translationService.translate('INVENTORY_MANAGEMENT') }}</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'inventory') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
+        }
+      }
+
+      <!-- Categories Section (Special) -->
+      @if (categories.length > 0) {
+        <div class="nav-section-title">{{ translationService.translate('CATEGORIES') }}</div>
+        @for (category of categories; track category) {
+          <a (click)="navigate('/category/' + category.toLowerCase())" routerLinkActive="active" class="nav-item">
+            <i class="pi pi-tag"></i> {{ category }}
+          </a>
+        }
       }
 
       <!-- Shopping Section -->
       @if (hasVisibleSection('shopping')) {
-        <div class="nav-section-title">Shopping</div>
+        <div class="nav-section-title">{{ translationService.translate('SHOPPING') }}</div>
         @for (route of visibleRoutes; track route.path) {
-          @if (route.section === 'shopping' && route.path !== '/products') {
+          @if (route.section === 'shopping') {
             <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
               <div class="nav-icon-wrapper">
                 <i [class]="route.icon"></i>
@@ -57,9 +79,21 @@
         }
       }
 
+      <!-- Help Section -->
+      @if (hasVisibleSection('help')) {
+        <div class="nav-section-title">{{ translationService.translate('HELP') }}</div>
+        @for (route of visibleRoutes; track route.path) {
+          @if (route.section === 'help') {
+            <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
+              <i [class]="route.icon"></i> {{ getRouteLabel(route) }}
+            </a>
+          }
+        }
+      }
+
       <!-- Account Section -->
       @if (hasVisibleSection('account')) {
-        <div class="nav-section-title">Account</div>
+        <div class="nav-section-title">{{ translationService.translate('ACCOUNT') }}</div>
         @for (route of visibleRoutes; track route.path) {
           @if (route.section === 'account') {
             <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">
@@ -71,7 +105,7 @@
 
       <!-- Settings Section -->
       @if (hasVisibleSection('settings')) {
-        <div class="nav-section-title">Settings</div>
+        <div class="nav-section-title">{{ translationService.translate('SETTINGS') }}</div>
         @for (route of visibleRoutes; track route.path) {
           @if (route.section === 'settings') {
             <a (click)="navigate(route.path)" routerLinkActive="active" class="nav-item">

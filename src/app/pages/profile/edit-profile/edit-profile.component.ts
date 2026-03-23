@@ -28,7 +28,9 @@ export class EditProfileComponent implements OnInit {
         address: '',
         city: '',
         state: '',
-        pincode: ''
+        pincode: '',
+        aiApiKey: '',
+        aiModel: 'google/gemini-2.0-flash-lite-preview-02-05:free'
     };
 
     isSaving = false;
@@ -63,6 +65,8 @@ export class EditProfileComponent implements OnInit {
             this.form.city = user.city || '';
             this.form.state = user.state || '';
             this.form.pincode = user.pincode || '';
+            this.form.aiApiKey = user.aiApiKey || '';
+            this.form.aiModel = user.aiModel || 'google/gemini-2.0-flash-lite-preview-02-05:free';
         }
     }
 
@@ -83,24 +87,29 @@ export class EditProfileComponent implements OnInit {
 
         this.isSaving = true;
 
-        setTimeout(() => {
-            this.authService.updateProfile({
-                name: this.form.name.trim(),
-                email: this.form.email.trim(),
-                phone: this.form.phone.trim(),
-                address: this.form.address.trim(),
-                city: this.form.city.trim(),
-                state: this.form.state,
-                pincode: this.form.pincode.trim()
-            });
-
-            this.isSaving = false;
-            this.toastService.success('Profile Updated!', 'Your profile has been saved successfully');
-
-            setTimeout(() => {
-                this.router.navigate(['/profile']);
-            }, 1000);
-        }, 800);
+        this.authService.updateProfile({
+            name: this.form.name.trim(),
+            email: this.form.email.trim(),
+            phone: this.form.phone.trim(),
+            address: this.form.address.trim(),
+            city: this.form.city.trim(),
+            state: this.form.state,
+            pincode: this.form.pincode.trim(),
+            aiApiKey: this.form.aiApiKey.trim(),
+            aiModel: this.form.aiModel
+        }).subscribe({
+            next: () => {
+                this.isSaving = false;
+                this.toastService.success('Profile Updated!', 'Your profile has been saved successfully');
+                setTimeout(() => {
+                    this.router.navigate(['/profile']);
+                }, 1000);
+            },
+            error: (err) => {
+                this.isSaving = false;
+                this.toastService.error('Update Failed', 'Could not save profile changes');
+            }
+        });
     }
 
     cancel(): void {

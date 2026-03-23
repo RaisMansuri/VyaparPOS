@@ -71,6 +71,33 @@
                     </select>
                 </div>
             </div>
+
+            <!-- AI Configuration -->
+            <div class="form-section full-width-section">
+                <h3><i class="pi pi-bolt"></i> AI Assistant Configuration</h3>
+                <p class="section-hint">Provide your OpenRouter API key to use your own AI credits. Leave blank to use system defaults (if available).</p>
+                
+                <div class="form-field">
+                    <label for="aiApiKey">OpenRouter API Key</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
+                        <input pInputText id="aiApiKey" [(ngModel)]="form.aiApiKey" type="password" placeholder="sk-or-v1-..."
+                            class="full-width" />
+                    </div>
+                    <small class="field-hint">Your key is stored securely and never shared. Get one at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai</a></small>
+                </div>
+
+                <div class="form-field">
+                    <label for="aiModel">AI Model</label>
+                    <select id="aiModel" [(ngModel)]="form.aiModel" class="state-select full-width">
+                        <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash Lite (Free)</option>
+                        <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash Exp (Free)</option>
+                        <option value="google/gemini-2.0-pro-exp-02-05:free">Gemini 2.0 Pro Exp (Free)</option>
+                        <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+                        <option value="openrouter/auto">OpenRouter Auto (Best Available)</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <!-- Actions -->

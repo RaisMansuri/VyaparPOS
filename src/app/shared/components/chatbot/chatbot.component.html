@@ -58,10 +58,15 @@
         </div>
 
         <div class="chat-footer">
-            <div class="quick-actions mb-2" *ngIf="messages().length < 4">
+            <div class="quick-actions mb-2" *ngIf="messages().length < 4 && !isConsumer()">
                 <button (click)="quickAction('Show today\'s sales')" class="quick-btn">🔥 Revenue</button>
                 <button (click)="quickAction('Go to reports')" class="quick-btn">📊 Reports</button>
                 <button (click)="quickAction('Low stock?')" class="quick-btn">📦 Stock</button>
+            </div>
+            
+            <div class="quick-actions mb-2" *ngIf="messages().length < 4 && isConsumer()">
+                <button (click)="quickAction('Where is my order?')" class="quick-btn">🚚 Order Status</button>
+                <button (click)="quickAction('I need help')" class="quick-btn">❓ Help & Support</button>
             </div>
             <div class="input-group">
                 <input type="text" pInputText [(ngModel)]="userInput" placeholder="Ask me anything..." (keyup.enter)="sendMessage()" />

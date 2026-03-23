@@ -100,9 +100,13 @@ export class ProductsComponent implements OnInit {
 
     deleteProduct(prod: Product) {
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete ' + prod.name + '?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
+            message: `<b>${prod.name}</b> will be permanently removed from the catalog?`,
+            header: 'Delete product?',
+            icon: 'pi pi-trash',
+            acceptLabel: 'Delete',
+            rejectLabel: 'Keep it',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this.products = this.products.filter((val) => val.id !== prod.id);
                 this.product = { id: 0, name: '', imageUrl: '', category: '', price: 0, stock: 0, barcode: '' };

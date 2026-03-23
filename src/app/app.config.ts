@@ -8,6 +8,8 @@ import Aura from '@primeng/themes/aura';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { loaderInterceptor } from './core/interceptors/loader.interceptor';
 import { CurrencyPipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
@@ -16,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withFetch(),
-      withInterceptors([errorInterceptor])
+      withInterceptors([loaderInterceptor, authInterceptor, errorInterceptor])
     ),
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),

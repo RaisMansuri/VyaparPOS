@@ -31,13 +31,13 @@ export class CartComponent {
     }
 
     removeItem(productId: number | string): void {
-        const item = this.cartService.items().find(i => i.product.id === productId);
+        const item = this.cartService.items().find(i => i.product.id == productId);
         this.confirmationService.confirm({
-            message: `Are you sure you want to remove <b>${item?.product.name}</b> from your cart?`,
-            header: 'Remove from Cart',
-            icon: 'pi pi-exclamation-triangle',
-            acceptIcon: 'pi pi-check',
-            rejectIcon: 'pi pi-times',
+            message: `<b>${item?.product.name}</b> will be removed from your cart?`,
+            header: 'Remove item?',
+            icon: 'pi pi-trash',
+            acceptLabel: 'Remove',
+            rejectLabel: 'Keep it',
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-text',
             accept: () => {

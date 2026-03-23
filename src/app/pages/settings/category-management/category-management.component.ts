@@ -66,9 +66,13 @@ export class CategoryManagementComponent implements OnInit {
 
   deleteCategory(category: Category): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${category.name}?`,
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
+      message: `<b>${category.name}</b> will be permanently removed?`,
+      header: 'Delete category?',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Keep it',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
       accept: () => {
         if (category.id || category._id) {
           this.categoryService.deleteCategory((category.id || category._id) as string).subscribe(success => {

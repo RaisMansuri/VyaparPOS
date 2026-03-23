@@ -7,12 +7,13 @@
 
 .chat-trigger {
     width: 60px;
-    height: 60px;
+    height: 45px;
     font-size: 1.5rem;
     cursor: pointer;
-    background: #10b981 !important; /* Premium green */
+    background: #2563eb !important;
+    /* Premium green */
     border: none !important;
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.7) !important;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -22,24 +23,33 @@
 
 .chat-window {
     position: fixed;
-    bottom: 5.5rem; /* Adjusted to be above the trigger */
+    bottom: 5.5rem;
+    /* Adjusted to be above the trigger */
     right: 1.5rem;
     width: 380px;
     max-width: calc(100vw - 3rem);
     height: 600px;
-    max-height: calc(100vh - 8rem); /* Prevent cutting off at the top */
+    max-height: calc(100vh - 8rem);
+    /* Prevent cutting off at the top */
     background: white;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .chat-header {
@@ -49,8 +59,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0; /* Important: Don't let header shrink */
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+    /* Important: Don't let header shrink */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-info {
@@ -60,7 +71,7 @@
 }
 
 .header-info i {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     width: 32px;
     height: 32px;
     display: flex;
@@ -95,8 +106,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .msg-bubble {
@@ -106,7 +124,7 @@
     font-size: 0.92rem;
     line-height: 1.5;
     position: relative;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 
 .msg-time {
@@ -116,7 +134,10 @@
     opacity: 0.5;
 }
 
-.assistant { justify-content: flex-start; }
+.assistant {
+    justify-content: flex-start;
+}
+
 .assistant .msg-bubble {
     background: white;
     color: #1e293b;
@@ -124,9 +145,13 @@
     border: 1px solid #e2e8f0;
 }
 
-.user { justify-content: flex-end; }
+.user {
+    justify-content: flex-end;
+}
+
 .user .msg-bubble {
-    background: #10b981; /* Matching green theme */
+    background: #10b981;
+    /* Matching green theme */
     color: white;
     border-bottom-right-radius: 4px;
 }
@@ -268,7 +293,11 @@
 }
 
 @media screen and (max-width: 480px) {
-    .chatbot-container { bottom: 1rem; right: 1rem; }
+    .chatbot-container {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
     .chat-window {
         width: calc(100vw - 2rem);
         right: 1rem;
