@@ -13,7 +13,7 @@
   <div class="card-modern">
     <p-table #dt [value]="products" [rows]="10" [paginator]="true"
       [globalFilterFields]="['name', 'category', 'barcode']" [rowHover]="true" dataKey="id"
-      styleClass="p-datatable-sm modern-table"
+      styleClass="p-datatable-sm modern-table" responsiveLayout="stack" [breakpoint]="'960px'"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
 
       <ng-template #caption>
@@ -81,12 +81,9 @@
           <i class="pi pi-desktop text-success"></i>
         </div>
         <div class="header-text-stack">
-          <span class="dialog-title">Add Product</span>
-          <span class="dialog-subtitle">Fill in the product information below</span>
         </div>
       </div>
       <div class="divider-hr"></div>
-
     </ng-template>
 
 
@@ -139,7 +136,7 @@
           <input type="text" pInputText id="name" formControlName="name" placeholder="e.g. Basmati Rice 1kg"
             [class.p-invalid]="submitted && productForm.get('name')?.invalid" />
           <small class="p-error block mt-1" *ngIf="submitted && productForm.get('name')?.errors?.['required']">
-            Product name is required.
+            This field is required.
           </small>
         </div>
 
@@ -199,7 +196,7 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-      <div class="flex justify-content-end gap-3 p-4">
+      <div class="flex justify-content-end gap-2 p-3">
         <button pButton pRipple label="Cancel" class="p-button-outlined p-button-secondary premium-footer-btn"
           (click)="hideDialog()"></button>
         <button pButton pRipple label="Save" class="premium-footer-btn-save" (click)="saveProduct()"></button>

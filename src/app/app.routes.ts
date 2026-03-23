@@ -204,6 +204,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'settings/categories',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/settings/category-management/category-management.component').then(
+            (m) => m.CategoryManagementComponent
+          ),
+      },
+      {
         path: 'settings/permissions',
         canActivate: [authGuard, planGuard],
         data: {

@@ -138,7 +138,14 @@ export class ProductService {
   }
 
   private normalizeProducts(res: any): Product[] {
-    const products = this.extractProducts(res);
+    let products = this.extractProducts(res);
+    
+    // Map _id to id for all products
+    products = products.map(p => ({
+      ...p,
+      id: p.id || (p as any)._id
+    }));
+
     if (!Array.isArray(products) || products.length === 0) {
       return this.mockProductsSubject.value;
     }
@@ -148,7 +155,14 @@ export class ProductService {
   }
 
   private normalizeLowStockProducts(res: any): Product[] {
-    const products = this.extractProducts(res);
+    let products = this.extractProducts(res);
+
+    // Map _id to id for all products
+    products = products.map(p => ({
+      ...p,
+      id: p.id || (p as any)._id
+    }));
+
     if (!Array.isArray(products) || products.length === 0) {
       return this.mockProductsSubject.value.filter(product => product.stock <= product.minStockLevel);
     }

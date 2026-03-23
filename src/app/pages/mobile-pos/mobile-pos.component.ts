@@ -148,7 +148,7 @@ export class MobilePosComponent implements OnInit {
     }
   }
 
-  decrementQuantity(productId: number, event: Event): void {
+  decrementQuantity(productId: string | number, event: Event): void {
       event.stopPropagation();
       const currentQty = this.getCartQuantity(productId);
       if (currentQty > 0) {
@@ -195,12 +195,12 @@ export class MobilePosComponent implements OnInit {
     return product.price;
   }
 
-  isInCart(productId: number): boolean {
-    return this.cartService.items().some(item => item.product.id === productId);
+  isInCart(productId: string | number): boolean {
+    return this.cartService.items().some(item => item.product.id == productId);
   }
 
-  getCartQuantity(productId: number): number {
-      const item = this.cartService.items().find(i => i.product.id === productId);
+  getCartQuantity(productId: string | number): number {
+      const item = this.cartService.items().find(i => i.product.id == productId);
       return item ? item.quantity : 0;
   }
 

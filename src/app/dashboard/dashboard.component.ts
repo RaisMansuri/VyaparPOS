@@ -52,17 +52,17 @@ export class DashboardComponent implements OnInit {
   filterDrawerVisible = false;
   selectedDuration: DurationFilter = '30d';
   selectedCategory: string | null = null;
-  selectedProduct: number | null = null;
+  selectedProduct: string | number | null = null;
   customStartDate = '';
   customEndDate = '';
 
   categoryOptions: Array<{ label: string; value: string | null }> = [
     { label: 'All Categories', value: null },
   ];
-  productOptions: Array<{ label: string; value: number | null; category?: string }> = [
+  productOptions: Array<{ label: string; value: string | number | null; category?: string }> = [
     { label: 'All Products', value: null },
   ];
-  filteredProductOptions: Array<{ label: string; value: number | null; category?: string }> = [
+  filteredProductOptions: Array<{ label: string; value: string | number | null; category?: string }> = [
     { label: 'All Products', value: null },
   ];
   durationOptions: Array<{ label: string; value: DurationFilter }> = [
@@ -111,7 +111,7 @@ export class DashboardComponent implements OnInit {
     }
 
     if (this.selectedProduct) {
-      const product = this.allProducts.find((item) => item.id === this.selectedProduct);
+      const product = this.allProducts.find((item) => item.id == this.selectedProduct);
       if (product) {
         labels.push(product.name);
       }
@@ -147,14 +147,14 @@ export class DashboardComponent implements OnInit {
 
     const filteredInventoryProducts = this.allProducts.filter((product) => {
       const categoryMatch = this.selectedCategory ? product.category === this.selectedCategory : true;
-      const productMatch = this.selectedProduct ? product.id === this.selectedProduct : true;
+      const productMatch = this.selectedProduct ? product.id == this.selectedProduct : true;
       return categoryMatch && productMatch;
     });
 
     const filteredReports = this.allReports.filter((report) => {
       const reportDate = this.toDate(report.date || report._id);
       const categoryMatch = this.selectedCategory ? report.category === this.selectedCategory : true;
-      const productMatch = this.selectedProduct ? report.productId === this.selectedProduct : true;
+      const productMatch = this.selectedProduct ? report.productId == this.selectedProduct : true;
       const dateMatch = this.matchesDateFilter(reportDate);
       return categoryMatch && productMatch && dateMatch;
     });
@@ -335,7 +335,7 @@ export class DashboardComponent implements OnInit {
     const totals = reports.reduce((acc, report) => {
       const productId = report.productId;
       const productName =
-        this.allProducts.find((product) => product.id === productId)?.name || `Product ${productId}`;
+        this.allProducts.find((product) => product.id == productId)?.name || `Product ${productId}`;
 
       acc[productName] = (acc[productName] || 0) + (report.revenue || 0);
       return acc;

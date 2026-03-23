@@ -27,11 +27,13 @@ import { PermissionService } from '../core/services/permission.service';
 import { RoutePermission } from '../models/permission.model';
 import { Notification } from '../models/notification.model';
 import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, OverlayPanelModule, DropdownModule, FormsModule, ChatbotComponent],
+  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, OverlayPanelModule, DropdownModule, FormsModule, ChatbotComponent, ConfirmDialogModule],
   providers: [MessageService],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',
@@ -183,7 +185,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     if (route.label.startsWith('DASHBOARD') ||
       route.label.startsWith('REPORTS') ||
       route.label.startsWith('CUSTOMERS') ||
-      route.label.startsWith('PRODUCTS')) {
+      route.label.startsWith('PRODUCTS') ||
+      route.label.startsWith('INVENTORY_MANAGEMENT')) {
       return this.translationService.translate(route.label) || route.label;
     }
     return route.label;
@@ -204,7 +207,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/cart')) this.pageTitle = 'Cart';
     else if (url.includes('/orders')) this.pageTitle = 'My Orders';
     else if (url.includes('/profile')) this.pageTitle = 'My Profile';
-    else if (url.includes('/settings/products')) this.pageTitle = 'Product Settings';
+    else if (url.includes('/settings/products')) this.pageTitle = this.translationService.translate('INVENTORY_MANAGEMENT') || 'Inventory Management';
+    else if (url.includes('/settings/categories')) this.pageTitle = this.translationService.translate('CATEGORIES') || 'Category Management';
     else if (url.includes('/settings/subscription')) this.pageTitle = 'Subscription';
     else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';
     else if (url.includes('/settings/expenses')) this.pageTitle = 'Expense Management';

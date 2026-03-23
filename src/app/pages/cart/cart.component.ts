@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
@@ -19,18 +20,31 @@ export class CartComponent {
     cartService = inject(CartService);
     private router = inject(Router);
     private toastService = inject(ToastService);
+    private confirmationService = inject(ConfirmationService);
 
-    increaseQty(productId: number, currentQty: number): void {
+    increaseQty(productId: number | string, currentQty: number): void {
         this.cartService.updateQuantity(productId, currentQty + 1);
     }
 
-    decreaseQty(productId: number, currentQty: number): void {
+    decreaseQty(productId: number | string, currentQty: number): void {
         this.cartService.updateQuantity(productId, currentQty - 1);
     }
 
-    removeItem(productId: number): void {
-        this.cartService.removeFromCart(productId);
-        this.toastService.info('Item Removed', 'Product has been removed from your cart.');
+    removeItem(productId: number | string): void {
+        const item = this.cartService.items().find(i => i.product.id === productId);
+        this.confirmationService.confirm({
+            message: `Are you sure you want to remove <b>${item?.product.name}</b> from your cart?`,
+            header: 'Remove from Cart',
+            icon: 'pi pi-exclamation-triangle',
+            acceptIcon: 'pi pi-check',
+            rejectIcon: 'pi pi-times',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-text',
+            accept: () => {
+                this.cartService.removeFromCart(productId);
+                this.toastService.info('Item Removed', 'Product has been removed from your cart.');
+            }
+        });
     }
 
     continueShopping(): void {

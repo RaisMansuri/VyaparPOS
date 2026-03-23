@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -47,6 +47,7 @@ export class ProductManagementComponent implements OnInit {
   private productService = inject(ProductService);
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
 
   products: Product[] = [];
   productDialog: boolean = false;
@@ -116,12 +117,21 @@ export class ProductManagementComponent implements OnInit {
   }
 
   deleteProduct(product: Product) {
-    if (confirm('Are you sure you want to delete ' + product.name + '?')) {
-      this.productService.deleteProduct(product.id).subscribe(() => {
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-        this.loadProducts();
-      });
-    }
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete <b>${product.name}</b>?`,
+      header: 'Delete Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'pi pi-check',
+      rejectIcon: 'pi pi-times',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.productService.deleteProduct(product.id).subscribe(() => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+          this.loadProducts();
+        });
+      }
+    });
   }
 
   hideDialog() {

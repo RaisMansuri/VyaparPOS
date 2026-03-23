@@ -84,17 +84,17 @@ export class CartService {
         }
     }
 
-    removeFromCart(productId: number): void {
-        this.cartItems.set(this.cartItems().filter(item => item.product.id !== productId));
+    removeFromCart(productId: string | number): void {
+        this.cartItems.set(this.cartItems().filter(item => item.product.id == productId));
     }
 
-    updateQuantity(productId: number, quantity: number): void {
+    updateQuantity(productId: string | number, quantity: number): void {
         if (quantity <= 0) {
             this.removeFromCart(productId);
             return;
         }
         const updated = this.cartItems().map(item => {
-            if (item.product.id === productId) {
+            if (item.product.id == productId) {
                 return {
                     ...item,
                     quantity,

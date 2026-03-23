@@ -313,7 +313,7 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  decrementQuantity(productId: number, event?: Event): void {
+  decrementQuantity(productId: string | number, event?: Event): void {
       if (event) {
           event.stopPropagation();
       }
@@ -323,8 +323,8 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
       }
   }
 
-  getCartQuantity(productId: number): number {
-      const item = this.cartService.items().find(i => i.product.id === productId);
+  getCartQuantity(productId: string | number): number {
+      const item = this.cartService.items().find(i => i.product.id == productId);
       return item ? item.quantity : 0;
   }
 

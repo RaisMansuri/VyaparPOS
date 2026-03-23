@@ -1,17 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface AiMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  metadata?: any; // To store QR data, invoice details, etc.
 }
 
 export interface AiAction {
-  type: 'NAVIGATE' | 'QUERY' | 'HELP' | 'NONE';
+  type: 'NAVIGATE' | 'QUERY' | 'HELP' | 'NONE' | 'ADD_TO_CART' | 'GENERATE_QR' | 'SHOW_INVOICE' | 'CHECK_DETAILS' | 'ADD_PRODUCT' | 'ADD_MULTIPLE_PRODUCTS' | 'ADD_CATEGORY' | 'ADD_MULTIPLE_CATEGORIES';
   payload?: any;
 }
 
@@ -34,11 +35,14 @@ export class AiAgentService {
 
     return this.http.post<any>(apiUrl, payload).pipe(
       map(res => {
-        // Handle navigation actions returned by the AI
-        if (res.action?.type === 'NAVIGATE' && res.action.payload) {
-          this.router.navigate([res.action.payload]);
-        }
         return res;
+      }),
+      catchError(err => {
+        console.error('AI Service Error:', err);
+        return of({ 
+          response: "I'm having trouble connecting to my service right now. Please make sure the backend is running.",
+          action: { type: 'HELP' as const }
+        });
       })
     );
   }

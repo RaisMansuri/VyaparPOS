@@ -1,0 +1,122 @@
+<div class="category-mgmt-container">
+    <p-toast></p-toast>
+
+    <div class="page-header">
+        <div class="title-group">
+            <h1>Category Management</h1>
+            <p>Manage your product categories and organization.</p>
+        </div>
+        <button pButton label="Add New Category" icon="pi pi-plus" class="p-button-primary shadow-2"
+            (click)="openNew()"></button>
+    </div>
+
+    <div class="card-modern">
+        <p-table #dt [value]="categories" [rows]="10" [paginator]="true" [globalFilterFields]="['name','description']"
+            responsiveLayout="stack" [breakpoint]="'960px'" [rowHover]="true" dataKey="id"
+            styleClass="p-datatable-sm modern-table"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true">
+
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between align-items-center w-full">
+                    <div class="flex align-items-center gap-2">
+                        <div class="search-action-group">
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-search"></p-inputicon>
+                                <input pInputText type="text"
+                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                    placeholder="Search categories..." />
+                            </p-iconfield>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem">#</th>
+                    <th pSortableColumn="name">Category <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-cat let-i="rowIndex">
+                <tr>
+                    <td>{{i + 1}}</td>
+                    <td>
+                        <div class="category-cell">
+                            <div class="cat-icon-box" [style.background-color]="cat.color || '#eef2ff'">
+                                <i class="pi pi-tag text-primary"></i>
+                            </div>
+                            <span class="category-name-text">{{cat.name}}</span>
+                        </div>
+                    </td>
+                    <td>{{cat.description || 'No description provided'}}</td>
+                    <td class="text-center">
+                        <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2"
+                            (click)="editCategory(cat)"></button>
+                        <button pButton icon="pi pi-trash" class="btn-action-delete"
+                            (click)="deleteCategory(cat)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-4">No categories found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog [(visible)]="categoryDialog" [style]="{ width: '500px' }" [modal]="true" styleClass="p-fluid modern-dialog"
+    [draggable]="false" [resizable]="false">
+
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-3 w-full custom-header-container">
+            <div class="header-icon-box">
+                <i class="pi pi-tags text-success"></i>
+            </div>
+            <div class="header-text-stack">
+                <span class="dialog-title">{{ category.id || category._id ? 'Edit Category' : 'New Category' }}</span>
+                <span class="dialog-subtitle">Configure category details below</span>
+        </div>
+        <div class="divider-hr"></div>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+        <div class="premium-form">
+            <h6 class="section-title">BASIC INFO</h6>
+
+            <div class="field mb-4 full-width-field">
+                <label for="name" class="premium-label">Category Name <span class="required-mark">*</span></label>
+                <input type="text" pInputText id="name" [(ngModel)]="category.name" placeholder="e.g. Breads, Cakes"
+                    [class.p-invalid]="submitted && !category.name" />
+                <small class="p-error block mt-1" *ngIf="submitted && !category.name">This field is required.</small>
+            </div>
+
+            <div class="field mb-4 full-width-field">
+                <label for="description" class="premium-label">Description <span
+                        class="optional-mark">(optional)</span></label>
+                <textarea id="description" pInputTextarea [(ngModel)]="category.description" rows="4"
+                    placeholder="Briefly describe this category..." class="premium-textarea"></textarea>
+            </div>
+
+            <!-- <div class="field mb-4 full-width-field">
+                <label for="imageUrl" class="premium-label">Image URL <span class="optional-mark">(optional)</span></label>
+                <p-iconfield>
+                    <p-inputicon class="pi pi-image"></p-inputicon>
+                    <input type="text" pInputText id="imageUrl" [(ngModel)]="category.imageUrl" placeholder="HTTPS image link..." />
+                </p-iconfield>
+            </div> -->
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2 p-3">
+            <button pButton pRipple label="Cancel" class="p-button-outlined p-button-secondary premium-footer-btn"
+                (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" class="premium-footer-btn-save" (click)="saveCategory()"></button>
+        </div>
+    </ng-template>
+</p-dialog>

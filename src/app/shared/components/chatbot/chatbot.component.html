@@ -15,7 +15,42 @@
         <div class="chat-body">
             <div *ngFor="let msg of messages()" class="msg-wrapper" [ngClass]="msg.role">
                 <div class="msg-bubble">
-                    {{ msg.content }}
+                    <div class="msg-text">{{ msg.content }}</div>
+                    
+                    <!-- commerce metadata rendering -->
+                    <div *ngIf="msg.metadata" class="msg-actions mt-3">
+                        <!-- QR Code Card -->
+                        <div *ngIf="msg.metadata.upiId" class="qr-card shadow-1">
+                            <div class="qr-title">Scan to Pay ₹{{ msg.metadata.amount }}</div>
+                            <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + 'upi://pay?pa=' + msg.metadata.upiId + '&pn=' + msg.metadata.name + '&am=' + msg.metadata.amount" 
+                                 alt="QR Code" class="qr-img" />
+                            <div class="qr-footer">{{ msg.metadata.note }}</div>
+                        </div>
+
+                        <!-- Invoice Card -->
+                        <div *ngIf="msg.metadata.orderId" class="invoice-card shadow-1">
+                            <div class="inv-header">
+                                <i class="pi pi-check-circle"></i>
+                                <span>Order Confirmed</span>
+                            </div>
+                            <div class="inv-details">
+                                <div>Order: {{ msg.metadata.orderId }}</div>
+                                <div class="font-bold">Total: ₹{{ msg.metadata.total }}</div>
+                            </div>
+                            <div class="inv-actions mt-2">
+                                <button pButton label="PDF" icon="pi pi-file-pdf" class="p-button-sm p-button-outlined mr-2"></button>
+                                <button pButton label="Print" icon="pi pi-print" class="p-button-sm p-button-outlined"></button>
+                            </div>
+                        </div>
+
+                        <!-- Product Added Hint -->
+                        <div *ngIf="msg.metadata.products" class="product-pills">
+                            <span *ngFor="let p of msg.metadata.products" class="p-pill">
+                                +{{ p.quantity }} {{ p.name }}
+                            </span>
+                        </div>
+                    </div>
+
                     <small class="msg-time">{{ msg.timestamp | date:'shortTime' }}</small>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 .layout-root {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   background: var(--surface-ground);
   transition: background-color 0.3s ease;
@@ -186,7 +186,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -414,7 +414,8 @@
   }
 
   .layout-content {
-    padding: 0;
+    padding: 1rem 0.5rem;
+    overflow-x: hidden;
   }
 
   .toolbar-left {

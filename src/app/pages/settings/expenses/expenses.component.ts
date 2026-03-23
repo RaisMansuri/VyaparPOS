@@ -10,8 +10,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 
@@ -29,12 +27,10 @@ import { TagModule } from 'primeng/tag';
     InputNumberModule,
     CalendarModule,
     DropdownModule,
-    ToastModule,
-    ConfirmDialogModule,
     CardModule,
     TagModule
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.css']
 })

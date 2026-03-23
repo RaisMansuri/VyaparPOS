@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://vyapar-pos-be-git-development-raismansuri74059-1745s-projects.vercel.app/api',
-  aiModelId: 'google/gemini-2.5-flash'
+  apiUrl: 'http://localhost:5000/api',
+  aiModelId: 'nvidia/nemotron-3-nano-30b-a3b:free'//'google/gemini-2.5-flash'
 };

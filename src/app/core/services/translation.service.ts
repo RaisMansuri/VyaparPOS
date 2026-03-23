@@ -25,7 +25,8 @@ export class TranslationService {
       'NOTIFICATIONS': 'Notifications',
       'MARK_ALL_READ': 'Mark all as read',
       'SEE_ALL': 'See all',
-      'NO_NOTIFICATIONS': 'No new notifications'
+      'NO_NOTIFICATIONS': 'No new notifications',
+      'INVENTORY_MANAGEMENT': 'Inventory Management'
     },
     hi: {
       'DASHBOARD': 'डैशबोर्ड',
@@ -44,7 +45,8 @@ export class TranslationService {
       'NOTIFICATIONS': 'सूचनाएं',
       'MARK_ALL_READ': 'सभी को पढ़ा हुआ मानें',
       'SEE_ALL': 'सभी देखें',
-      'NO_NOTIFICATIONS': 'कोई नई सूचना नहीं'
+      'NO_NOTIFICATIONS': 'कोई नई सूचना नहीं',
+      'INVENTORY_MANAGEMENT': 'इन्वेंट्री प्रबंधन'
     }
   };
 

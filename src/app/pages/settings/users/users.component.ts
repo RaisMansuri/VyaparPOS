@@ -20,7 +20,6 @@ import { UserService, User } from '../../../core/services/user.service';
 @Component({
     selector: 'app-users',
     standalone: true,
-    providers: [ConfirmationService],
     imports: [
         CommonModule,
         FormsModule,
@@ -32,7 +31,6 @@ import { UserService, User } from '../../../core/services/user.service';
         DialogModule,
         InputSwitchModule,
         MultiSelectModule,
-        ConfirmDialogModule,
         IconFieldModule,
         InputIconModule,
         FloatLabelModule
