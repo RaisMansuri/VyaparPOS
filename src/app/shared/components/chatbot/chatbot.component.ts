@@ -48,8 +48,20 @@ export class ChatbotComponent {
     // Add user message
     this.messages.update(msgs => [...msgs, { role: 'user', content: text, timestamp: new Date() }]);
     this.userInput.set('');
-    this.isTyping.set(true);
 
+    // Check if user is still logged in
+    if (!this.authService.getCurrentUser()) {
+      this.messages.update(msgs => [...msgs, { 
+        role: 'assistant', 
+        content: 'Your session has expired. Please log in again to use the AI assistant.', 
+        timestamp: new Date() 
+      }]);
+      setTimeout(() => this.authService.logout(), 2000);
+      return;
+    }
+
+    this.isTyping.set(true);
+    
     // Process with AI Service
     setTimeout(() => {
       this.aiService.processMessage(text, this.messages()).subscribe({
@@ -72,9 +84,21 @@ export class ChatbotComponent {
         },
         error: (err) => {
           console.error('Chatbot Error:', err);
+          
+          // Handle session expiration (401)
+          if (err.status === 401) {
+            this.messages.update(msgs => [...msgs, { 
+              role: 'assistant', 
+              content: 'Your session has expired! Redirecting to login...', 
+              timestamp: new Date() 
+            }]);
+            setTimeout(() => this.authService.logout(), 2000);
+            return;
+          }
+
           this.messages.update(msgs => [...msgs, { 
             role: 'assistant', 
-            content: "Sorry, I'm having trouble connecting. Please check if the backend is running.", 
+            content: "Sorry, I'm having trouble connecting. Please check if the backend is running or your API key is correct.", 
             timestamp: new Date() 
           }]);
           this.isTyping.set(false);

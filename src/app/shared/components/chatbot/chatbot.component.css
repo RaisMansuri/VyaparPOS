@@ -10,7 +10,7 @@
     height: 45px;
     font-size: 1.5rem;
     cursor: pointer;
-    background: #2563eb !important;
+    background: var(--p-primary-color) !important;
     /* Premium green */
     border: none !important;
     box-shadow: 0 4px 20px rgba(37, 99, 235, 0.7) !important;
@@ -150,19 +150,66 @@
 }
 
 .user .msg-bubble {
-    background: #10b981;
-    /* Matching green theme */
+    background: var(--p-primary-color);
+    /* Updated to light blue */
     color: white;
     border-bottom-right-radius: 4px;
 }
 
-.typing-indicator {
-    padding: 0 0.5rem;
-    font-size: 0.8rem;
-    color: #94a3b8;
+.typing-container {
+    display: flex;
+    justify-content: flex-start;
+    animation: fadeIn 0.3s ease;
+}
+
+.typing-bubble {
+    background: #f1f5f9;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    background: #64748b;
+    border-radius: 50%;
+    animation: typingPulse 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingPulse {
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    30% {
+        transform: translateY(-4px);
+        opacity: 1;
+        background: #38bdf8;
+    }
 }
 
 .chat-footer {
@@ -215,7 +262,7 @@
     border-radius: 12px !important;
     width: 44px !important;
     height: 44px !important;
-    background: #10b981 !important;
+    background: #38bdf8 !important;
     border: none !important;
 }
 
@@ -256,8 +303,8 @@
 }
 
 .invoice-card {
-    background: #f0fdf4;
-    border: 1px solid #bcf0da;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
     padding: 1rem;
     border-radius: 12px;
 }
@@ -266,7 +313,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #059669;
+    color: #0284c7;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
@@ -290,6 +337,107 @@
     font-size: 0.75rem;
     font-weight: 600;
     border: 1px solid #bae6fd;
+}
+
+/* Product & Category List Styles */
+.confirm-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid #38bdf8;
+    background: #f0f9ff;
+    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.confirm-msg {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #0369a1;
+    margin-bottom: 0.75rem;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.product-list-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.list-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.product-item:not(:last-child) {
+    border-bottom: 1px dashed #f1f5f9;
+}
+
+.p-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.p-meta {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.category-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.category-pill {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.85rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.category-pill:hover {
+    background: #f0f9ff;
+    border-color: #38bdf8;
+    color: #0284c7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(56, 189, 248, 0.1);
 }
 
 @media screen and (max-width: 480px) {

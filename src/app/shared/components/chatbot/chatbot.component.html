@@ -1,6 +1,7 @@
 <div class="chatbot-container" [class.open]="isOpen()">
     <!-- Floating Trigger -->
-    <button pButton icon="pi pi-comment" class="chat-trigger p-button-rounded p-button-primary shadow-6" (click)="toggleChat()" [pTooltip]="isOpen() ? '' : 'Ask Vyapar AI'"></button>
+    <button pButton icon="pi pi-comment" class="chat-trigger p-button-rounded p-button-primary shadow-6"
+        (click)="toggleChat()" [pTooltip]="isOpen() ? '' : 'Ask Vyapar AI'"></button>
 
     <!-- Chat Window -->
     <div class="chat-window shadow-8" *ngIf="isOpen()">
@@ -9,21 +10,22 @@
                 <i class="pi pi-bolt mr-2"></i>
                 <span>Vyapar AI Assistant</span>
             </div>
-            <button pButton icon="pi pi-times" class="p-button-text p-button-rounded text-white p-button-sm" (click)="toggleChat()"></button>
+            <button pButton icon="pi pi-times" class="p-button-text p-button-rounded text-white p-button-sm"
+                (click)="toggleChat()"></button>
         </div>
 
         <div class="chat-body">
             <div *ngFor="let msg of messages()" class="msg-wrapper" [ngClass]="msg.role">
                 <div class="msg-bubble">
                     <div class="msg-text">{{ msg.content }}</div>
-                    
+
                     <!-- commerce metadata rendering -->
                     <div *ngIf="msg.metadata" class="msg-actions mt-3">
                         <!-- QR Code Card -->
                         <div *ngIf="msg.metadata.upiId" class="qr-card shadow-1">
                             <div class="qr-title">Scan to Pay ₹{{ msg.metadata.amount }}</div>
-                            <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + 'upi://pay?pa=' + msg.metadata.upiId + '&pn=' + msg.metadata.name + '&am=' + msg.metadata.amount" 
-                                 alt="QR Code" class="qr-img" />
+                            <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + 'upi://pay?pa=' + msg.metadata.upiId + '&pn=' + msg.metadata.name + '&am=' + msg.metadata.amount"
+                                alt="QR Code" class="qr-img" />
                             <div class="qr-footer">{{ msg.metadata.note }}</div>
                         </div>
 
@@ -38,13 +40,49 @@
                                 <div class="font-bold">Total: ₹{{ msg.metadata.total }}</div>
                             </div>
                             <div class="inv-actions mt-2">
-                                <button pButton label="PDF" icon="pi pi-file-pdf" class="p-button-sm p-button-outlined mr-2"></button>
-                                <button pButton label="Print" icon="pi pi-print" class="p-button-sm p-button-outlined"></button>
+                                <button pButton label="PDF" icon="pi pi-file-pdf"
+                                    class="p-button-sm p-button-outlined mr-2"></button>
+                                <button pButton label="Print" icon="pi pi-print"
+                                    class="p-button-sm p-button-outlined"></button>
                             </div>
                         </div>
 
-                        <!-- Product Added Hint -->
-                        <div *ngIf="msg.metadata.products" class="product-pills">
+                        <!-- Confirmation Card (CONFIRMATION) -->
+                        <div *ngIf="msg.metadata.onConfirm" class="confirm-card shadow-1">
+                            <div class="confirm-msg">{{ msg.metadata.message }}</div>
+                            <div class="confirm-actions">
+                                <button pButton [label]="msg.metadata.onConfirm" (click)="quickAction(msg.metadata.onConfirm)" class="p-button-sm p-button-info mr-2"></button>
+                                <button pButton [label]="msg.metadata.onCancel || 'No'" (click)="quickAction(msg.metadata.onCancel || 'No')" class="p-button-sm p-button-text p-button-secondary"></button>
+                            </div>
+                        </div>
+
+                        <!-- Product List (SHOW_PRODUCTS) -->
+                        <div *ngIf="msg.metadata.title && msg.metadata.products" class="product-list-card shadow-1">
+                            <div class="list-title">{{ msg.metadata.title }}</div>
+                            <div class="product-items">
+                                <div *ngFor="let p of msg.metadata.products" class="product-item">
+                                    <div class="p-info">
+                                        <div class="p-name">{{ p.name }}</div>
+                                        <div class="p-meta">₹{{ p.price }} • Stock: {{ p.stock }}</div>
+                                    </div>
+                                    <button pButton icon="pi pi-plus" class="p-button-text p-button-rounded p-button-sm"
+                                        (click)="quickAction('Add 1 ' + p.name + ' to cart')"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category List (SHOW_CATEGORIES) -->
+                        <div *ngIf="msg.metadata.categories" class="category-grid">
+                            <div *ngFor="let cat of msg.metadata.categories" class="category-pill"
+                                (click)="quickAction('Show me products in ' + cat.name)">
+                                <i class="pi pi-tag mr-1"></i>
+                                <span>{{ cat.name }}</span>
+                                <small *ngIf="cat.productCount" class="ml-1">({{ cat.productCount }})</small>
+                            </div>
+                        </div>
+
+                        <!-- Product Added Hint (Simple Pills) -->
+                        <div *ngIf="!msg.metadata.title && msg.metadata.products" class="product-pills">
                             <span *ngFor="let p of msg.metadata.products" class="p-pill">
                                 +{{ p.quantity }} {{ p.name }}
                             </span>
@@ -54,7 +92,15 @@
                     <small class="msg-time">{{ msg.timestamp | date:'shortTime' }}</small>
                 </div>
             </div>
-            <div *ngIf="isTyping()" class="typing-indicator">AI is thinking...</div>
+            <div *ngIf="isTyping()" class="typing-container">
+                <div class="typing-bubble">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="chat-footer">
@@ -63,13 +109,14 @@
                 <button (click)="quickAction('Go to reports')" class="quick-btn">📊 Reports</button>
                 <button (click)="quickAction('Low stock?')" class="quick-btn">📦 Stock</button>
             </div>
-            
+
             <div class="quick-actions mb-2" *ngIf="messages().length < 4 && isConsumer()">
                 <button (click)="quickAction('Where is my order?')" class="quick-btn">🚚 Order Status</button>
                 <button (click)="quickAction('I need help')" class="quick-btn">❓ Help & Support</button>
             </div>
             <div class="input-group">
-                <input type="text" pInputText [(ngModel)]="userInput" placeholder="Ask me anything..." (keyup.enter)="sendMessage()" />
+                <input type="text" pInputText [(ngModel)]="userInput" placeholder="Ask me anything..."
+                    (keyup.enter)="sendMessage()" />
                 <button pButton icon="pi pi-send" (click)="sendMessage()" [disabled]="!userInput()"></button>
             </div>
         </div>
