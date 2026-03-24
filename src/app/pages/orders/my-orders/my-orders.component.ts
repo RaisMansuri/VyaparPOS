@@ -58,4 +58,8 @@ export class MyOrdersComponent implements OnInit {
             default: return method;
         }
     }
+
+    handleImageError(event: any): void {
+        event.target.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23e2e8f0\'/%3E%3C/svg%3E';
+    }
 }

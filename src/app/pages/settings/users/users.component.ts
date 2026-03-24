@@ -92,9 +92,9 @@ export class UsersComponent implements OnInit {
             error: () => {
                 // Fallback to dummy data if API fails to maintain functionality
                 this.users = [
-                    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active', permissions: ['Manage Users', 'View Sales', 'Manage Products'] },
-                    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Manager', status: 'Active', permissions: ['View Sales', 'Manage Products'] },
-                    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Cashier', status: 'Inactive', permissions: ['Process Sales'] },
+                    { id: '1', name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active', permissions: ['Manage Users', 'View Sales', 'Manage Products'] },
+                    { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'Manager', status: 'Active', permissions: ['View Sales', 'Manage Products'] },
+                    { id: '3', name: 'Bob Johnson', email: 'bob@example.com', role: 'Cashier', status: 'Inactive', permissions: ['Process Sales'] },
                 ];
                 this.loading = false;
             }
@@ -128,7 +128,7 @@ export class UsersComponent implements OnInit {
     }
 
     openNew() {
-        this.user = { id: 0, name: '', email: '', role: '', status: 'Active', permissions: [] };
+        this.user = { id: '', name: '', email: '', role: '', status: 'Active', permissions: [] };
         this.submitted = false;
         this.userDialog = true;
     }
@@ -151,7 +151,7 @@ export class UsersComponent implements OnInit {
                 this.userService.deleteUser(user.id).subscribe({
                     next: () => {
                         this.users = this.users.filter((val) => val.id !== user.id);
-                        this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
+                        this.user = { id: '', name: '', email: '', role: '', status: '', permissions: [] };
                         this.toastService.success('Successful', 'User Deleted');
                     },
                     error: () => {
@@ -194,14 +194,14 @@ export class UsersComponent implements OnInit {
     private closeDialog() {
         this.users = [...this.users];
         this.userDialog = false;
-        this.user = { id: 0, name: '', email: '', role: '', status: '', permissions: [] };
+        this.user = { id: '', name: '', email: '', role: '', status: '', permissions: [] };
     }
 
     onStatusChange(user: User) {
         this.toastService.info('Status Updated', `${user.name} is now ${user.status}`);
     }
 
-    findIndexById(id: number): number {
+    findIndexById(id: string): number {
         let index = -1;
         for (let i = 0; i < this.users.length; i++) {
             if (this.users[i].id === id) {

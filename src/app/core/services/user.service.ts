@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: string;
@@ -20,18 +20,24 @@ export class UserService {
     private apiUrl = `${environment.apiUrl}/users`;
 
     getUsers(): Observable<User[]> {
-        return this.http.get<User[]>(this.apiUrl);
+        return this.http.get<any>(this.apiUrl).pipe(
+            map(res => res.data || [])
+        );
     }
 
     createUser(user: User): Observable<User> {
-        return this.http.post<User>(this.apiUrl, user);
+        return this.http.post<any>(this.apiUrl, user).pipe(
+            map(res => res.data)
+        );
     }
 
     updateUser(user: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}/${user.id}`, user);
+        return this.http.put<any>(`${this.apiUrl}/${user.id}`, user).pipe(
+            map(res => res.data)
+        );
     }
 
-    deleteUser(id: number): Observable<any> {
+    deleteUser(id: string): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${id}`);
     }
 
@@ -43,6 +49,8 @@ export class UserService {
     }
 
     updateProfile(data: any): Observable<any> {
-        return this.http.put(`${this.apiUrl}/profile`, data);
+        return this.http.put<any>(`${this.apiUrl}/profile`, data).pipe(
+            map(res => res.data)
+        );
     }
 }
