@@ -111,4 +111,8 @@ export class OrderService {
     getOrderById(id: string): Order | null {
         return this.orders().find(o => o.id === id) || null;
     }
+
+    sendInvoice(orderId: string, email?: string, phone?: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${orderId}/send`, { email, phone });
+    }
 }

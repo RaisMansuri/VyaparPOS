@@ -97,10 +97,18 @@
 }
 
 /* Items Table */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 24px;
+    border-radius: 4px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 24px;
+    min-width: 600px; /* Force minimum width for horizontal scroll if content doesn't fit */
 }
 
 thead th {
@@ -334,14 +342,19 @@ tbody tr:last-child td {
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .invoice-page {
+        padding: 16px;
+    }
+
     .invoice-paper {
-        padding: 20px;
+        padding: 24px;
     }
 
     .invoice-top {
         flex-direction: column;
-        gap: 16px;
+        gap: 20px;
+        border-bottom-width: 2px;
     }
 
     .invoice-meta {
@@ -350,23 +363,56 @@ tbody tr:last-child td {
 
     .addresses {
         flex-direction: column;
-        gap: 20px;
+        gap: 24px;
     }
 
-    .payment-info {
+    .totals-section {
         flex-direction: column;
-        gap: 16px;
+        gap: 24px;
     }
 
     .totals {
         width: 100%;
     }
 
+    .payment-info {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .action-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
     .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
         flex-wrap: wrap;
     }
 
-    table {
-        font-size: 0.8rem;
+    .action-buttons button {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand h1 {
+        font-size: 1.5rem;
+    }
+
+    .invoice-meta h2 {
+        font-size: 1.3rem;
+    }
+
+    .total-row.grand {
+        font-size: 1.2rem;
+    }
+
+    .invoice-paper {
+        padding: 16px;
     }
 }

@@ -35,6 +35,7 @@
 
         <!-- Addresses -->
         <div class="addresses">
+            @if (order.address) {
             <div class="address-block">
                 <h4>Bill To</h4>
                 <p class="name">{{ order.address.fullName }}</p>
@@ -45,6 +46,12 @@
                 <p>{{ order.address.city }}, {{ order.address.state }} - {{ order.address.pincode }}</p>
                 <p>Phone: {{ order.address.phone }}</p>
             </div>
+            } @else {
+            <div class="address-block">
+                <h4>Bill To</h4>
+                <p class="text-gray-400 italic">No billing address provided</p>
+            </div>
+            }
             <div class="address-block">
                 <h4>From</h4>
                 <p class="name">VyaparPOS Store</p>
@@ -55,35 +62,37 @@
         </div>
 
         <!-- Items Table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Item</th>
-                    <th class="text-right">Price</th>
-                    <th class="text-right">Qty</th>
-                    <th class="text-right">Taxable</th>
-                    <th class="text-right">GST %</th>
-                    <th class="text-right">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of order.items; track item.product.id; let i = $index) {
-                <tr>
-                    <td>{{ i + 1 }}</td>
-                    <td>
-                        <strong>{{ item.product.name }}</strong><br>
-                        <small>{{ item.product.category }}</small>
-                    </td>
-                    <td class="text-right">{{ item.product.price | currency:'INR':'symbol':'1.0-0' }}</td>
-                    <td class="text-right">{{ item.quantity }}</td>
-                    <td class="text-right">{{ (item.product.price * item.quantity) / (1 + ((item.product.gstRate || 0) / 100)) | currency:'INR':'symbol':'1.2-2' }}</td>
-                    <td class="text-right">{{ item.product.gstRate || 0 }}%</td>
-                    <td class="text-right"><strong>{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</strong></td>
-                </tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Qty</th>
+                        <th class="text-right">Taxable</th>
+                        <th class="text-right">GST %</th>
+                        <th class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of order.items; track item.product.id; let i = $index) {
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                            <strong>{{ item.product.name }}</strong><br>
+                            <small>{{ item.product.category }}</small>
+                        </td>
+                        <td class="text-right">{{ item.product.price | currency:'INR':'symbol':'1.0-0' }}</td>
+                        <td class="text-right">{{ item.quantity }}</td>
+                        <td class="text-right">{{ (item.product.price * item.quantity) / (1 + ((item.product.gstRate || 0) / 100)) | currency:'INR':'symbol':'1.2-2' }}</td>
+                        <td class="text-right">{{ item.product.gstRate || 0 }}%</td>
+                        <td class="text-right"><strong>{{ item.subtotal | currency:'INR':'symbol':'1.0-0' }}</strong></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
         <!-- Totals -->
         <div class="totals-section">

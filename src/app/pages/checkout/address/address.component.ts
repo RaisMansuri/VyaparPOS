@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { OrderService } from '../../../core/services/order.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -15,7 +15,7 @@ import { CartService } from '../../../core/services/cart.service';
     standalone: true,
     imports: [
         CommonModule, ReactiveFormsModule, InputTextModule, ButtonModule,
-        SelectButtonModule, DropdownModule, FloatLabelModule
+        SelectButtonModule, SelectModule, FloatLabelModule
     ],
     templateUrl: './address.component.html',
     styleUrl: './address.component.css'

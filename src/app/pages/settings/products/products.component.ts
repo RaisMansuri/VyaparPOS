@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -37,7 +37,7 @@ interface Product {
         InputTextModule,
         TagModule,
         DialogModule,
-        DropdownModule,
+        SelectModule,
         ConfirmDialogModule,
         FileUploadModule,
         InputNumberModule,

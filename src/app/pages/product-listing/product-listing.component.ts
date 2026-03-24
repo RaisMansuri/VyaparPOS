@@ -7,7 +7,7 @@ import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SidebarModule } from 'primeng/sidebar';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
@@ -24,7 +24,7 @@ import { InputTextModule } from 'primeng/inputtext';
     CurrencyPipe, 
     FormsModule, 
     SidebarModule, 
-    DropdownModule, 
+    SelectModule, 
     InputSwitchModule, 
     TagModule,
     ButtonModule,
@@ -141,7 +141,10 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
       this.categories = [...new Set(products.map(p => p.category))];
 
       if (this.currentCategory && this.currentCategory !== 'all') {
-        this.selectedCategory = this.currentCategory;
+        const found = this.categories.find(c => c.toLowerCase() === this.currentCategory?.toLowerCase());
+        this.selectedCategory = found || this.currentCategory;
+      } else {
+        this.selectedCategory = 'all';
       }
 
       this.applyFilters();

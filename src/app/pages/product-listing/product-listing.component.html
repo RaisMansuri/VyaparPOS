@@ -161,8 +161,8 @@
 
     <div class="filter-group">
       <h4>Sort Order</h4>
-      <p-dropdown [options]="sortOptions" [(ngModel)]="sortBy" (onChange)="applyFilters()" 
-                  styleClass="w-full modern-dropdown" appendTo="body"></p-dropdown>
+      <p-select [options]="sortOptions" [(ngModel)]="sortBy" (onChange)="applyFilters()" 
+                  styleClass="w-full modern-dropdown" appendTo="body"></p-select>
     </div>
 
     <div class="filter-group">

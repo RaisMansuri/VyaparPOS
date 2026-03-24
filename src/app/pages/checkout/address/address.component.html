@@ -103,7 +103,7 @@
                 <!-- State -->
                 <div class="form-row">
                     <label class="form-label" for="state">State *</label>
-                    <p-dropdown [options]="states" formControlName="state" placeholder="Select State"
+                    <p-select [options]="states" formControlName="state" placeholder="Select State"
                         styleClass="full-width" [filter]="true" />
                     @if (isInvalid('state')) {
                     <small class="error-msg">State is required</small>

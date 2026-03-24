@@ -17,8 +17,8 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { DropdownModule } from 'primeng/dropdown';
+import { PopoverModule } from 'primeng/popover';
+import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { SubscriptionService } from '../core/services/subscription.service';
 import { AuthUser } from '../auth/auth.service';
@@ -33,7 +33,7 @@ import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, OverlayPanelModule, DropdownModule, FormsModule, ChatbotComponent, ConfirmDialogModule],
+  imports: [CommonModule, RouterModule, SidebarModule, ToolbarModule, ButtonModule, BadgeModule, MenuModule, ToastModule, PopoverModule, SelectModule, FormsModule, ChatbotComponent, ConfirmDialogModule],
   providers: [MessageService],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',
@@ -191,7 +191,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     if (url.includes('/dashboard')) this.pageTitle = this.translationService.translate('DASHBOARD') || 'Dashboard';
     else if (url.includes('/mobile-pos')) this.pageTitle = 'Mobile POS';
     else if (url.includes('/customers')) this.pageTitle = this.translationService.translate('CUSTOMERS') || 'Customers';
-    else if (url.includes('/reports')) this.pageTitle = this.translationService.translate('REPORTS') || 'Reports';
+    else if (url.includes('/reports')) this.pageTitle = this.translationService.translate('REPORTS') || 'Payment History';
     else if (url.includes('/support')) this.pageTitle = 'Customer Support';
     else if (url.includes('/products')) this.pageTitle = this.translationService.translate('PRODUCTS') || 'Products';
     else if (url.includes('/category/')) {
@@ -210,6 +210,21 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     // else if (url.includes('/marketing')) this.pageTitle = 'Marketing & Promotions';
     else if (url.includes('/settings/permissions')) this.pageTitle = 'Permission Settings';
     else this.pageTitle = 'VyaparPOS';
+  }
+
+  getCategoryIcon(category: string): string {
+    const normalizedCategory = category.toLowerCase();
+
+    if (normalizedCategory.includes('bread')) return 'pi pi-box';
+    if (normalizedCategory.includes('pastr')) return 'pi pi-star';
+    if (normalizedCategory.includes('cake')) return 'pi pi-heart';
+    if (normalizedCategory.includes('drink') || normalizedCategory.includes('beverage')) return 'pi pi-shopping-bag';
+    if (normalizedCategory.includes('snack')) return 'pi pi-shopping-bag';
+    if (normalizedCategory.includes('dairy')) return 'pi pi-box';
+    if (normalizedCategory.includes('pie')) return 'pi pi-chart-pie';
+    if (normalizedCategory.includes('cookie')) return 'pi pi-clone';
+
+    return 'pi pi-tag';
   }
 }
 

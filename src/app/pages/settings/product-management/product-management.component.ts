@@ -15,7 +15,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextarea } from 'primeng/inputtextarea';
 @Component({
   selector: 'app-product-management',
@@ -35,15 +35,14 @@ import { InputTextarea } from 'primeng/inputtextarea';
     TagModule,
     IconFieldModule,
     InputIconModule,
-    DropdownModule,
-    InputTextarea
+    SelectModule
   ],
   providers: [MessageService],
   templateUrl: './product-management.component.html',
   styleUrl: './product-management.component.css'
 })
 export class ProductManagementComponent implements OnInit {
-  private readonly defaultImageUrl = 'https://via.placeholder.com/150';
+  public readonly defaultImageUrl = 'https://placehold.co/150/e2e8f0/64748b?text=Product';
   private productService = inject(ProductService);
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
@@ -139,36 +138,49 @@ export class ProductManagementComponent implements OnInit {
     this.submitted = false;
   }
 
+  getLowStockCount(): number {
+    return this.products.filter(p => p.stock <= (p.minStockLevel || 0)).length;
+  }
+
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     if (!this.isSupportedImage(file)) {
       input.value = '';
       this.messageService.add({
         severity: 'warn',
         summary: 'Unsupported Image',
-        detail: 'Please upload a JPG, JPEG, PNG, or WEBP image.',
-        life: 3000
+        detail: 'Please upload a JPG, JPEG, PNG, or WEBP image.'
       });
       return;
     }
 
+    // Show temporary preview while uploading
     const reader = new FileReader();
     reader.onload = () => {
-      const result = typeof reader.result === 'string' ? reader.result : this.defaultImageUrl;
-      this.imagePreviewUrl = result;
-      this.selectedImageName = file.name;
-      this.productForm.patchValue({
-        imageUrl: result
-      });
-      this.productForm.get('imageUrl')?.markAsDirty();
+        this.imagePreviewUrl = reader.result as string;
     };
     reader.readAsDataURL(file);
+
+    this.selectedImageName = 'Uploading...';
+    this.productService.uploadProductImage(file).subscribe({
+      next: (res: any) => {
+        const url = res.data.url;
+        this.imagePreviewUrl = url;
+        this.selectedImageName = file.name;
+        this.productForm.patchValue({ imageUrl: url });
+        this.productForm.get('imageUrl')?.markAsDirty();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Image uploaded to cloud' });
+      },
+      error: (err) => {
+        this.imagePreviewUrl = this.defaultImageUrl;
+        this.selectedImageName = '';
+        this.messageService.add({ severity: 'error', summary: 'Upload Failed', detail: err.error?.message || 'Failed to upload photo' });
+      }
+    });
   }
 
   removeSelectedImage(fileInput?: HTMLInputElement): void {
@@ -190,22 +202,34 @@ export class ProductManagementComponent implements OnInit {
       return;
     }
 
+    const rawData = this.productForm.value;
     const productData = {
-      ...this.productForm.value,
-      imageUrl: this.productForm.value.imageUrl || this.defaultImageUrl
+      ...rawData,
+      category: typeof rawData.category === 'object' ? rawData.category.name : rawData.category,
+      imageUrl: rawData.imageUrl || this.defaultImageUrl
     };
 
     if (this.isEditMode) {
-      this.productService.updateProduct(productData).subscribe(() => {
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-        this.loadProducts();
-        this.productDialog = false;
+      this.productService.updateProduct(productData).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+          this.loadProducts();
+          this.productDialog = false;
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message || 'Update failed' });
+        }
       });
     } else {
-      this.productService.addProduct(productData).subscribe(() => {
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-        this.loadProducts();
-        this.productDialog = false;
+      this.productService.addProduct(productData).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+          this.loadProducts();
+          this.productDialog = false;
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message || 'Creation failed' });
+        }
       });
     }
   }

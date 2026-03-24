@@ -14,14 +14,14 @@ export class LoaderService {
 
   show(): void {
     this.count++;
-    this.loadingSubject.next(true);
+    setTimeout(() => this.loadingSubject.next(true));
   }
 
   hide(): void {
     this.count--;
     if (this.count <= 0) {
       this.count = 0;
-      this.loadingSubject.next(false);
+      setTimeout(() => this.loadingSubject.next(false));
     }
   }
 }

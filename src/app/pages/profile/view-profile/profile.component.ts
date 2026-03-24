@@ -6,7 +6,10 @@ import { TagModule } from 'primeng/tag';
 import { AuthService, AuthUser } from '../../../auth/auth.service';
 import { OrderService } from '../../../core/services/order.service';
 import { SubscriptionService } from '../../../core/services/subscription.service';
-import { SubscriptionPlan, UserSubscription } from '../../../models/subscription.model';
+import { UserSubscription, SubscriptionPlan } from '../../../models/subscription.model';
+import { UserService } from '../../../core/services/user.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile',
@@ -20,8 +23,11 @@ export class ProfileComponent implements OnInit {
     private orderService = inject(OrderService);
     private subscriptionService = inject(SubscriptionService);
     private router = inject(Router);
+    private userService = inject(UserService);
+    private toastService = inject(ToastService);
 
     user: AuthUser | null = null;
+    uploading = false;
     totalOrders = 0;
     totalSpent = 0;
     currentSubscription: UserSubscription | null = null;
@@ -81,14 +87,33 @@ export class ProfileComponent implements OnInit {
     }
 
     getSubscriptionSeverity(): "success" | "warn" | "info" {
-        if (this.currentSubscription?.status === 'active') {
-            return 'success';
-        }
-
-        if (this.currentSubscription?.status === 'canceled') {
-            return 'warn';
-        }
-
+        if (this.currentSubscription?.status === 'active') return 'success';
+        if (this.currentSubscription?.status === 'canceled') return 'warn';
         return 'info';
+    }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (file) {
+            this.uploadAvatar(file);
+        }
+    }
+
+    private uploadAvatar(file: File): void {
+        this.uploading = true;
+        this.userService.uploadAvatar(file)
+            .pipe(finalize(() => this.uploading = false))
+            .subscribe({
+                next: (res: any) => {
+                    const url = res.data.url;
+                    this.authService.updateProfile({ avatarUrl: url }).subscribe({
+                        next: () => this.toastService.success('Success', 'Profile picture updated'),
+                        error: (err: any) => this.toastService.error('Error', 'Failed to update profile')
+                    });
+                },
+                error: (err: any) => {
+                    this.toastService.error('Upload Failed', err.error?.message || 'Failed to upload image');
+                }
+            });
     }
 }

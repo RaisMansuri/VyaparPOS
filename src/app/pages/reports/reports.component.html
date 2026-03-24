@@ -38,26 +38,26 @@
     <div class="drawer-body">
       <div class="drawer-field">
         <label>Period</label>
-        <p-dropdown
+        <p-select
           [options]="[{label:'This Week', value:'week'},{label:'This Month', value:'month'},{label:'This Year', value:'year'}]"
           [(ngModel)]="currentPeriod" styleClass="w-full drawer-dd" placeholder="Select Period">
-        </p-dropdown>
+        </p-select>
       </div>
 
       <div class="drawer-field">
         <label>Category</label>
-        <p-dropdown [options]="categories" [(ngModel)]="selectedCategory"
+        <p-select [options]="categories" [(ngModel)]="selectedCategory"
                     (onChange)="onCategoryChange()" placeholder="All Categories"
                     styleClass="w-full drawer-dd">
-        </p-dropdown>
+        </p-select>
       </div>
 
       <div class="drawer-field">
         <label>Product</label>
-        <p-dropdown [options]="filteredProducts" [(ngModel)]="selectedProduct"
+        <p-select [options]="filteredProducts" [(ngModel)]="selectedProduct"
                     (onChange)="onProductChange()" placeholder="All Products"
                     styleClass="w-full drawer-dd" [disabled]="!filteredProducts.length">
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 

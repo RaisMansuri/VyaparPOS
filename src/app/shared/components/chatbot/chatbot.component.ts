@@ -10,6 +10,7 @@ import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
+import { SupportService } from '../../../core/services/support.service';
 import { AuthService } from '../../../auth/auth.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -28,6 +29,7 @@ export class ChatbotComponent {
   private orderService = inject(OrderService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  private supportService = inject(SupportService);
   private authService = inject(AuthService);
 
   isOpen = signal(false);
@@ -135,7 +137,7 @@ export class ChatbotComponent {
         break;
 
       case 'SHOW_INVOICE':
-        // Metadata already added, showing success card
+        this.cartService.clearCart();
         break;
       case 'ADD_PRODUCT':
         this.handleAddProduct(action.payload);
@@ -155,8 +157,11 @@ export class ChatbotComponent {
       case 'SHOW_PAYMENT_METHODS':
         // Handled by component template rendering
         break;
+      case 'CREATE_TICKET':
+        this.handleCreateTicket(action.payload);
+        break;
     }
-  }
+}
 
   private sendInvoiceEmail(payload: any) {
     if (!payload.email || !payload.orderId) return;
@@ -174,25 +179,81 @@ export class ChatbotComponent {
     });
   }
 
+  private handleCreateTicket(payload: any) {
+    if (!payload.subject) return;
+
+    this.supportService.createTicket(payload).subscribe({
+      next: (ticket) => {
+        const newMessage: AiMessage = {
+          role: 'assistant',
+          content: `I've created a support ticket for you.`,
+          timestamp: new Date(),
+          metadata: { ...ticket, type: 'TICKET_CREATED' }
+        };
+        this.messages.update(msgs => [...msgs, newMessage]);
+        this.scrollToBottom();
+      },
+      error: (err) => console.error('Failed to create ticket via AI:', err)
+    });
+  }
+
+  sendTicketNotification(ticketId: string, type: 'email' | 'sms') {
+    const user = this.authService.getCurrentUser() as any;
+    const destination = type === 'email' ? user?.email : user?.phone;
+    
+    if (!destination) {
+      this.messages.update(msgs => [...msgs, { 
+        role: 'assistant', 
+        content: `Sorry, I don't have your ${type} on file.`, 
+        timestamp: new Date() 
+      }]);
+      return;
+    }
+
+    this.aiService.sendTicketInfo(ticketId, destination, type).subscribe({
+      next: (res) => {
+        this.messages.update(msgs => [...msgs, { 
+          role: 'assistant', 
+          content: res.message || `Ticket details sent via ${type.toUpperCase()}!`, 
+          timestamp: new Date() 
+        }]);
+        this.scrollToBottom();
+      },
+      error: (err) => console.error(`Failed to send ticket ${type}:`, err)
+    });
+  }
+
   downloadInvoice(metadata: any) {
-    const link = metadata.pdfLink || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-    window.open(link, '_blank');
+    if (!metadata.orderId) return;
+    
+    this.router.navigate(['/orders', metadata.orderId, 'invoice'], { 
+      queryParams: { action: 'download' } 
+    });
     
     this.messages.update(msgs => [...msgs, { 
       role: 'assistant', 
-      content: `Opening PDF for Order ${metadata.orderId}...`, 
+      content: `Generating PDF for Order ${metadata.orderId}...`, 
       timestamp: new Date() 
     }]);
   }
 
   printInvoice(metadata: any) {
-    window.print();
+    if (!metadata.orderId) return;
+
+    this.router.navigate(['/orders', metadata.orderId, 'invoice'], { 
+      queryParams: { action: 'print' } 
+    });
     
     this.messages.update(msgs => [...msgs, { 
       role: 'assistant', 
-      content: `Sending Order ${metadata.orderId} to printer...`, 
+      content: `Opening Print View for Order ${metadata.orderId}...`, 
       timestamp: new Date() 
     }]);
+  }
+
+  viewOrderDetails(orderId: string) {
+    this.router.navigate(['/orders', orderId]);
+    this.isOpen.set(false);
   }
 
   private handleAddProduct(product: any): void {

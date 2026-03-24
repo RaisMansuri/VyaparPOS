@@ -18,15 +18,13 @@ export class TransactionService {
     return this.http.get<any>(this.apiUrl, { params: filters }).pipe(      
       map(res => {
         const data = Array.isArray(res) ? res : (res?.data || res?.transactions || []);
-        // If database is empty, return mock data for visual testing
-        if (data.length === 0) return this.getMockTransactions();
         
         return data.map((t: any) => ({
           ...t,
           date: new Date(t.date || t.timestamp || t.createdAt)
         }));
       }),
-      catchError(() => of(this.getMockTransactions()))
+      catchError(() => of([]))
     );
   }
 
@@ -35,11 +33,21 @@ export class TransactionService {
    */
   getTransactionStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`).pipe(
+      map(res => res.data || {
+        totalVolume: 0,
+        upiVolume: 0,
+        cashVolume: 0,
+        cardVolume: 0,
+        refundVolume: 0,
+        settledRate: 0
+      }),
       catchError(() => of({
-        totalVolume: 125430,
-        upiVolume: 85400,
-        cashVolume: 35000,
-        cardVolume: 5030
+        totalVolume: 0,
+        upiVolume: 0,
+        cashVolume: 0,
+        cardVolume: 0,
+        refundVolume: 0,
+        settledRate: 0
       }))
     );
   }

@@ -34,4 +34,15 @@ export class UserService {
     deleteUser(id: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${id}`);
     }
+
+    uploadAvatar(file: File): Observable<{ data: { url: string } }> {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'avatars');
+        return this.http.post<{ data: { url: string } }>(`${environment.apiUrl}/upload`, formData);
+    }
+
+    updateProfile(data: any): Observable<any> {
+        return this.http.put(`${this.apiUrl}/profile`, data);
+    }
 }

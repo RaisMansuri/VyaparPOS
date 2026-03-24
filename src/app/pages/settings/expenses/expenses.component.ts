@@ -9,7 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 
@@ -26,7 +26,7 @@ import { TagModule } from 'primeng/tag';
     InputTextModule,
     InputNumberModule,
     CalendarModule,
-    DropdownModule,
+    SelectModule,
     CardModule,
     TagModule
   ],

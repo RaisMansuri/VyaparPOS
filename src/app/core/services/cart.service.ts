@@ -2,6 +2,9 @@ import { Injectable, signal, computed, inject, PLATFORM_ID, effect } from '@angu
 import { isPlatformBrowser } from '@angular/common';
 import { Product } from '../../models/product.model';
 import { CartItem } from '../../models/cart.model';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +14,8 @@ export class CartService {
     private platformId = inject(PLATFORM_ID);
     private readonly CART_KEY = 'vyapar-pos-cart';
     private readonly CUSTOMER_KEY = 'vyapar-pos-selected-customer';
+    private http = inject(HttpClient);
+    private authService = inject(AuthService);
     private cartItems = signal<CartItem[]>([]);
     private selectedCustomerSignal = signal<any | null>(null);
 
@@ -20,9 +25,10 @@ export class CartService {
     readonly cartTotal = computed(() => this.cartItems().reduce((sum, item) => sum + item.subtotal, 0));
     readonly deliveryFee = computed(() => this.cartTotal() > 500 ? 0 : 40);
     readonly grandTotal = computed(() => this.cartTotal() + this.deliveryFee());
-
+    
     constructor() {
         if (isPlatformBrowser(this.platformId)) {
+            // Load local first
             const savedCart = localStorage.getItem(this.CART_KEY);
             if (savedCart) {
                 try {
@@ -31,6 +37,13 @@ export class CartService {
                     console.error('Failed to parse cart from localStorage', e);
                 }
             }
+            
+            // Sync from backend if logged in
+            this.authService.currentUser$.subscribe(user => {
+                if (user) {
+                    this.fetchCartFromBackend();
+                }
+            });
 
             const savedCustomer = localStorage.getItem(this.CUSTOMER_KEY);
             if (savedCustomer) {
@@ -47,7 +60,30 @@ export class CartService {
             if (isPlatformBrowser(this.platformId)) {
                 localStorage.setItem(this.CART_KEY, JSON.stringify(this.cartItems()));
                 localStorage.setItem(this.CUSTOMER_KEY, JSON.stringify(this.selectedCustomerSignal()));
+                
+                // Sync to backend if logged in
+                if (this.authService.getCurrentUser()) {
+                    this.saveCartToBackend(this.cartItems());
+                }
             }
+        });
+    }
+
+    private fetchCartFromBackend() {
+        this.http.get<any>(`${environment.apiUrl}/cart`).subscribe({
+            next: (res) => {
+                const items = Array.isArray(res) ? res : (res.data || []);
+                if (items.length > 0) {
+                    this.cartItems.set(items);
+                }
+            },
+            error: (err) => console.error('Failed to fetch cart from BE:', err)
+        });
+    }
+
+    private saveCartToBackend(items: CartItem[]) {
+        this.http.post(`${environment.apiUrl}/cart`, { items }).subscribe({
+            error: (err) => console.error('Failed to save cart to BE:', err)
         });
     }
 

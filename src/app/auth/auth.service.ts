@@ -25,6 +25,7 @@ export interface AuthUser {
   permissions?: string[];
   aiApiKey?: string;
   aiModel?: string;
+  avatarUrl?: string;
 }
 
 @Injectable({

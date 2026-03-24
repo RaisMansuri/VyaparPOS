@@ -13,7 +13,7 @@
     background: var(--p-primary-color) !important;
     /* Premium green */
     border: none !important;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.7) !important;
+    box-shadow: 0 4px 20px rgb(183 236 205 / 70%) !important;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -342,6 +342,13 @@
     border-radius: 12px;
 }
 
+.inv-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 .inv-header {
     display: flex;
     align-items: center;
@@ -386,8 +393,10 @@
 }
 
 .p-button-xs {
-    padding: 0.2rem 0.5rem !important;
+    padding: 3px 8px !important;
     font-size: 0.7rem !important;
+    height: auto !important;
+    min-width: 0 !important;
 }
 
 /* Payment Methods Styles */
@@ -539,7 +548,8 @@
 .confirm-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .product-list-card {
@@ -606,6 +616,81 @@
     color: #0284c7;
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(56, 189, 248, 0.1);
+}
+
+/* Support Ticket Card Styles */
+.ticket-card {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    padding: 1rem;
+    border-radius: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+.ticket-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ea580c;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.ticket-info {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ffedd5;
+}
+
+.ticket-id {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.ticket-subject {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1e293b;
+    margin: 0.25rem 0;
+}
+
+.ticket-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #f97316;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: #f97316;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+.ticket-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 @media screen and (max-width: 480px) {

@@ -2,8 +2,9 @@
   <p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="false" styleClass="layout-sidebar">
     <div class="sidebar-profile-section">
       <div class="user-avatar-wrapper">
-        <img src="assets/avatar.png" alt="User" class="user-avatar"
-          onerror="this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'" />
+        <div class="user-avatar initials-avatar">
+          {{ (currentUser?.name || 'G').charAt(0).toUpperCase() }}
+        </div>
         <span class="status-indicator"></span>
       </div>
       <div class="user-info">
@@ -56,7 +57,7 @@
         <div class="nav-section-title">{{ translationService.translate('CATEGORIES') }}</div>
         @for (category of categories; track category) {
           <a (click)="navigate('/category/' + category.toLowerCase())" routerLinkActive="active" class="nav-item">
-            <i class="pi pi-tag"></i> {{ category }}
+            <i [class]="getCategoryIcon(category)"></i> {{ category }}
           </a>
         }
       }
@@ -134,8 +135,8 @@
 
       <ng-template #end>
         <div class="toolbar-right">
-          <p-dropdown [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
-            class="language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-dropdown>
+          <p-select [options]="languages" [(ngModel)]="selectedLang" (onChange)="onLanguageChange($event)"
+            class="language-dropdown" [style]="{'min-width': '100px'}" appendTo="body"></p-select>
 
           <div class="toolbar-separator"></div>
 
@@ -146,7 +147,7 @@
             }
           </div>
 
-          <p-overlayPanel #op styleClass="notification-overlay">
+          <p-popover #op styleClass="notification-popover">
             <div class="notification-panel">
               <div class="panel-header">
                 <h4 class="m-0">{{ translationService.translate('NOTIFICATIONS') }}</h4>
@@ -188,7 +189,7 @@
                   class="p-button-text w-full" (click)="navigate('/notifications'); op.hide()"></button>
               </div>
             </div>
-          </p-overlayPanel>
+          </p-popover>
 
           <div class="badge-wrapper" (click)="navigate('/cart')">
             <button pButton type="button" icon="pi pi-shopping-cart" class="p-button-rounded p-button-text"></button>

@@ -31,9 +31,9 @@
                         Role
                         <p-columnFilter type="text" field="role" display="menu">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-dropdown [ngModel]="value" [options]="roles" (onChange)="filter($event.value)"
+                                <p-select [ngModel]="value" [options]="roles" (onChange)="filter($event.value)"
                                     placeholder="Any">
-                                </p-dropdown>
+                                </p-select>
                             </ng-template>
                         </p-columnFilter>
                     </div>
@@ -130,9 +130,9 @@
             <div class="premium-grid mb-4">
                 <div class="premium-col field">
                     <label for="role" class="premium-label">System role <span class="required-mark">*</span></label>
-                    <p-dropdown [(ngModel)]="user.role" inputId="role" [options]="roles" placeholder="Select role"
+                    <p-select [(ngModel)]="user.role" inputId="role" [options]="roles" placeholder="Select role"
                         appendTo="body" [class.p-invalid]="submitted && !user.role">
-                    </p-dropdown>
+                    </p-select>
                 </div>
 
                 <div class="premium-col field">

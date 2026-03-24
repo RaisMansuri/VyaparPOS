@@ -154,4 +154,11 @@ export class ProductService {
   refreshProducts(): void {
     this.getProducts().subscribe();
   }
+
+  uploadProductImage(file: File): Observable<{ data: { url: string } }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'products');
+    return this.http.post<{ data: { url: string } }>(`${environment.apiUrl}/upload`, formData);
+  }
 }

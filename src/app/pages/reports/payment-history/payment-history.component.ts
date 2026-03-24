@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TagModule } from 'primeng/tag';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
@@ -26,7 +26,7 @@ import { Transaction, TransactionStatus, TransactionType } from '../../../models
     IconFieldModule,
     InputIconModule,
     TagModule,
-    DropdownModule,
+    SelectModule,
     CalendarModule,
     CardModule,
     TooltipModule,

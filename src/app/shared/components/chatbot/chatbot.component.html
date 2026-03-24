@@ -53,15 +53,18 @@
                             </div>
                             <div class="inv-details">
                                 <div>Order: {{ msg.metadata.orderId }}</div>
-                                <div class="font-bold">Total: ₹{{ msg.metadata.total }}</div>
+                                <div class="font-bold">Total: ₹{{ msg.metadata.total || msg.metadata.amount || '0' }}</div>
                             </div>
                             <div class="inv-actions mt-2">
                                 <button pButton label="PDF" icon="pi pi-file-pdf"
                                     (click)="downloadInvoice(msg.metadata)"
-                                    class="p-button-sm p-button-outlined mr-2"></button>
+                                    class="p-button-xs p-button-outlined"></button>
                                 <button pButton label="Print" icon="pi pi-print"
                                     (click)="printInvoice(msg.metadata)"
-                                    class="p-button-sm p-button-outlined"></button>
+                                    class="p-button-xs p-button-outlined"></button>
+                                <button pButton label="Details" icon="pi pi-search"
+                                    (click)="viewOrderDetails(msg.metadata.orderId)"
+                                    class="p-button-xs p-button-outlined"></button>
                             </div>
                         </div>
 
@@ -92,7 +95,7 @@
                                 {{ msg.metadata.stepPrompt }}
                             </div>
                             <div class="mt-2 flex justify-content-end" *ngIf="msg.metadata.onNext">
-                                <button pButton [label]="msg.metadata.nextLabel || 'Next Step'" (click)="quickAction(msg.metadata.onNext)" class="p-button-sm"></button>
+                                <button pButton [label]="msg.metadata.nextLabel || 'Next Step'" (click)="quickAction(msg.metadata.onNext)" class="p-button-xs"></button>
                             </div>
                         </div>
 
@@ -100,8 +103,8 @@
                         <div *ngIf="msg.metadata.onConfirm" class="confirm-card shadow-1">
                             <div class="confirm-msg">{{ msg.metadata.message }}</div>
                             <div class="confirm-actions">
-                                <button pButton [label]="msg.metadata.onConfirm" (click)="quickAction(msg.metadata.onConfirm)" class="p-button-sm p-button-info mr-2"></button>
-                                <button pButton [label]="msg.metadata.onCancel || 'No'" (click)="quickAction(msg.metadata.onCancel || 'No')" class="p-button-sm p-button-text p-button-secondary"></button>
+                                <button pButton [label]="msg.metadata.onConfirm" (click)="quickAction(msg.metadata.onConfirm)" class="p-button-xs p-button-info"></button>
+                                <button pButton [label]="msg.metadata.onCancel || 'No'" (click)="quickAction(msg.metadata.onCancel || 'No')" class="p-button-xs p-button-text p-button-secondary"></button>
                             </div>
                         </div>
 
@@ -153,6 +156,30 @@
                                 </span>
                             </div>
                             <button pButton label="Checkout Now" icon="pi pi-shopping-cart" (click)="quickAction('Go to my cart')" class="p-button-xs p-button-text p-button-info mt-1"></button>
+                        </div>
+
+                        <!-- Support Ticket Card -->
+                        <div *ngIf="msg.metadata?.type === 'TICKET_CREATED'" class="ticket-card shadow-1">
+                            <div class="ticket-header">
+                                <i class="pi pi-ticket"></i>
+                                <span>Ticket Generated</span>
+                            </div>
+                            <div class="ticket-info">
+                                <div class="ticket-id">#{{ msg.metadata.id }}</div>
+                                <div class="ticket-subject">{{ msg.metadata.subject }}</div>
+                                <div class="ticket-status">
+                                    <span class="status-dot"></span>
+                                    {{ msg.metadata.status }}
+                                </div>
+                            </div>
+                            <div class="ticket-actions mt-2">
+                                <button pButton label="Email" icon="pi pi-envelope"
+                                    (click)="sendTicketNotification(msg.metadata.id, 'email')"
+                                    class="p-button-xs p-button-outlined"></button>
+                                <button pButton label="SMS" icon="pi pi-phone"
+                                    (click)="sendTicketNotification(msg.metadata.id, 'sms')"
+                                    class="p-button-xs p-button-outlined"></button>
+                            </div>
                         </div>
                     </div>
 

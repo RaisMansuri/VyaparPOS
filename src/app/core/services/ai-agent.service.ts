@@ -13,7 +13,7 @@ export interface AiMessage {
 }
 
 export interface AiAction {
-  type: 'NAVIGATE' | 'QUERY' | 'HELP' | 'NONE' | 'ADD_TO_CART' | 'GENERATE_QR' | 'SHOW_INVOICE' | 'CHECK_DETAILS' | 'ADD_PRODUCT' | 'ADD_MULTIPLE_PRODUCTS' | 'ADD_CATEGORY' | 'ADD_MULTIPLE_CATEGORIES' | 'SHOW_PRODUCTS' | 'SHOW_CATEGORIES' | 'CONFIRMATION' | 'SEND_INVOICE_EMAIL' | 'SHOW_PAYMENT_METHODS';
+  type: 'NAVIGATE' | 'QUERY' | 'HELP' | 'NONE' | 'ADD_TO_CART' | 'GENERATE_QR' | 'SHOW_INVOICE' | 'CHECK_DETAILS' | 'ADD_PRODUCT' | 'ADD_MULTIPLE_PRODUCTS' | 'ADD_CATEGORY' | 'ADD_MULTIPLE_CATEGORIES' | 'SHOW_PRODUCTS' | 'SHOW_CATEGORIES' | 'CONFIRMATION' | 'SEND_INVOICE_EMAIL' | 'SHOW_PAYMENT_METHODS' | 'CREATE_TICKET';
   payload?: any;
 }
 
@@ -58,6 +58,13 @@ export class AiAgentService {
   sendInvoice(orderId: string, email: string): Observable<any> {
     const apiUrl = `${environment.apiUrl}/ai/send-invoice`;
     return this.http.post<any>(apiUrl, { orderId, email }, { 
+      headers: { 'X-Skip-Loader': 'true' } 
+    });
+  }
+
+  sendTicketInfo(ticketId: string, destination: string, type: 'email' | 'sms'): Observable<any> {
+    const apiUrl = `${environment.apiUrl}/ai/send-ticket`;
+    return this.http.post<any>(apiUrl, { ticketId, destination, type }, { 
       headers: { 'X-Skip-Loader': 'true' } 
     });
   }

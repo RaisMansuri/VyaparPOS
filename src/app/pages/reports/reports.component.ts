@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -26,7 +26,7 @@ import * as XLSX from 'xlsx';
     ChartModule, 
     CardModule, 
     TableModule, 
-    DropdownModule, 
+    SelectModule, 
     ButtonModule,
     TooltipModule,
     SelectButtonModule,

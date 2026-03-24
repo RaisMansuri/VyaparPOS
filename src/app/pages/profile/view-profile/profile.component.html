@@ -1,8 +1,19 @@
 <div class="profile-page">
     @if (user) {
     <div class="profile-header">
-        <div class="avatar">
-            <span>{{ getInitials() }}</span>
+        <div class="avatar-container" (click)="fileInput.click()">
+            <div class="avatar-wrapper">
+                @if (user.avatarUrl) {
+                    <img [src]="user.avatarUrl" [alt]="user.name" class="avatar-img" />
+                } @else {
+                    <div class="avatar-initials">{{ getInitials() }}</div>
+                }
+                <div class="avatar-overlay">
+                    <i class="pi" [class.pi-camera]="!uploading" [class.pi-spin]="uploading" [class.pi-spinner]="uploading"></i>
+                    <span>{{ uploading ? 'Uploading...' : 'Change Photo' }}</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none" />
         </div>
         <div class="header-info">
             <h1>{{ user.name || 'User' }}</h1>

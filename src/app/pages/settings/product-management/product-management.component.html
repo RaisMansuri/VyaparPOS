@@ -1,76 +1,150 @@
 <div class="product-mgmt-container">
   <p-toast></p-toast>
 
-  <div class="page-header">
-    <div class="title-group">
-      <h1>Inventory Management</h1>
-      <p>Add, edit and track your bakery products.</p>
+  <!-- Premium Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1><i class="pi pi-box mr-2"></i> Inventory Management</h1>
+        <p>Add, edit and track your bakery products and stock levels</p>
+      </div>
+      <div class="header-actions">
+        <button pButton label="Add New Product" icon="pi pi-plus" class="p-button-success shadow-2"
+          (click)="openNew()"></button>
+      </div>
     </div>
-    <button pButton label="Add New Product" icon="pi pi-plus" class="p-button-primary shadow-2"
-      (click)="openNew()"></button>
   </div>
 
-  <div class="card-modern">
-    <p-table #dt [value]="products" [rows]="10" [paginator]="true"
-      [globalFilterFields]="['name', 'category', 'barcode']" [rowHover]="true" dataKey="id"
-      styleClass="p-datatable-sm modern-table" responsiveLayout="stack" [breakpoint]="'960px'"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+  <!-- Quick Stats Cards -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon total-bg"><i class="pi pi-database"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Total Items</span>
+        <span class="metric-value">{{ products.length }}</span>
+        <div class="metric-trend"><span class="text-xs">Active Catalog</span></div>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon alert-bg"><i class="pi pi-exclamation-triangle"></i></div>
+      <div class="metric-info">
+        <span class="metric-label">Low Stock</span>
+        <span class="metric-value">{{ getLowStockCount() }}</span>
+        <div class="metric-trend negative"><i class="pi pi-arrow-down"></i> Action required</div>
+      </div>
+    </div>
+  </div>
 
-      <ng-template #caption>
-        <div class="flex justify-content-between align-items-center w-full">
-          <!-- <h3 class="m-0">Bakery Inventory</h3> -->
-          <div class="flex align-items-center gap-2">
-            <div class="search-action-group">
-              <p-iconfield>
-                <p-inputicon class="pi pi-search"></p-inputicon>
-                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                  placeholder="Search items..." />
-              </p-iconfield>
+  <!-- Search & Filters Bar -->
+  <div class="table-card mb-4 filter-card">
+    <div class="filter-belt">
+      <div class="filter-item search-item">
+        <label>Search Inventory</label>
+        <p-iconfield>
+          <p-inputicon class="pi pi-search"></p-inputicon>
+          <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Search by name, barcode or category..." class="w-full" />
+        </p-iconfield>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card p-0 overflow-hidden main-view-container">
+    <!-- Desktop View: Table -->
+    <div class="desktop-only">
+      <p-table #dt [value]="products" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['name', 'category.name', 'barcode']" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-sm modern-table" responsiveLayout="scroll"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="name">Product <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+            <th pSortableColumn="category.name">Category <p-sortIcon field="category.name"></p-sortIcon></th>
+            <th pSortableColumn="stock">Inventory <p-sortIcon field="stock"></p-sortIcon></th>
+            <th>GST</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              <div class="product-cell">
+                <img [src]="product.imageUrl || defaultImageUrl" [alt]="product.name" class="product-thumb" />
+                <div class="product-info-cell">
+                  <span class="product-name-text">{{ product.name }}</span>
+                  <small class="barcode-text">{{ product.barcode || 'No Barcode' }}</small>
+                </div>
+              </div>
+            </td>
+            <td><span class="font-bold">{{ product.price | currency:'INR' }}</span></td>
+            <td><p-tag [value]="product.category?.name || product.category || 'General'" severity="secondary"></p-tag></td>
+            <td>
+              <div class="stock-status">
+                <span [class]="'stock-badge ' + (product.stock > (product.minStockLevel || 0) ? 'status-in' : 'status-low')">
+                  {{ product.stock }} in stock
+                </span>
+                <small class="min-stock">Min: {{ product.minStockLevel || 0 }}</small>
+              </div>
+            </td>
+            <td>{{ product.gstRate }}%</td>
+            <td class="text-center">
+              <div class="flex justify-center gap-2">
+                <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editProduct(product)"></button>
+                <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteProduct(product)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center p-8">
+              <i class="pi pi-box text-6xl text-gray-200 mb-4 block"></i>
+              <h3 class="text-gray-400 font-bold">No Products Found</h3>
+              <p class="text-gray-300">Try adjusting your filters or add a new product.</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Mobile View: Card Grid -->
+    <div class="mobile-only">
+      <div class="product-mobile-grid">
+        <div *ngFor="let product of dt.filteredValue || products" class="product-card">
+          <div class="product-card-header">
+            <img [src]="product.imageUrl || defaultImageUrl" [alt]="product.name" class="card-img" />
+            <div class="card-status-badge">
+              <p-tag [value]="product.category?.name || product.category || 'General'" severity="info"></p-tag>
             </div>
           </div>
-        </div>
-      </ng-template>
-
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name">Product <p-sortIcon field="name"></p-sortIcon></th>
-          <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-          <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-          <th pSortableColumn="stock">Inventory <p-sortIcon field="stock"></p-sortIcon></th>
-          <th>GST</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-product>
-        <tr>
-          <td>
-            <div class="product-cell">
-              <img [src]="product.imageUrl" [alt]="product.name" class="product-thumb" />
-              <div class="product-info-cell">
-                <span class="product-name-text">{{ product.name }}</span>
-                <small class="barcode-text">{{ product.barcode || 'No Barcode' }}</small>
+          <div class="product-card-content">
+            <div class="card-title-row">
+              <span class="card-name">{{ product.name }}</span>
+              <span class="card-price">{{ product.price | currency:'INR' }}</span>
+            </div>
+            <div class="card-meta">
+              <span class="card-barcode"><i class="pi pi-barcode mr-1"></i> {{ product.barcode || 'N/A' }}</span>
+              <div [class]="'card-stock ' + (product.stock > (product.minStockLevel || 0) ? 'status-in-text' : 'status-low-text')">
+                <i class="pi pi-box mr-1"></i> Stock: {{ product.stock }}
               </div>
             </div>
-          </td>
-          <td><span class="font-bold">{{ product.price | currency:'INR' }}</span></td>
-          <td><p-tag [value]="product.category" severity="secondary"></p-tag></td>
-          <td>
-            <div class="stock-status">
-              <span [class]="'stock-badge ' + (product.stock > product.minStockLevel ? 'status-in' : 'status-low')">
-                {{ product.stock }} in stock
-              </span>
-              <small class="min-stock">Min: {{ product.minStockLevel }}</small>
-            </div>
-          </td>
-          <td>{{ product.gstRate }}%</td>
-          <td class="text-center">
-            <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editProduct(product)"></button>
-            <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteProduct(product)"></button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+          </div>
+          <div class="product-card-footer">
+            <button pButton label="Edit" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editProduct(product)"></button>
+            <button pButton label="Delete" icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="deleteProduct(product)"></button>
+          </div>
+        </div>
+
+        <div *ngIf="products.length === 0" class="mobile-empty-state">
+           <i class="pi pi-search text-4xl mb-2"></i>
+           <p>No products match your search</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <p-dialog [(visible)]="productDialog" [style]="{ maxWidth: '600px' }" [modal]="true"
@@ -127,7 +201,12 @@
                   (click)="removeSelectedImage(fileInput)">
                 </button>
               </div>
-              <span class="upload-file-name">{{ selectedImageName || 'No file selected' }}</span>
+              <span class="upload-file-name">
+                @if (selectedImageName === 'Uploading...') {
+                  <i class="pi pi-spin pi-spinner mr-2"></i>
+                }
+                {{ selectedImageName || 'No file selected' }}
+              </span>
               <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP</small>
             </div>
           </div>
@@ -145,7 +224,7 @@
         <div class="premium-grid mb-4 mt-2">
           <div class="premium-col field">
             <label for="category" class="premium-label">Category</label>
-            <p-dropdown formControlName="category" [options]="categories" optionLabel="name"
+            <p-select formControlName="category" [options]="categories" optionLabel="name"
               placeholder="Select a category" appendTo="body" />
           </div>
           <div class="premium-col field">

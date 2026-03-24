@@ -42,13 +42,13 @@
     <div class="drawer-body">
       <div class="drawer-field">
         <label>Duration</label>
-        <p-dropdown
+        <p-select
           [options]="durationOptions"
           [(ngModel)]="selectedDuration"
           optionLabel="label"
           optionValue="value"
           appendTo="body">
-        </p-dropdown>
+        </p-select>
       </div>
 
       @if (selectedDuration === 'custom') {
@@ -64,25 +64,25 @@
 
       <div class="drawer-field">
         <label>Category</label>
-        <p-dropdown
+        <p-select
           [options]="categoryOptions"
           [(ngModel)]="selectedCategory"
           optionLabel="label"
           optionValue="value"
           appendTo="body"
           (onChange)="onCategoryChange()">
-        </p-dropdown>
+        </p-select>
       </div>
 
       <div class="drawer-field">
         <label>Product</label>
-        <p-dropdown
+        <p-select
           [options]="filteredProductOptions"
           [(ngModel)]="selectedProduct"
           optionLabel="label"
           optionValue="value"
           appendTo="body">
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 

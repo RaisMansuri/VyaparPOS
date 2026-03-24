@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ProductService } from '../core/services/product.service';
 import { SalesService } from '../core/services/sales.service';
 import { AuthService } from '../auth/auth.service';
@@ -28,7 +28,7 @@ type DurationFilter = '7d' | '30d' | '90d' | 'custom';
     CurrencyPipe,
     ButtonModule,
     SidebarModule,
-    DropdownModule,
+    SelectModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',

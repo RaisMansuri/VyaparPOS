@@ -9,9 +9,7 @@
     ]
   },
   "files": [
-    "src/main.ts",
-    "src/main.server.ts",
-    "src/server.ts"
+    "src/main.ts"
   ],
   "include": [
     "src/**/*.ts",
@@ -19,6 +17,14 @@
   ],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/test.ts"
+    "src/test.ts",
+    "src/app/core/services/marketing.service.ts",
+    "src/app/pages/marketing/marketing.component.ts",
+    "src/app/pages/settings/products/products.component.ts",
+    "src/app/app.config.server.ts",
+    "src/app/app.routes.server.ts",
+    "src/environments/environment.development.ts",
+    "src/main.server.ts",
+    "src/server.ts"
   ]
 }

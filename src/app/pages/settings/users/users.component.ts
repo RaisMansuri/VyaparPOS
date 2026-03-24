@@ -5,7 +5,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -27,7 +27,7 @@ import { UserService, User } from '../../../core/services/user.service';
         ButtonModule,
         InputTextModule,
         TagModule,
-        DropdownModule,
+        SelectModule,
         DialogModule,
         InputSwitchModule,
         MultiSelectModule,

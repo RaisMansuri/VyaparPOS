@@ -35,16 +35,16 @@
             <div class="metric-icon avg-bg"><i class="pi pi-refresh"></i></div>
             <div class="metric-info">
                 <span class="metric-label">Refunds</span>
-                <span class="metric-value">₹ 1,250</span>
-                <div class="metric-trend negative"><i class="pi pi-arrow-down"></i> 2% <span>improvement</span></div>
+                <span class="metric-value">{{ stats.refundVolume | currency:'INR':'symbol':'1.0-0' }}</span>
+                <div class="metric-trend negative"><i class="pi pi-arrow-down"></i> No refunds <span>yet</span></div>
             </div>
         </div>
         <div class="metric-card">
             <div class="metric-icon filter-bg"><i class="pi pi-check-circle"></i></div>
             <div class="metric-info">
-                <span class="metric-label">Settled</span>
-                <span class="metric-value">98.5%</span>
-                <div class="metric-trend neutral"><span>On Track</span></div>
+                <span class="metric-label">Settled Rate</span>
+                <span class="metric-value">{{ stats.settledRate || 0 }}%</span>
+                <div class="metric-trend neutral"><span>Performance</span></div>
             </div>
         </div>
     </div>
@@ -54,11 +54,11 @@
         <div class="filter-belt">
             <div class="filter-item">
                 <label>Transaction Type</label>
-                <p-dropdown [options]="typeOptions" [(ngModel)]="selectedType" placeholder="All Types" [showClear]="true" styleClass="w-full filter-dropdown"></p-dropdown>
+                <p-select [options]="typeOptions" [(ngModel)]="selectedType" placeholder="All Types" [showClear]="true" styleClass="w-full filter-dropdown"></p-select>
             </div>
             <div class="filter-item">
                 <label>Payment Method</label>
-                <p-dropdown [options]="methodOptions" [(ngModel)]="selectedMethod" placeholder="All Methods" [showClear]="true" styleClass="w-full filter-dropdown"></p-dropdown>
+                <p-select [options]="methodOptions" [(ngModel)]="selectedMethod" placeholder="All Methods" [showClear]="true" styleClass="w-full filter-dropdown"></p-select>
             </div>
             <div class="filter-item date-range">
                 <label>Date Range</label>

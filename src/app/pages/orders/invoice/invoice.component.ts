@@ -50,6 +50,24 @@ export class InvoiceComponent implements OnInit {
             }
             // Generate invoice number from order ID
             this.invoiceNumber = 'INV-' + this.order.id.replace('ORD-', '');
+
+            // Ensure financial fields are populated (handling differences in BE response)
+            const tax = (this.order as any).tax || this.order.totalGST || 0;
+            const total = this.order.totalAmount || 0;
+            const delivery = (this.order as any).deliveryFee !== undefined ? (this.order as any).deliveryFee : 0;
+            
+            if (!this.order.totalGST) this.order.totalGST = tax;
+            if (!this.order.taxableAmount) this.order.taxableAmount = total - tax - delivery;
+            if (!this.order.subTotal) this.order.subTotal = total - delivery;
+            if (this.order.deliveryFee === undefined) this.order.deliveryFee = delivery;
+
+            // Handle auto-actions from chatbot
+            const action = this.route.snapshot.queryParamMap.get('action');
+            if (action === 'print') {
+                setTimeout(() => this.printInvoice(), 1000);
+            } else if (action === 'download') {
+                setTimeout(() => this.downloadInvoice(), 1000);
+            }
         });
     }
 
@@ -114,6 +132,7 @@ export class InvoiceComponent implements OnInit {
     }
 
     sendInvoice(): void {
+        if (!this.order) return;
         if (!this.sendEmail && !this.sendPhone) {
             this.messageService.add({
                 severity: 'warn',
@@ -125,22 +144,30 @@ export class InvoiceComponent implements OnInit {
 
         this.isSending = true;
 
-        // Simulate sending
-        setTimeout(() => {
-            this.isSending = false;
-            this.showSendDialog = false;
+        this.orderService.sendInvoice(this.order.id, this.sendEmail, this.sendPhone).subscribe({
+            next: (res: any) => {
+                this.isSending = false;
+                this.showSendDialog = false;
 
-            const destination = this.sendEmail || this.sendPhone;
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Invoice Sent!',
-                detail: `Invoice sent to ${destination}`,
-                life: 4000
-            });
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Invoice Sent!',
+                    detail: 'Invoice delivery has been processed successfully.',
+                    life: 4000
+                });
 
-            this.sendEmail = '';
-            this.sendPhone = '';
-        }, 1500);
+                this.sendEmail = '';
+                this.sendPhone = '';
+            },
+            error: (err: any) => {
+                this.isSending = false;
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Failed',
+                    detail: 'Failed to send invoice. Please try again later.'
+                });
+            }
+        });
     }
 
     goBack(): void {
