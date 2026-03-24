@@ -78,8 +78,8 @@ export class ReportsComponent implements OnInit {
   }
 
   loadFinancials() {
-    this.reportService.getProfitLoss().subscribe((res: any) => {
-      this.profitLossData = res.data;
+    this.reportService.getProfitLoss().subscribe(data => {
+      this.profitLossData = data;
     });
   }
 

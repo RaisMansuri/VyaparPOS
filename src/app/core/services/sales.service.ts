@@ -13,7 +13,7 @@ export class SalesService {
   getSalesByDay(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`).pipe(
       map(res => {
-        const source = Array.isArray(res?.byDay) ? res.byDay : [];
+        const source = Array.isArray(res?.data?.byDay) ? res.data.byDay : [];
         return {
           labels: source.map((d: any) => d._id || d.date),
           datasets: [
@@ -45,7 +45,7 @@ export class SalesService {
   getSalesByCategory(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`).pipe(
       map(res => {
-        const source = Array.isArray(res?.byCategory) && res.byCategory.length > 0 ? res.byCategory : [];
+        const source = Array.isArray(res?.data?.byCategory) && res.data.byCategory.length > 0 ? res.data.byCategory : [];
         return {
           labels: source.map((c: any) => c._id || 'Unknown'),
           datasets: [
@@ -67,8 +67,8 @@ export class SalesService {
   }
 
   getDailySalesReport(category?: any, productId?: any): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/daily-report`).pipe(
-      map(reports => this.filterReports(Array.isArray(reports) ? reports : [], category, productId)),
+    return this.http.get<any>(`${this.apiUrl}/daily-report`).pipe(
+      map(res => this.filterReports(Array.isArray(res?.data) ? res.data : [], category, productId)),
       catchError(() => of([]))
     );
   }

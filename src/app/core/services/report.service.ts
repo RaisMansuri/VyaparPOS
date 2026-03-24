@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ProfitLossData {
@@ -20,7 +20,9 @@ export class ReportService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/reports`;
 
-  getProfitLoss(filters?: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/profit-loss`, { params: filters });
+  getProfitLoss(filters?: any): Observable<ProfitLossData> {
+    return this.http.get<any>(`${this.apiUrl}/profit-loss`, { params: filters }).pipe(
+      map(res => res.data)
+    );
   }
 }
