@@ -254,3 +254,49 @@ app-root {
     background: #be123c !important;
     transform: translateY(-1px);
 }
+
+/* Global Toast Responsiveness */
+.p-toast {
+    max-width: 100vw !important;
+}
+
+@media screen and (max-width: 480px) {
+    .p-toast {
+        width: calc(100vw - 2rem) !important;
+        left: 1rem !important;
+        right: 1rem !important;
+    }
+    
+    .p-toast-message {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .p-toast-message-content {
+        padding: 0.75rem !important;
+    }
+    
+    .p-toast-summary {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        word-break: break-word !important;
+    }
+    
+    .p-toast-detail {
+        font-size: 0.85rem !important;
+        line-height: 1.4 !important;
+        word-break: break-word !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .p-toast-icon-close {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+    }
+
+    /* Prevent toast from being cut off if positioned top-right */
+    .p-toast-top-right, .p-toast-top-left, .p-toast-top-center {
+        top: 1rem !important;
+        left: 1rem !important;
+        right: 1rem !important;
+    }
+}
