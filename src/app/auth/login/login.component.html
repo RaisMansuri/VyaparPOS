@@ -46,21 +46,25 @@
         </div>
 
         <div class="form-group">
-          <div class="label-row">
-            <label for="password">Password <span class="required-star">*</span></label>
-            <a routerLink="/auth/forgot-password" class="forgot-link">Forgot password?</a>
-          </div>
+          <label for="password">Password <span class="required-star">*</span></label>
           <div class="input-wrapper">
             <i class="pi pi-lock input-icon"></i>
             <input
               id="password"
-              type="password"
+              [type]="passwordVisible ? 'text' : 'password'"
               pInputText
               formControlName="password"
               placeholder="••••••••"
               class="modern-input"
             />
+            <i 
+              class="pi password-toggle" 
+              [ngClass]="passwordVisible ? 'pi-eye-slash' : 'pi-eye'"
+              (click)="togglePasswordVisibility()">
+            </i>
           </div>
+          <a routerLink="/auth/forgot-password" class="forgot-link-bottom">Forgot password?</a>
+          
           <div class="field-error" *ngIf="password?.touched && password?.invalid">
             <span *ngIf="password?.errors?.['required']">Password is required.</span>
             <span *ngIf="password?.errors?.['minlength']">Must be at least 6 characters.</span>

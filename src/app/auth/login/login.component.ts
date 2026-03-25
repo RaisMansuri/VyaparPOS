@@ -31,6 +31,11 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  passwordVisible: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
 
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
