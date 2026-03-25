@@ -38,6 +38,18 @@ export class ChatbotComponent {
     { role: 'assistant', content: 'Hi! I am your Vyapar AI assistant. How can I help you today?', timestamp: new Date() }
   ]);
   isTyping = signal(false);
+  
+  // Get cart data for context
+  private getLiveContext() {
+    return {
+      cart: {
+        items: this.cartService.items(),
+        total: this.cartService.cartTotal(),
+        count: this.cartService.cartCount()
+      },
+      user: this.authService.getCurrentUser()
+    };
+  }
 
   toggleChat() {
     this.isOpen.update(v => !v);
@@ -66,7 +78,8 @@ export class ChatbotComponent {
     
     // Process with AI Service
     setTimeout(() => {
-      this.aiService.processMessage(text, this.messages()).subscribe({
+      const context = this.getLiveContext();
+      this.aiService.processMessage(text, this.messages(), context).subscribe({
         next: (res) => {
           const newMessage: AiMessage = { 
             role: 'assistant', 

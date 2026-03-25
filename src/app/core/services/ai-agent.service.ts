@@ -28,7 +28,7 @@ export class AiAgentService {
   /**
    * Calls the backend AI Agent for a real LLM response.
    */
-  processMessage(message: string, history: AiMessage[] = []): Observable<{ response: string; action?: AiAction }> {
+  processMessage(message: string, history: AiMessage[] = [], context: any = {}): Observable<{ response: string; action?: AiAction }> {
     const apiUrl = `${environment.apiUrl}/ai/chat`;
     const user = this.authService.getCurrentUser() as any;
     const currentUserId = user?.id || user?._id;
@@ -36,7 +36,8 @@ export class AiAgentService {
     const payload = { 
       message, 
       userId: currentUserId,
-      history: history.slice(-5).map(m => ({ role: m.role, content: m.content })) // Send last 5 messages for context
+      history: history.slice(-5).map(m => ({ role: m.role, content: m.content })), // Send last 5 messages for context
+      context: context
     };
 
     return this.http.post<any>(apiUrl, payload, { 

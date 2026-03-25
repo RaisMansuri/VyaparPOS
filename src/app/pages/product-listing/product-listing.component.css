@@ -507,15 +507,18 @@
   
   .header-actions button {
     padding: 0.5rem !important;
+    min-width: 42px;
+    justify-content: center;
   }
   
-  .header-actions button span {
-    display: none;
+  :host ::ng-deep .header-actions button .p-button-label {
+    display: none !important;
   }
   
-  .header-actions button i {
+  :host ::ng-deep .header-actions button .p-button-icon {
     margin: 0 !important;
   }
+
   
   .search-box input {
     height: 40px;
