@@ -309,4 +309,31 @@
   .auth-form-container {
     padding: 2.5rem;
   }
-}
+}
+
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 1.5rem;
+  }
+  .auth-form-header {
+    margin-bottom: 1.5rem;
+  }
+  .auth-form-header h2 {
+    font-size: 1.25rem;
+  }
+  .auth-form-header p {
+    font-size: 0.875rem;
+  }
+  .modern-input {
+    padding-top: 0.625rem !important;
+    padding-bottom: 0.625rem !important;
+    font-size: 0.925rem !important;
+  }
+  .submit-btn {
+    padding: 0.75rem !important;
+    font-size: 0.925rem !important;
+  }
+  .forgot-link-bottom {
+    font-size: 0.75rem;
+  }
+}

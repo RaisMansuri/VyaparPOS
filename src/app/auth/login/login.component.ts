@@ -57,7 +57,9 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        if (err.error?.unverified || err.error?.message?.toLowerCase().includes('verify')) {
+        if (err.status === 0) {
+          this.toastService.error('Connection Failed', 'Unable to reach the server. Please check your internet connection and ensure the backend is running.');
+        } else if (err.error?.unverified || err.error?.message?.toLowerCase().includes('verify')) {
           this.toastService.warn('Email Unverified', 'Please verify your email to log in.');
           this.router.navigate(['/auth/verify-email'], { queryParams: { email } });
         } else {

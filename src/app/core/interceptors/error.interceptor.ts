@@ -12,6 +12,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Check if we should skip the global toast for this request
+      const skipToast = req.headers.has('X-Skip-Error-Toast');
+      
       let errorMessage = 'Something went wrong. Please try again later.';
       let errorTitle = 'API Error';
       
@@ -41,7 +44,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
       
       console.error(`[Global Error Interceptor] ${errorTitle}:`, error);
-      toastService.error(errorTitle, errorMessage);
+      
+      if (!skipToast) {
+        toastService.error(errorTitle, errorMessage);
+      }
       
       return throwError(() => error);
     })
