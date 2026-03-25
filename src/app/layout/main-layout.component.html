@@ -2,8 +2,12 @@
   <p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="false" styleClass="layout-sidebar">
     <div class="sidebar-profile-section">
       <div class="user-avatar-wrapper">
-        <div class="user-avatar initials-avatar">
-          {{ (currentUser?.name || 'G').charAt(0).toUpperCase() }}
+        <div class="user-avatar" [class.initials-avatar]="!currentUser?.avatarUrl">
+          @if (currentUser?.avatarUrl) {
+            <img [src]="currentUser?.avatarUrl" [alt]="currentUser?.name" class="avatar-img" />
+          } @else {
+            {{ (currentUser?.name || 'G').charAt(0).toUpperCase() }}
+          }
         </div>
         <span class="status-indicator"></span>
       </div>
@@ -200,8 +204,13 @@
 
           <div class="toolbar-separator"></div>
 
-          <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text profile-btn"
-            (click)="menu.toggle($event)"></button>
+          <div class="user-avatar-toolbar" (click)="menu.toggle($event)" [class.initials-avatar]="!currentUser?.avatarUrl">
+            @if (currentUser?.avatarUrl) {
+              <img [src]="currentUser?.avatarUrl" [alt]="currentUser?.name" class="avatar-toolbar-img" />
+            } @else {
+              <i class="pi pi-user"></i>
+            }
+          </div>
           <p-menu #menu [model]="profileMenuItems" [popup]="true"></p-menu>
         </div>
       </ng-template>

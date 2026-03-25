@@ -9,7 +9,11 @@
         <!-- Avatar Preview -->
         <div class="avatar-section">
             <div class="avatar">
-                <span>{{ getInitials() }}</span>
+                @if (form.avatarUrl) {
+                    <img [src]="form.avatarUrl" [alt]="form.name" class="avatar-img" />
+                } @else {
+                    <span>{{ getInitials() }}</span>
+                }
             </div>
             <p class="avatar-hint">Initials are generated from your name</p>
         </div>

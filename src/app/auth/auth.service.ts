@@ -159,6 +159,18 @@ export class AuthService {
     );
   }
 
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/me`).pipe(
+      tap((response: any) => {
+        const current = this.currentUserSubject.value;
+        if (current) {
+          const updatedUser = { ...current, ...response.data };
+          this.saveUser(updatedUser);
+        }
+      })
+    );
+  }
+
   forgotPassword(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email }).pipe(
       catchError(err => throwError(() => err))

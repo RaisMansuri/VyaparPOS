@@ -40,18 +40,38 @@ export class LoginComponent {
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    rememberMe: [false]
   });
 
   get email() { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
+
+  ngOnInit(): void {
+    const savedEmail = localStorage.getItem('remembered_email');
+    if (savedEmail) {
+      this.form.patchValue({
+        email: savedEmail,
+        rememberMe: true
+      });
+    }
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    const email = this.form.get('email')?.value;
-    this.auth.login(this.form.value).subscribe({
+
+    const { email, password, rememberMe } = this.form.value;
+
+    // Handle "Remember Me"
+    if (rememberMe) {
+      localStorage.setItem('remembered_email', email);
+    } else {
+      localStorage.removeItem('remembered_email');
+    }
+
+    this.auth.login({ email, password }).subscribe({
       next: () => {
         this.toastService.success('Login Successful', 'Welcome back to VyaparPOS!');
         this.router.navigate(['/dashboard']);

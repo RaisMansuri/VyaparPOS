@@ -30,7 +30,8 @@ export class EditProfileComponent implements OnInit {
         state: '',
         pincode: '',
         aiApiKey: '',
-        aiModel: 'google/gemini-2.0-flash-lite-preview-02-05:free'
+        aiModel: 'google/gemini-2.0-flash-lite-preview-02-05:free',
+        avatarUrl: ''
     };
 
     isSaving = false;
@@ -67,6 +68,7 @@ export class EditProfileComponent implements OnInit {
             this.form.pincode = user.pincode || '';
             this.form.aiApiKey = user.aiApiKey || '';
             this.form.aiModel = user.aiModel || 'google/gemini-2.0-flash-lite-preview-02-05:free';
+            this.form.avatarUrl = user.avatarUrl || '';
         }
     }
 

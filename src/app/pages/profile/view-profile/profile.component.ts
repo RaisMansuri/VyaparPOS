@@ -48,6 +48,10 @@ export class ProfileComponent implements OnInit {
             };
         });
 
+        // Fetch latest profile data from server
+        this.authService.getProfile().subscribe();
+
+
         const orders = this.orderService.getOrders();
         this.totalOrders = orders.length;
         this.totalSpent = orders.reduce((sum, o) => sum + o.totalAmount, 0);
