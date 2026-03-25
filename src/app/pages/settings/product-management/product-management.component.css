@@ -412,28 +412,6 @@
   margin: 0rem 0 0.5rem;
 }
 
-.premium-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #64748b;
-  margin-bottom: 0.5rem;
-}
-
-.required-mark {
-  color: #ef4444;
-}
-
-.optional-mark {
-  color: #cbd5e1;
-  font-weight: 400;
-}
-
-.premium-grid {
-  display: flex;
-  gap: 1rem;
-  margin-top: 11px;
-}
 
 .premium-col {
   flex: 1;
@@ -608,10 +586,6 @@
       width: 100% !important;
   }
 
-  .premium-grid {
-    flex-direction: column;
-    gap: 0;
-  }
 
   .image-upload-panel {
     flex-direction: column;
