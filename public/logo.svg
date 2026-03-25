@@ -1,0 +1,21 @@
+<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="brandGradient" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1E40AF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon Background -->
+  <rect x="0" y="5" width="50" height="50" rx="14" fill="url(#brandGradient)"/>
+  
+  <!-- Stylized POS Icon (Cart + Check) -->
+  <path d="M15 20H20L22 35H18M20 20L22 25M30 20H35L37 35H32" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="20" y="25" width="15" height="12" rx="2" fill="white" fill-opacity="0.2" stroke="white" stroke-width="2"/>
+  <path d="M24 42C24 43.1046 23.1046 44 22 44C20.8954 44 20 43.1046 20 42C20 40.8954 20.8954 40 22 40C23.1046 40 24 40.8954 24 42Z" fill="white"/>
+  <path d="M35 42C35 43.1046 34.1046 44 33 44C31.8954 44 31 43.1046 31 42C31 40.8954 31.8954 40 33 40C34.1046 40 35 40.8954 35 42Z" fill="white"/>
+  
+  <!-- Text -->
+  <text x="65" y="42" fill="#1E293B" style="font: bold 28px sans-serif; letter-spacing: -1px;">Vyapar<tspan fill="#2563EB">POS</tspan></text>
+</svg>

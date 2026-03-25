@@ -105,6 +105,17 @@
   background: white;
 }
 
+.mobile-brand-container {
+  display: none;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.mobile-logo {
+  height: 48px;
+  width: auto;
+}
+
 .auth-form-header {
   margin-bottom: 2.5rem;
 }
@@ -308,6 +319,9 @@
   }
   .auth-form-container {
     padding: 2.5rem;
+  }
+  .mobile-brand-container {
+    display: flex;
   }
 }
 

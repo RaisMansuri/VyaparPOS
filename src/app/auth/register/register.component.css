@@ -106,6 +106,17 @@
   overflow-y: auto;
 }
 
+.mobile-brand-container {
+  display: none;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.mobile-logo {
+  height: 44px;
+  width: auto;
+}
+
 .auth-form-header {
   margin-bottom: 2rem;
 }
@@ -268,4 +279,7 @@
     padding: 2rem;
     flex: 1;
   }
-}
+  .mobile-brand-container {
+    display: flex;
+  }
+}
