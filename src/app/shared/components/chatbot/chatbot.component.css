@@ -1,6 +1,7 @@
 .chatbot-container {
     position: fixed;
-    bottom: 1.5rem;
+    bottom: 3.5rem;
+    /* Moved up from 1.5rem */
     right: 1.5rem;
     z-index: 9999;
 }
@@ -23,8 +24,8 @@
 
 .chat-window {
     position: fixed;
-    bottom: 5.5rem;
-    /* Adjusted to be above the trigger */
+    bottom: 7rem;
+    /* Moved up from 5.5rem to stay above trigger */
     right: 1.5rem;
     width: 380px;
     max-width: calc(100vw - 3rem);

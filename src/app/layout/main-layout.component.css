@@ -1,7 +1,7 @@
 .layout-root {
   min-height: 100dvh;
   display: flex;
-  background: var(--surface-ground);
+  background: transparent;
   transition: background-color 0.3s ease;
 }
 
@@ -273,7 +273,7 @@
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background: var(--surface-ground);
+  background: transparent;
 }
 
 .layout-footer {
@@ -493,4 +493,18 @@
   .profile-btn {
     display: none !important;
   }
+}
+
+/* Ensure User Profile Menu doesn't overflow on small screens */
+::ng-deep .user-profile-menu.p-menu-overlay {
+    max-width: calc(100vw - 2rem);
+    right: 0.5rem !important;
+    left: auto !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (min-width: 992px) {
+    ::ng-deep .user-profile-menu.p-menu-overlay {
+        right: auto !important;
+    }
 }

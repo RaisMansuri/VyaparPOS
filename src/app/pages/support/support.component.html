@@ -5,7 +5,7 @@
     <button pButton label="New Ticket" icon="pi pi-plus" (click)="openNew()"></button>
   </div>
 
-  <p-table [value]="tickets" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <p-table [value]="tickets" [paginator]="true" [rows]="10" responsiveLayout="stack" [breakpoint]="'960px'">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
@@ -90,8 +90,10 @@
       </form>
     </ng-template>
     <ng-template pTemplate="footer">
-      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
-      <button pButton label="Create" icon="pi pi-check" class="p-button-text" (click)="saveTicket()"></button>
+      <div class="flex justify-content-end gap-2">
+        <button pButton label="Cancel" icon="pi pi-times" class="p-button-outlined p-button-secondary p-button-sm" (click)="showDialog = false"></button>
+        <button pButton label="Create" icon="pi pi-check" class="p-button-sm" (click)="saveTicket()"></button>
+      </div>
     </ng-template>
   </p-dialog>
 
@@ -129,7 +131,9 @@
           </div>
           <div class="add-comment mt-3">
             <textarea pInputTextarea [(ngModel)]="newComment" placeholder="Add a comment..." rows="2"></textarea>
-            <button pButton label="Send" icon="pi pi-send" class="mt-2" (click)="addComment()"></button>
+            <div class="flex justify-content-end mt-2">
+              <button pButton label="Send Comment" icon="pi pi-send" class="p-button-sm" (click)="addComment()"></button>
+            </div>
           </div>
         </div>
       </div>

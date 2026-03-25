@@ -11,6 +11,12 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #1f2937;
   background-color: #f3f4f6;
+  background-image: 
+    linear-gradient(rgba(243, 244, 246, 0.7), rgba(243, 244, 246, 0.7)), 
+    url('/assets/images/bg-pos.png');
+  background-size: 300px; /* Pattern size */
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
 app-root {
