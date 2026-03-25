@@ -240,12 +240,52 @@
 
 /* Responsive Adjustments */
 @media screen and (max-width: 1280px) {
-    .metrics-grid, .table-card { padding: 1rem 1.5rem; margin-left: 1.5rem; margin-right: 1.5rem; }
+    .metrics-grid, .table-card { padding: 1.25rem; margin-left: 1.5rem; margin-right: 1.5rem; }
     .header-content { padding: 1.25rem 1.5rem; }
 }
 
 @media screen and (max-width: 960px) {
-    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .metrics-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
     .filter-belt { grid-template-columns: 1fr; gap: 1rem; }
-    .header-content { flex-direction: column; align-items: flex-start; }
+}
+
+@media screen and (max-width: 640px) {
+    .dashboard-header { border-radius: 0; }
+    .header-content { 
+        padding: 1.5rem 1rem; 
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .metrics-grid { 
+        grid-template-columns: 1fr; 
+        padding: 0 1rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .table-card {
+        margin: 0 1rem 1rem;
+        padding: 1.25rem 1rem;
+    }
+    .filter-actions-group {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        width: 100%;
+    }
+    .filter-item.date-range { grid-column: auto; }
+}
+
+@media screen and (max-width: 480px) {
+    .header-title h1 { font-size: 1.35rem; }
+    .metric-card { padding: 1rem; }
 }
