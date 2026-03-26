@@ -60,14 +60,14 @@ export const routes: Routes = [
             (m) => m.ProductListingComponent
           ),
       },
-      {
-        path: 'customers',
-        canActivate: [authGuard],
-        loadComponent: () =>
-          import('./pages/customers/customers.component').then(
-            (m) => m.CustomersComponent
-          ),
-      },
+      // {
+      //   path: 'customers',
+      //   canActivate: [authGuard],
+      //   loadComponent: () =>
+      //     import('./pages/customers/customers.component').then(
+      //       (m) => m.CustomersComponent
+      //     ),
+      // },
       {
         path: 'reports/payments',
         canActivate: [authGuard],

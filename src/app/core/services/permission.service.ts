@@ -16,7 +16,7 @@ export class PermissionService {
   private defaultPermissions: RoutePermission[] = [
     { path: '/dashboard', label: 'DASHBOARD', icon: 'pi pi-home', section: 'overview', allowedRoles: ['owner', 'admin', 'manager', 'cashier', 'consumer'], requiredPermission: 'View Sales' },
     { path: '/mobile-pos', label: 'Mobile POS', icon: 'pi pi-camera', section: 'management', allowedRoles: ['owner', 'admin', 'manager', 'cashier'], requiredFeature: 'mobile_pos', requiredPermission: 'Process Sales' },
-    { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'management', allowedRoles: ['owner', 'admin', 'manager'] },
+    // { path: '/customers', label: 'CUSTOMERS', icon: 'pi pi-users', section: 'management', allowedRoles: ['owner', 'admin', 'manager'] },
     { path: '/reports', label: 'REPORTS', icon: 'pi pi-chart-bar', section: 'management', allowedRoles: ['owner', 'admin', 'manager', 'consumer'], requiredFeature: 'advanced_reports', requiredPermission: 'View Reports' },
     { path: '/reports/payments', label: 'Payment History', icon: 'pi pi-history', section: 'management', allowedRoles: ['owner', 'admin', 'manager', 'consumer'], requiredPermission: 'View Reports' },
     { path: '/notifications', label: 'Notifications', icon: 'pi pi-bell', section: 'overview', allowedRoles: ['owner', 'admin', 'manager', 'cashier', 'consumer'] },

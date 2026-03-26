@@ -190,7 +190,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   updatePageTitle(url: string): void {
     if (url.includes('/dashboard')) this.pageTitle = this.translationService.translate('DASHBOARD') || 'Dashboard';
     else if (url.includes('/mobile-pos')) this.pageTitle = 'Mobile POS';
-    else if (url.includes('/customers')) this.pageTitle = this.translationService.translate('CUSTOMERS') || 'Customers';
+    // else if (url.includes('/customers')) this.pageTitle = this.translationService.translate('CUSTOMERS') || 'Customers';
     else if (url.includes('/reports')) this.pageTitle = this.translationService.translate('REPORTS') || 'Payment History';
     else if (url.includes('/support')) this.pageTitle = 'Customer Support';
     else if (url.includes('/products')) this.pageTitle = this.translationService.translate('PRODUCTS') || 'Products';
