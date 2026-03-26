@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmationService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -31,6 +32,7 @@ import { UserService, User } from '../../../core/services/user.service';
         DialogModule,
         InputSwitchModule,
         MultiSelectModule,
+        CardModule,
         IconFieldModule,
         InputIconModule,
         FloatLabelModule

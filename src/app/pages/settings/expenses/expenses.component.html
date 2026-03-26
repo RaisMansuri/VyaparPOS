@@ -2,13 +2,14 @@
   <div class="header-section">
     <div>
       <h1 class="page-title">Expense Management</h1>
-      <p class="subtitle">Track and manage your business costs effectively</p>
-    </div>
-    <button pButton label="Add New Expense" icon="pi pi-plus" (click)="showDialog()" class="p-button-success"></button>
+  <div class="p-4">
+  <div class="mb-4">
+    <h1 class="text-3xl font-bold text-900 m-0">Expense Tracking</h1>
+    <p class="text-500 m-0">Monitor and manage your business expenditures and payouts.</p>
   </div>
 
   <!-- Summary Cards -->
-  <div class="stats-grid">
+  <div class="grid mb-2">
     <p-card styleClass="stats-card total-card">
       <div class="stats-content">
         <div class="stats-info">
@@ -35,17 +36,28 @@
   </div>
 
   <!-- Expenses Table -->
-  <p-card styleClass="table-card mt-4">
-    <p-table [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
-             responsiveLayout="scroll" styleClass="p-datatable-sm">
+  <p-card styleClass="shadow-2 border-round-xl overflow-hidden mt-4">
+    <p-table #dt [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
+             [globalFilterFields]="globalFilterFields" responsiveLayout="scroll" styleClass="p-datatable-striped">
+      <ng-template pTemplate="caption">
+        <div class="search-action-group p-2">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search"></p-inputicon>
+            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+                   placeholder="Search expenses..." />
+          </p-iconfield>
+          <button pButton label="Add Expense" icon="pi pi-plus" class="p-button-primary shadow-2 border-round-lg flex-shrink-0" (click)="showDialog()"></button>
+        </div>
+      </ng-template>
+
       <ng-template pTemplate="header">
         <tr>
-          <th>Date</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Amount</th>
-          <th>Paid By</th>
-          <th>Actions</th>
+          <th style="width: 15%">Date</th>
+          <th style="width: 30%">Title</th>
+          <th style="width: 15%">Category</th>
+          <th style="width: 15%">Amount</th>
+          <th style="width: 15%">Paid By</th>
+          <th style="width: 10%; text-align: center;">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-expense>
@@ -53,26 +65,32 @@
           <td>{{ expense.date | date:'mediumDate' }}</td>
           <td>
             <div class="flex flex-column">
-              <span class="font-bold">{{ expense.title }}</span>
-              <small class="text-gray-500">{{ expense.description }}</small>
+              <span class="font-bold text-900">{{ expense.title }}</span>
+              <small class="text-500">{{ expense.description }}</small>
             </div>
           </td>
           <td>
-            <p-tag [value]="expense.category" [severity]="getSeverity(expense.category)"></p-tag>
+            <p-tag [value]="expense.category" [severity]="getSeverity(expense.category)" [rounded]="true"></p-tag>
           </td>
-          <td class="font-bold text-red-500">-{{ expense.amount | currency:'INR' }}</td>
+          <td class="font-bold text-red-600">-{{ expense.amount | currency:'INR' }}</td>
           <td>{{ expense.paidBy }}</td>
           <td>
-            <div class="flex gap-2">
-              <button pButton icon="pi pi-pencil" class="p-button-text p-button-info" (click)="showDialog(expense)"></button>
-              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteExpense(expense._id)"></button>
+            <div class="flex gap-2 justify-content-center">
+              <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info" (click)="showDialog(expense)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteExpense(expense._id)"></button>
             </div>
           </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="text-center p-5">No expenses found.</td>
+          <td colspan="6" class="text-center" style="padding: 3rem;">
+            <div class="empty-state flex flex-column align-items-center justify-content-center">
+              <i class="pi pi-wallet" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
+              <div style="font-size: 1.25rem; color: #64748b; font-weight: 600;">No expenses found</div>
+              <p style="color: #94a3b8; margin-top: 0.5rem;">Total costs will appear here once recorded.</p>
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>

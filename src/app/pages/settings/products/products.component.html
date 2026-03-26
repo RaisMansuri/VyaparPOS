@@ -1,92 +1,96 @@
-<div class="card">
-    <p-table #dt [value]="products" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
-        [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }">
-        <ng-template #caption>
-            <div class="flex flex-column sm:flex-row justify-start items-center gap-3 mb-2">
-                <h3 class="m-0 mr-4">Manage Products</h3>
-                <div class="search-action-group">
+<div class="p-4">
+    <div class="mb-4">
+        <h1 class="text-3xl font-bold text-900 m-0">Product Management</h1>
+        <p class="text-500 m-0">Manage your inventory, pricing, and stock levels.</p>
+    </div>
+
+    <p-card styleClass="shadow-2 border-round-xl overflow-hidden">
+        <p-table #dt [value]="products" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
+            [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }"
+            styleClass="p-datatable-striped">
+            <ng-template pTemplate="caption">
+                <div class="search-action-group p-2">
                     <p-iconfield>
                         <p-inputicon class="pi pi-search"></p-inputicon>
                         <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             placeholder="Search products..." />
                     </p-iconfield>
+                    <div class="flex flex-row gap-2">
+                        <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success shadow-2 border-round-lg"
+                            (click)="openNew()"></button>
+                        <p-fileUpload mode="basic" accept=".csv" [maxFileSize]="1000000" label="Import CSV"
+                            chooseLabel="Import CSV" class="p-button-help shadow-2 border-round-lg" (onSelect)="onBulkUpload($event)"
+                            [auto]="true"></p-fileUpload>
+                    </div>
                 </div>
-                <div class="ml-auto flex gap-2">
-                    <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success shadow-1"
-                        (click)="openNew()"></button>
-                    <!-- Bulk Upload Button -->
-                    <p-fileUpload mode="basic" accept=".csv" [maxFileSize]="1000000" label="Bulk Import"
-                        chooseLabel="Import CSV" class="p-button-help" (onSelect)="onBulkUpload($event)"
-                        [auto]="true"></p-fileUpload>
-                </div>
-            </div>
-        </ng-template>
+            </ng-template>
 
-        <ng-template #header>
-            <tr>
-                <th style="width:10%">Image</th>
-                <th style="width:25%">Name</th>
-                <th style="width:15%">
-                    <div class="flex items-center">
-                        Category
-                        <p-columnFilter type="text" field="category" display="menu">
-                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-select [ngModel]="value" [options]="categories" (onChange)="filter($event.value)"
-                                    placeholder="Any">
-                                </p-select>
-                            </ng-template>
-                        </p-columnFilter>
-                    </div>
-                </th>
-                <th style="width:15%">Price</th>
-                <th style="width:10%">Stock</th>
-                <th style="width:15%">Barcode</th>
-                <th style="width:10%; text-align: center;">Actions</th>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:10%">Image</th>
+                    <th style="width:25%">Name</th>
+                    <th style="width:15%">
+                        <div class="flex items-center">
+                            Category
+                            <p-columnFilter type="text" field="category" display="menu">
+                                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                    <p-select [ngModel]="value" [options]="categories" (onChange)="filter($event.value)"
+                                        placeholder="Any">
+                                    </p-select>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="width:15%">Price</th>
+                    <th style="width:10%">Stock</th>
+                    <th style="width:15%">Barcode</th>
+                    <th style="width:10%; text-align: center;">Actions</th>
+                </tr>
+            </ng-template>
 
-        <ng-template #body let-prod>
-            <tr>
-                <td>
-                    <img *ngIf="prod.image" [src]="prod.image[0] === 'b' ? prod.image : 'assets/' + prod.image"
-                        [alt]="prod.name" width="45" class="shadow-4" />
-                    <div *ngIf="!prod.image" class="placeholder-img shadow-4">
-                        <i class="pi pi-image text-gray-500 text-xl"></i>
-                    </div>
-                </td>
-                <td>{{ prod.name }}</td>
-                <td>{{ prod.category }}</td>
-                <td>{{ prod.price | currency:'USD' }}</td>
-                <td>
-                    <p-tag [value]="prod.stock.toString()" [severity]="getStockSeverity(prod.stock)"></p-tag>
-                </td>
-                <td>
-                    <div class="text-sm text-gray-700 font-mono bg-gray-100 p-1 border-round w-max">{{ prod.barcode }}
-                    </div>
-                </td>
-                <td>
-                    <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-pencil" class="btn-action-edit"
-                            (click)="editProduct(prod)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="btn-action-delete"
-                            (click)="deleteProduct(prod)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="body" let-prod>
+                <tr>
+                    <td>
+                        <img *ngIf="prod.image" [src]="prod.image[0] === 'b' ? prod.image : 'assets/' + prod.image"
+                            [alt]="prod.name" width="45" class="shadow-2 border-round" />
+                        <div *ngIf="!prod.image" class="placeholder-img shadow-1 border-round">
+                            <i class="pi pi-image text-gray-400 text-xl"></i>
+                        </div>
+                    </td>
+                    <td class="font-bold text-900">{{ prod.name }}</td>
+                    <td>{{ prod.category }}</td>
+                    <td class="text-primary font-bold">{{ prod.price | currency:'USD' }}</td>
+                    <td>
+                        <p-tag [value]="prod.stock.toString()" [severity]="getStockSeverity(prod.stock)" [rounded]="true"></p-tag>
+                    </td>
+                    <td>
+                        <div class="text-xs text-gray-600 font-mono bg-gray-100 p-1 px-2 border-round w-max">{{ prod.barcode }}</div>
+                    </td>
+                    <td>
+                        <div class="flex gap-2 justify-content-center">
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+                                (click)="editProduct(prod)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                                (click)="deleteProduct(prod)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="7" class="text-center" style="padding: 3rem;">
-                    <div class="empty-state flex flex-column align-items-center justify-content-center">
-                        <i class="pi pi-box" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
-                        <div style="font-size: 1.25rem; color: #64748b; font-weight: 600;">No records available</div>
-                        <p style="color: #94a3b8; margin-top: 0.5rem;">Start adding products or use bulk import to get started.</p>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center" style="padding: 4rem;">
+                        <div class="empty-state flex flex-column align-items-center justify-content-center">
+                            <i class="pi pi-box" style="font-size: 3.5rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
+                            <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">Inventory is empty</div>
+                            <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">Start adding products or use bulk import to populate your catalog.</p>
+                            <button pButton label="Add First Product" icon="pi pi-plus" class="p-button-text mt-3" (click)="openNew()"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
 </div>
 
 <!-- Product Dialog -->

@@ -13,6 +13,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TagModule } from 'primeng/tag';
 import { RippleModule } from 'primeng/ripple';
+import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
+import { CardModule } from 'primeng/card';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -30,6 +32,7 @@ import { InputIconModule } from 'primeng/inputicon';
     ToolbarModule,
     TagModule,
     RippleModule,
+    CardModule,
     IconFieldModule,
     InputIconModule
   ],
@@ -48,6 +51,7 @@ export class CategoryManagementComponent implements OnInit {
   submitted = false;
 
   ngOnInit(): void {
+    this.categoryService.loadCategories();
     this.categoryService.categories$.subscribe(data => {
       this.categories = data;
     });

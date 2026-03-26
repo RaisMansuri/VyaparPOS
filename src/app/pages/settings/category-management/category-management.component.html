@@ -1,48 +1,42 @@
-<div class="category-mgmt-container">
+<div class="p-4">
     <p-toast></p-toast>
 
-    <div class="page-header">
-        <div class="title-group">
-            <h1>Category Management</h1>
-            <p>Manage your product categories and organization.</p>
-        </div>
-        <button pButton label="Add New Category" icon="pi pi-plus" class="p-button-primary shadow-2"
-            (click)="openNew()"></button>
+    <div class="mb-4">
+        <h1 class="text-3xl font-bold text-900 m-0">Category Management</h1>
+        <p class="text-500 m-0">Manage your product categories and organization.</p>
     </div>
 
-    <div class="card-modern">
+    <p-card styleClass="shadow-2 border-round-xl overflow-hidden">
         <p-table #dt [value]="categories" [rows]="10" [paginator]="true" [globalFilterFields]="['name','description']"
-            responsiveLayout="stack" [breakpoint]="'960px'" [rowHover]="true" dataKey="id"
-            styleClass="p-datatable-sm modern-table"
+            responsiveLayout="scroll" [rowHover]="true" dataKey="id"
+            styleClass="p-datatable-striped"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true">
 
             <ng-template pTemplate="caption">
-                <div class="flex justify-content-between align-items-center w-full">
-                    <div class="flex align-items-center gap-2">
-                        <div class="search-action-group">
-                            <p-iconfield>
-                                <p-inputicon class="pi pi-search"></p-inputicon>
-                                <input pInputText type="text"
-                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                                    placeholder="Search categories..." />
-                            </p-iconfield>
-                        </div>
-                    </div>
+                <div class="search-action-group p-2">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search"></p-inputicon>
+                        <input pInputText type="text"
+                            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Search categories..." />
+                    </p-iconfield>
+                    <button pButton label="Add New Category" icon="pi pi-plus" class="p-button-primary shadow-2 border-round-lg flex-shrink-0"
+                        (click)="openNew()"></button>
                 </div>
             </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
                     <th style="width: 4rem">#</th>
-                    <th pSortableColumn="name">Category <p-sortIcon field="name"></p-sortIcon></th>
-                    <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
-                    <th class="text-center">Actions</th>
+                    <th pSortableColumn="name" style="width: 35%">Category <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="description" style="width: 45%">Description <p-sortIcon field="description"></p-sortIcon></th>
+                    <th class="text-center" style="width: 15%">Actions</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-cat let-i="rowIndex">
                 <tr>
-                    <td>{{i + 1}}</td>
+                    <td><span class="text-500">{{i + 1}}</span></td>
                     <td>
                         <div class="category-cell">
                             <div class="cat-icon-box" [style.background-color]="cat.color || '#eef2ff'">
@@ -51,28 +45,31 @@
                             <span class="category-name-text">{{cat.name}}</span>
                         </div>
                     </td>
-                    <td>{{cat.description || 'No description provided'}}</td>
-                    <td class="text-center">
-                        <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2"
-                            (click)="editCategory(cat)"></button>
-                        <button pButton icon="pi pi-trash" class="btn-action-delete"
-                            (click)="deleteCategory(cat)"></button>
+                    <td class="text-600">{{cat.description || 'No description provided'}}</td>
+                    <td>
+                        <div class="flex gap-2 justify-content-center">
+                            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+                                (click)="editCategory(cat)"></button>
+                            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                                (click)="deleteCategory(cat)"></button>
+                        </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="4" class="text-center" style="padding: 3rem;">
+                    <td colspan="4" class="text-center" style="padding: 4rem;">
                         <div class="empty-state flex flex-column align-items-center justify-content-center">
-                            <i class="pi pi-tags" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
-                            <div style="font-size: 1.25rem; color: #64748b; font-weight: 600;">No records available</div>
-                            <p style="color: #94a3b8; margin-top: 0.5rem;">Organize your bakery by adding product categories.</p>
+                            <i class="pi pi-tags" style="font-size: 3.5rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
+                            <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No categories found</div>
+                            <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">Organize your bakery by adding product categories to group your catalog.</p>
+                            <button pButton label="Add First Category" icon="pi pi-plus" class="p-button-text mt-3" (click)="openNew()"></button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </p-card>
 </div>
 
 <p-dialog [(visible)]="categoryDialog" [style]="{ width: '500px' }" [modal]="true" styleClass="p-fluid modern-dialog"

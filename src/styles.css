@@ -67,10 +67,13 @@ app-root {
 
 /* Global Search & Action Layout */
 .search-action-group {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
 }
 
 /* Icon Field refinement */

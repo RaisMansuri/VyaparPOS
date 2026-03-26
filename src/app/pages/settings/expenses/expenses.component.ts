@@ -12,6 +12,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-expenses',
@@ -28,7 +30,9 @@ import { TagModule } from 'primeng/tag';
     CalendarModule,
     SelectModule,
     CardModule,
-    TagModule
+    TagModule,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [],
   templateUrl: './expenses.component.html',
@@ -45,6 +49,7 @@ export class ExpensesComponent implements OnInit {
   displayDialog: boolean = false;
   editingExpense: Expense | null = null;
   loading: boolean = false;
+  globalFilterFields: string[] = ['title', 'category', 'paidBy'];
 
   categories = [
     { label: 'Rent', value: 'Rent' },

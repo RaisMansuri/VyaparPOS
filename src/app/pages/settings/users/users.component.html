@@ -1,26 +1,24 @@
-<div class="card">
-    <p-table #dt [value]="users" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
-        [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }"
-        styleClass="custom-table">
-        <ng-template #caption>
-            <div class="flex justify-between items-center flex-wrap gap-3 mb-2">
-                <h3 class="m-0 mr-4">Manage Users</h3>
-                <div class="flex gap-2">
-                    <div class="search-action-group">
-                        <p-iconfield>
-                            <p-inputicon class="pi pi-search"></p-inputicon>
-                            <input pInputText type="text"
-                                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                                placeholder="Search users..." />
-                        </p-iconfield>
-                    </div>
-                    <div class="ml-auto">
-                        <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success shadow-1"
-                            (click)="openNew()"></button>
-                    </div>
+<div class="p-4">
+    <div class="mb-4">
+        <h1 class="text-3xl font-bold text-900 m-0">User Management</h1>
+        <p class="text-500 m-0">Manage system users, roles, and permissions.</p>
+    </div>
+
+    <p-card styleClass="shadow-2 border-round-xl overflow-hidden">
+        <p-table #dt [value]="users" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
+            [paginator]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'width': '100%' }"
+            styleClass="p-datatable-striped">
+            <ng-template pTemplate="caption">
+                <div class="search-action-group p-2">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search"></p-inputicon>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Search users..." />
+                    </p-iconfield>
+                    <button pButton pRipple label="New User" icon="pi pi-plus" class="p-button-success shadow-2 border-round-lg flex-shrink-0"
+                        (click)="openNew()"></button>
                 </div>
-            </div>
-        </ng-template>
+            </ng-template>
 
         <ng-template #header>
             <tr>
@@ -87,6 +85,7 @@
             </tr>
         </ng-template>
     </p-table>
+    </p-card>
 </div>
 
 <p-dialog [(visible)]="userDialog" [style]="{ width: '90vw', maxWidth: '500px' }" [modal]="true"

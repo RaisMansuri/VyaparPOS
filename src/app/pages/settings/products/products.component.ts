@@ -10,6 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { CardModule } from 'primeng/card';
 import { ConfirmationService } from 'primeng/api';
 import { ToastService } from '../../../core/services/toast.service';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -41,6 +42,7 @@ interface Product {
         ConfirmDialogModule,
         FileUploadModule,
         InputNumberModule,
+        CardModule,
         IconFieldModule,
         InputIconModule
     ],
