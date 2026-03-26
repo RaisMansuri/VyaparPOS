@@ -26,6 +26,7 @@ export interface AuthUser {
   aiApiKey?: string;
   aiModel?: string;
   avatarUrl?: string;
+  loginTimestamp?: number;
 }
 
 @Injectable({
@@ -50,7 +51,12 @@ export class AuthService {
       return null;
     }
     try {
-      return JSON.parse(raw) as AuthUser;
+      const user = JSON.parse(raw) as AuthUser;
+      if (this.isSessionExpired(user)) {
+        this.logout();
+        return null;
+      }
+      return user;
     } catch {
       return null;
     }
@@ -66,8 +72,23 @@ export class AuthService {
       this.currentUserSubject.next(null);
       return;
     }
+
+    // Set timestamp if not already present or if new login
+    if (!user.loginTimestamp) {
+      user.loginTimestamp = Date.now();
+    }
+
     window.localStorage.setItem(this.storageKey, JSON.stringify(user));
     this.currentUserSubject.next(user);
+  }
+
+  isSessionExpired(user?: AuthUser | null): boolean {
+    const u = user || this.getCurrentUser();
+    if (!u || !u.loginTimestamp) return false;
+
+    const oneHour = 60 * 60 * 1000;
+    const elapsed = Date.now() - u.loginTimestamp;
+    return elapsed > oneHour;
   }
 
   isAuthenticated(): boolean {

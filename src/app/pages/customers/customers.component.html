@@ -8,18 +8,18 @@
     <button pButton label="Add Customer" icon="pi pi-user-plus" class="p-button-primary shadow-2" (click)="openNew()"></button>
   </div>
 
-  <div class="card-modern">
-    <p-table #dt [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm modern-table"
+  <div class="card-modern mt-3">
+    <p-table #dt [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="stack" breakpoint="960px" styleClass="p-datatable-sm modern-table"
       [globalFilterFields]="['name', 'email', 'phone']">
       
       <ng-template #caption>
-        <div class="flex justify-start items-center flex-wrap gap-3 mb-2">
-            <h3 class="m-0 mr-4">Customer Lists</h3>
+        <div class="flex justify-content-between align-items-center flex-wrap gap-3 mb-2 p-3">
+            <h3 class="m-0">Customer Lists</h3>
             <div class="search-action-group">
                 <p-iconfield>
                     <p-inputicon class="pi pi-search"></p-inputicon>
                     <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                        placeholder="Search customers..." />
+                        placeholder="Search customers..." class="w-full" />
                 </p-iconfield>
             </div>
         </div>
@@ -33,9 +33,10 @@
           <th class="text-center">Actions</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-customer>
+      <ng-template pTemplate="body" let-customer let-columns="columns">
         <tr>
           <td>
+            <span class="p-column-title font-bold">Customer</span>
             <div class="customer-cell">
               <div class="avatar">{{ customer.name.charAt(0) }}</div>
               <div class="info">
@@ -45,16 +46,26 @@
             </div>
           </td>
           <td>
+            <span class="p-column-title font-bold">Contact</span>
             <div class="contact-cell">
               <span><i class="pi pi-envelope mr-1"></i>{{ customer.email }}</span>
               <span><i class="pi pi-phone mr-1"></i>{{ customer.phone }}</span>
             </div>
           </td>
-          <td class="text-center"><p-tag [value]="customer.totalOrders" severity="info"></p-tag></td>
-          <td class="text-right font-bold">{{ customer.totalSpent | currency:'INR' }}</td>
           <td class="text-center">
-            <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editCustomer(customer)"></button>
-            <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteCustomer(customer)"></button>
+            <span class="p-column-title font-bold">Orders</span>
+            <p-tag [value]="customer.totalOrders" severity="info"></p-tag>
+          </td>
+          <td class="text-right font-bold">
+            <span class="p-column-title font-bold">Total Spent</span>
+            {{ customer.totalSpent | currency:'INR' }}
+          </td>
+          <td class="text-center">
+            <span class="p-column-title font-bold">Actions</span>
+            <div class="flex justify-content-center gap-2">
+              <button pButton icon="pi pi-pencil" class="btn-action-edit" (click)="editCustomer(customer)"></button>
+              <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteCustomer(customer)"></button>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -72,34 +83,44 @@
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="showDialog" [header]="editingCustomerId ? 'Edit Customer' : 'Add New Customer'" [modal]="true" styleClass="p-fluid">
+  <p-dialog [(visible)]="showDialog" [header]="editingCustomerId ? 'Edit Customer' : 'Add New Customer'" 
+            [modal]="true" [style]="{width: '550px', maxWidth: '95vw'}" styleClass="p-fluid modern-dialog" [draggable]="false" [resizable]="false">
     <ng-template pTemplate="content">
-      <form [formGroup]="customerForm">
-        <div class="field mb-3">
-          <label for="name">Name</label>
-          <input pInputText id="name" formControlName="name" />
+      <form [formGroup]="customerForm" id="customerForm">
+        <div class="field mb-4">
+          <label class="premium-label" for="name">Name <span class="required-mark">*</span></label>
+          <input pInputText id="name" formControlName="name" placeholder="Full name" />
         </div>
-        <div class="field mb-3">
-          <label for="email">Email</label>
-          <input pInputText id="email" formControlName="email" />
+
+        <div class="premium-grid mb-4">
+          <div class="premium-col field">
+            <label class="premium-label" for="email">Email <span class="required-mark">*</span></label>
+            <input pInputText id="email" formControlName="email" placeholder="customer@example.com" />
+          </div>
+          <div class="premium-col field">
+            <label class="premium-label" for="phone">Phone <span class="required-mark">*</span></label>
+            <input pInputText id="phone" formControlName="phone" placeholder="+91 ..." />
+          </div>
         </div>
-        <div class="field mb-3">
-          <label for="phone">Phone</label>
-          <input pInputText id="phone" formControlName="phone" />
+
+        <div class="field mb-4">
+          <label class="premium-label" for="address">Address</label>
+          <input pInputText id="address" formControlName="address" placeholder="Physical address" />
         </div>
-        <div class="field mb-3">
-          <label for="address">Address</label>
-          <input pInputText id="address" formControlName="address" />
-        </div>
-        <div class="field mb-3">
-          <label for="notes">Notes</label>
-          <input pInputText id="notes" formControlName="notes" />
+
+        <div class="field mb-0">
+          <label class="premium-label" for="notes">Notes <span class="optional-mark">(Optional)</span></label>
+          <textarea pInputTextarea id="notes" formControlName="notes" rows="3" placeholder="Any internal notes..."></textarea>
         </div>
       </form>
     </ng-template>
     <ng-template pTemplate="footer">
-      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
-      <button pButton label="Save" icon="pi pi-check" class="p-button-text" (click)="saveCustomer()"></button>
+      <div class="flex justify-content-end gap-2 p-3">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-outlined p-button-secondary premium-footer-btn" 
+          (click)="showDialog = false"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="premium-footer-btn-save" 
+          (click)="saveCustomer()" [disabled]="customerForm.invalid"></button> 
+      </div>
     </ng-template>
   </p-dialog>
 </div>

@@ -69,7 +69,7 @@ export class CartService {
         });
     }
 
-    private fetchCartFromBackend() {
+    public fetchCartFromBackend() {
         this.http.get<any>(`${environment.apiUrl}/cart`).subscribe({
             next: (res) => {
                 const items = Array.isArray(res) ? res : (res.data || []);

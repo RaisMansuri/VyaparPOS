@@ -69,11 +69,58 @@
 .text-right { text-align: right; }
 .font-bold { font-weight: 700; }
 
-:host ::ng-deep .modern-table .p-datatable-thead > tr > th {
-  background: transparent;
-  border-bottom: 1px solid var(--surface-border);
+@media screen and (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .header .p-button {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .card-modern {
+    padding: 0.5rem;
+  }
 }
 
-:host ::ng-deep .p-dialog .field {
-  margin-bottom: 1.5rem;
+.card-modern {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
+
+.search-action-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+@media screen and (max-width: 576px) {
+    .search-action-group {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .customers-page {
+        padding: 0.75rem;
+    }
+}
+
+.btn-action-edit {
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+    border: none !important;
+}
+
+.btn-action-delete {
+    background: #fef2f2 !important;
+    color: #ef4444 !important;
+    border: none !important;
+}
+
+.btn-action-edit:hover { background: #e0e7ff !important; }
+.btn-action-delete:hover { background: #fee2e2 !important; }

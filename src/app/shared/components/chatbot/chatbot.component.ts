@@ -39,15 +39,34 @@ export class ChatbotComponent {
   ]);
   isTyping = signal(false);
   
-  // Get cart data for context
+  // Get cart data and system info for context
   private getLiveContext() {
+    const products = this.productService.getProductsSnapshot();
+    const availableProducts = products.map(p => ({
+      name: p.name,
+      price: p.price,
+      stock: p.stock,
+      category: p.category
+    }));
+
     return {
       cart: {
         items: this.cartService.items(),
         total: this.cartService.cartTotal(),
         count: this.cartService.cartCount()
       },
-      user: this.authService.getCurrentUser()
+      availableProducts: availableProducts,
+      user: this.authService.getCurrentUser(),
+      systemInstructions: `
+        You are the Vyapar AI Assistant for a POS system.
+        RULES:
+        1. ONLY answer questions related to this business system (Sales, Products, Inventory, Orders, Support).
+        2. Use the 'availableProducts' list provided in the context for accurate pricing and stock info.
+        3. If a user asks to buy or add something, use the ADD_TO_CART action with the correct product names from 'availableProducts'.
+        4. When reporting totals, ensure they match the 'price * quantity' of the products added.
+        5. If the user message is personal or irrelevant to the POS system, politely say you can only help with business-related tasks.
+        6. Be professional, concise, and 'proper' in your responses.
+      `
     };
   }
 

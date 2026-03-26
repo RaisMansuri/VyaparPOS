@@ -14,6 +14,13 @@ export class ProductService {
 
   private productsSubject = new BehaviorSubject<Product[]>([]);
   public products$ = this.productsSubject.asObservable();
+  
+  /**
+   * Returns a snapshot of the current products in the subject.
+   */
+  getProductsSnapshot(): Product[] {
+    return this.productsSubject.value;
+  }
 
   private categoriesSubject = new BehaviorSubject<string[]>([]);
   public categories$ = this.categoriesSubject.asObservable();
@@ -21,9 +28,7 @@ export class ProductService {
   private lowStockSubject = new BehaviorSubject<Product[]>([]);
   public lowStockProducts$ = this.lowStockSubject.asObservable();
 
-  constructor() {
-    this.refreshAll();
-  }
+  constructor() {}
 
   refreshAll(): void {
     this.getProducts().subscribe();

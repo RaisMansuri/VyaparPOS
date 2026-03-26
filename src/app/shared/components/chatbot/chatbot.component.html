@@ -199,9 +199,9 @@
 
         <div class="chat-footer">
             <div class="quick-actions mb-2" *ngIf="messages().length < 4 && !isConsumer()">
-                <button (click)="quickAction('Show today\'s sales')" class="quick-btn">🔥 Revenue</button>
-                <button (click)="quickAction('Go to reports')" class="quick-btn">📊 Reports</button>
-                <button (click)="quickAction('Low stock?')" class="quick-btn">📦 Stock</button>
+                <button (click)="quickAction('Show today\'s sales')" class="quick-btn mobile-hide">🔥 Revenue</button>
+                <button (click)="quickAction('Go to reports')" class="quick-btn mobile-hide">📊 Reports</button>
+                <button (click)="quickAction('Low stock?')" class="quick-btn mobile-hide">📦 Stock</button>
             </div>
 
             <div class="quick-actions mb-2" *ngIf="messages().length < 4 && isConsumer()">

@@ -82,7 +82,8 @@ export class DashboardComponent implements OnInit {
 
     this.initChartOptions();
 
-    this.productService.getProductsByCategory('all').subscribe((products) => {
+    // Re-enable page-wise fetching
+    this.productService.getProducts().subscribe((products) => {
       this.allProducts = products;
       this.setupProductFilters();
       this.applyFilters();

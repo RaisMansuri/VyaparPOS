@@ -7,6 +7,14 @@ import { AuthService } from '../../auth/auth.service';
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+
+  // Check for session timeout
+  if (authService.isAuthenticated() && authService.isSessionExpired()) {
+    authService.logout();
+    // Pass original request as logout will trigger navigation anyway
+    return next(req);
+  }
+
   const user = authService.getCurrentUser();
   const token = user?.token;
 

@@ -14,9 +14,7 @@ export class CategoryService {
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
   public categories$ = this.categoriesSubject.asObservable();
 
-  constructor() {
-    this.loadCategories();
-  }
+  constructor() {}
 
   loadCategories(): void {
     this.http.get<any>(this.apiUrl).subscribe(res => {
