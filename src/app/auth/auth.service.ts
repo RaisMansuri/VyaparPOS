@@ -105,7 +105,23 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.hasRole('admin');
+    return this.hasRole('admin') || this.hasRole('superadmin') || this.hasRole('owner');
+  }
+
+  isSuperAdmin(): boolean {
+    return this.hasRole('superadmin') || this.hasRole('owner');
+  }
+
+  isInventoryManager(): boolean {
+    return this.hasRole('inventory_manager');
+  }
+
+  isAccountant(): boolean {
+    return this.hasRole('accountant');
+  }
+
+  isDeliveryStaff(): boolean {
+    return this.hasRole('delivery_staff');
   }
 
   isManager(): boolean {
@@ -117,7 +133,7 @@ export class AuthService {
   }
   
   isConsumer(): boolean {
-    return this.hasRole('consumer');
+    return this.hasRole('consumer') || this.hasRole('customer');
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {

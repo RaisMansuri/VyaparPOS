@@ -19,53 +19,87 @@ import { TranslationService } from '../../../core/services/translation.service';
   template: `
     <div class="permission-container p-4">
       <p-toast></p-toast>
-      <p-card header="Role-wise Page Permissions" subheader="Configure which roles can access specific sidebar menus.">
-        <p-table [value]="localPermissions" responsiveLayout="scroll" styleClass="p-datatable-striped">
+      <div class="header mb-4">
+        <h1 class="text-2xl font-bold mb-2">Role Permissions</h1>
+        <p class="text-muted">Configure access controls for each role in your POS system.</p>
+      </div>
+
+      <p-card styleClass="shadow-2 border-round-xl overflow-hidden">
+        <p-table [value]="localPermissions" responsiveLayout="scroll" styleClass="p-datatable-striped modern-permissions-table">
           <ng-template pTemplate="header">
             <tr>
-              <th>Page / Route</th>
-              <th class="text-center">Owner</th>
-              <th class="text-center">Manager</th>
-              <th class="text-center">Cashier</th>
+              <th style="min-width: 250px">Resource / Page</th>
+              <th class="text-center">Admin / Super</th>
+              @for (role of configurableRoles; track role.name) {
+                <th class="text-center">{{ role.label }}</th>
+              }
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-perm>
             <tr>
               <td>
-                <div class="flex align-items-center gap-2">
-                  <i [class]="perm.icon"></i>
-                  <span>{{ perm.label.startsWith('DASHBOARD') || perm.label.startsWith('REPORTS') || perm.label.startsWith('CUSTOMERS') ? translationService.translate(perm.label) : perm.label }}</span>
+                <div class="flex align-items-center gap-3">
+                  <div class="icon-circle shadow-1" [class]="perm.section">
+                    <i [class]="perm.icon"></i>
+                  </div>
+                  <div class="flex flex-column">
+                    <span class="font-bold text-900">{{ translationService.translate(perm.label) || perm.label }}</span>
+                    <small class="text-500 font-mono">{{ perm.path }}</small>
+                  </div>
                 </div>
-                <small class="text-muted">{{ perm.path }}</small>
               </td>
               <td class="text-center">
                 <p-checkbox [binary]="true" [ngModel]="true" [disabled]="true"></p-checkbox>
-                <small class="block text-xs mt-1">(Always Allowed)</small>
+                <div class="text-xs text-primary font-medium mt-1">Full Access</div>
               </td>
-              <td class="text-center">
-                <p-checkbox [binary]="true" [(ngModel)]="perm.isManager" (onChange)="onToggle(perm, 'manager')"></p-checkbox>
-              </td>
-              <td class="text-center">
-                <p-checkbox [binary]="true" [(ngModel)]="perm.isCashier" (onChange)="onToggle(perm, 'cashier')"></p-checkbox>
-              </td>
+              @for (role of configurableRoles; track role.name) {
+                <td class="text-center">
+                  <p-checkbox [binary]="true" [(ngModel)]="perm.roles[role.name]" (onChange)="onToggle(perm, role.name)"></p-checkbox>
+                </td>
+              }
             </tr>
           </ng-template>
         </p-table>
 
-        <div class="flex justify-content-end mt-5 gap-3" style="display: flex; justify-content: flex-end; margin-top: 2rem; gap: 1rem;">
-          <button pButton label="Reset Defaults" icon="pi pi-refresh" class="p-button-outlined p-button-secondary" (click)="resetDefaults()"></button>
-          <button pButton label="Save Changes" icon="pi pi-check" (click)="saveChanges()" class="p-button-success"></button>
+        <div class="flex btn-group p-4 mt-2 border-top-1 border-gray-100 gap-4 bg-gray-50">
+          <button pButton label="Save All Changes" icon="pi pi-check" (click)="saveChanges()" class="p-button-success p-button-rounded shadow-2 px-4"></button>
+          <button pButton label="Reset to Defaults" icon="pi pi-refresh" class="p-button-outlined p-button-secondary p-button-rounded px-4" (click)="resetDefaults()"></button>
+          <button pButton label="Clear All Permissions" icon="pi pi-trash" class="p-button-outlined p-button-danger p-button-rounded px-4" (click)="clearAllPermissions()"></button>
         </div>
       </p-card>
     </div>
   `,
   styles: [`
-    .permission-container {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+    .permission-container { max-width: 1400px; margin: 0 auto; }
     .text-center { text-align: center; }
-    .text-muted { color: #6c757d; font-size: 0.8rem; }
+    .icon-circle { 
+        width: 32px; height: 32px; border-radius: 8px; 
+        display: flex; align-items: center; justify-content: center;
+        background: #f8fafc; color: #475569;
+    }
+    .icon-circle.management { background: #eef2ff; color: #4f46e5; }
+    .icon-circle.inventory { background: #ecfdf5; color: #10b981; }
+    .icon-circle.shopping { background: #fff7ed; color: #f97316; }
+    .icon-circle.settings { background: #fef2f2; color: #ef4444; }
+    .icon-circle.overview { background: #faf5ff; color: #a855f7; }
+    
+    :host ::ng-deep .modern-permissions-table .p-datatable-thead > tr > th {
+        background: #ffffff;
+        padding: 1.5rem 1rem;
+        border-bottom: 2px solid #f1f5f9;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+    :host ::ng-deep .modern-permissions-table .p-datatable-tbody > tr > td {
+        padding: 1.25rem 1rem;
+    }
+        .btn-group{
+          display: flex;
+          justify-content: end;
+          gap: 10px;
+          margin-top: 20px;
+        }
   `]
 })
 export class PermissionsComponent implements OnInit {
@@ -75,18 +109,45 @@ export class PermissionsComponent implements OnInit {
 
   localPermissions: any[] = [];
 
+  configurableRoles = [
+    { name: 'manager', label: 'Manager' },
+    { name: 'cashier', label: 'Cashier' },
+    { name: 'inventory_manager', label: 'Inventory' },
+    { name: 'accountant', label: 'Accountant' },
+    { name: 'delivery_staff', label: 'Delivery' },
+    { name: 'customer', label: 'Customer' }
+  ];
+
   ngOnInit() {
     this.permissionService.permissions$.subscribe(perms => {
-      this.localPermissions = perms.map(p => ({
-        ...p,
-        isManager: p.allowedRoles.includes('manager'),
-        isCashier: p.allowedRoles.includes('cashier')
-      }));
+      this.localPermissions = perms.map(p => {
+        const roleMap: any = {};
+        this.configurableRoles.forEach(r => {
+          roleMap[r.name] = p.allowedRoles.includes(r.name as UserRole);
+        });
+        return {
+          ...p,
+          roles: roleMap
+        };
+      });
     });
   }
 
-  onToggle(perm: any, role: UserRole) {
-    // Logic is handled by ngModel, but we can add validation here if needed
+  onToggle(perm: any, role: string) {
+    // Reactive mapping logic
+  }
+
+  clearAllPermissions() {
+    this.localPermissions.forEach(p => {
+      Object.keys(p.roles).forEach(r => {
+        p.roles[r] = false;
+      });
+    });
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Permissions Cleared Locally',
+      detail: 'Click Save All Changes to persist the reset.'
+    });
   }
 
   saveChanges() {
@@ -97,6 +158,7 @@ export class PermissionsComponent implements OnInit {
       section: p.section,
       badge: p.badge,
       requiredFeature: p.requiredFeature,
+      requiredPermission: p.requiredPermission,
       allowedRoles: this.getRoles(p)
     }));
 
@@ -104,21 +166,21 @@ export class PermissionsComponent implements OnInit {
     this.messageService.add({
       severity: 'success',
       summary: 'Permissions Updated',
-      detail: 'Sidebar menu will now update based on these settings.'
+      detail: 'Sidebar access rules have been successfully applied.'
     });
   }
 
   private getRoles(p: any): UserRole[] {
-    const roles: UserRole[] = ['owner'];
-    if (p.isManager) roles.push('manager');
-    if (p.isCashier) roles.push('cashier');
+    const roles: UserRole[] = ['superadmin', 'owner', 'admin'];
+    this.configurableRoles.forEach(r => {
+      if (p.roles[r.name]) {
+        roles.push(r.name as UserRole);
+      }
+    });
     return roles;
   }
 
   resetDefaults() {
-    // Reload from default in service if we add a reset method, 
-    // for now we can just clear localStorage and reload page or call service method
-    // I'll just reload the page for simplicity or call a service reset if I had one.
     window.localStorage.removeItem('vyaparpos_route_permissions');
     window.location.reload();
   }

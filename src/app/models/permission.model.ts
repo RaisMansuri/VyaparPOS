@@ -1,4 +1,4 @@
-export type UserRole = 'owner' | 'admin' | 'manager' | 'cashier' | 'guest' | 'consumer';
+export type UserRole = 'superadmin' | 'owner' | 'admin' | 'manager' | 'cashier' | 'inventory_manager' | 'accountant' | 'customer' | 'delivery_staff' | 'guest' | 'consumer';
 
 export interface RoutePermission {
   path: string;

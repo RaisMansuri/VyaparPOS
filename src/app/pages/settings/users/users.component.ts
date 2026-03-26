@@ -59,10 +59,14 @@ export class UsersComponent implements OnInit {
 
     ngOnInit() {
         this.roles = [
-            { label: 'Admin', value: 'Admin' },
-            { label: 'Manager', value: 'Manager' },
-            { label: 'Cashier', value: 'Cashier' },
-            { label: 'Consumer', value: 'Consumer' }
+            { label: 'Super Admin', value: 'superadmin' },
+            { label: 'Admin', value: 'admin' },
+            { label: 'Manager', value: 'manager' },
+            { label: 'Cashier', value: 'cashier' },
+            { label: 'Inventory Manager', value: 'inventory_manager' },
+            { label: 'Accountant', value: 'accountant' },
+            { label: 'Delivery Staff', value: 'delivery_staff' },
+            { label: 'Customer', value: 'customer' }
         ];
 
         this.statuses = [
@@ -76,7 +80,9 @@ export class UsersComponent implements OnInit {
             { label: 'Manage Products', value: 'Manage Products' },
             { label: 'Process Sales', value: 'Process Sales' },
             { label: 'View Reports', value: 'View Reports' },
-            { label: 'Manage Settings', value: 'Manage Settings' }
+            { label: 'Manage Settings', value: 'Manage Settings' },
+            { label: 'Manage Expenses', value: 'Manage Expenses' },
+            { label: 'Manage Inventory', value: 'Manage Inventory' }
         ];
 
         this.loadUsers();
@@ -113,14 +119,25 @@ export class UsersComponent implements OnInit {
     }
 
     getRoleSeverity(role: string) {
-        switch (role) {
-            case 'Admin':
+        const r = role.toLowerCase();
+        switch (r) {
+            case 'superadmin':
+            case 'owner':
+                return 'danger';
+            case 'admin':
                 return 'warn';
-            case 'Manager':
+            case 'manager':
                 return 'info';
-            case 'Cashier':
+            case 'cashier':
                 return 'secondary';
-            case 'Consumer':
+            case 'inventory_manager':
+                return 'success';
+            case 'accountant':
+                return 'contrast';
+            case 'delivery_staff':
+                return 'info';
+            case 'customer':
+            case 'consumer':
                 return 'info';
             default:
                 return 'info';
@@ -198,7 +215,15 @@ export class UsersComponent implements OnInit {
     }
 
     onStatusChange(user: User) {
-        this.toastService.info('Status Updated', `${user.name} is now ${user.status}`);
+        this.userService.updateUser(user).subscribe({
+            next: () => {
+                this.toastService.info('Status Updated', `${user.name} is now ${user.status}`);
+            },
+            error: () => {
+                this.toastService.error('Error', 'Failed to update user status');
+                // Revert UI state if needed, but for simplicity we'll just show error
+            }
+        });
     }
 
     findIndexById(id: string): number {
