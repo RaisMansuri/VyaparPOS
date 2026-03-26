@@ -32,8 +32,17 @@ export class OrderDetailComponent implements OnInit {
             const id = params.get('id');
             if (id) {
                 this.order = this.orderService.getOrderById(id);
-            }
-            if (!this.order) {
+                
+                // If not found locally, fetch all orders to populate the signal
+                if (!this.order) {
+                    this.orderService.fetchOrders().subscribe(orders => {
+                        this.order = this.orderService.getOrderById(id);
+                        if (!this.order) {
+                            this.router.navigate(['/orders']);
+                        }
+                    });
+                }
+            } else {
                 this.router.navigate(['/orders']);
             }
         });

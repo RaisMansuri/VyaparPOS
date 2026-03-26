@@ -18,7 +18,10 @@ export class CustomerService {
   public customers$: Observable<Customer[]> = this.refreshSubject.pipe(
     switchMap(() => this.http.get<any>(this.apiUrl).pipe(
       map(res => this.normalizeCustomers(res)),
-      catchError(() => of(this.mockCustomersSubject.value))
+      catchError(err => {
+        console.error('Customer fetch error:', err);
+        return of(this.mockCustomersSubject.value);
+      })
     )),
     shareReplay(1)
   );
@@ -33,11 +36,9 @@ export class CustomerService {
 
   addCustomer(customer: Partial<Customer>): Observable<Customer> {
     return this.http.post<Customer>(this.apiUrl, customer).pipe(
-      tap(saved => {
-        this.mockCustomersSubject.next([saved, ...this.mockCustomersSubject.value]);
-        this.refreshCustomers();
-      }),
-      catchError(() => {
+      tap(() => this.refreshCustomers()),
+      catchError(err => {
+        console.warn('Customer add failed, using mock fallback', err);
         const mockCustomer: Customer = {
           id: `CUS-${Date.now()}`,
           name: customer.name || 'Walk-in Customer',
@@ -59,13 +60,9 @@ export class CustomerService {
 
   updateCustomer(id: string, updates: Partial<Customer>): Observable<Customer> {
     return this.http.put<Customer>(`${this.apiUrl}/${id}`, updates).pipe(
-      tap(updated => {
-        this.mockCustomersSubject.next(
-          this.mockCustomersSubject.value.map(customer => customer.id === id ? { ...customer, ...updated } : customer)
-        );
-        this.refreshCustomers();
-      }),
-      catchError(() => {
+      tap(() => this.refreshCustomers()),
+      catchError(err => {
+        console.warn('Customer update failed, using mock fallback', err);
         const fallback = this.mockCustomersSubject.value.find(customer => customer.id === id);
         const updated = { ...fallback, ...updates } as Customer;
         this.mockCustomersSubject.next(
@@ -79,11 +76,9 @@ export class CustomerService {
 
   deleteCustomer(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      tap(() => {
-        this.mockCustomersSubject.next(this.mockCustomersSubject.value.filter(customer => customer.id !== id));
-        this.refreshCustomers();
-      }),
-      catchError(() => {
+      tap(() => this.refreshCustomers()),
+      catchError(err => {
+        console.warn('Customer delete failed, using mock fallback', err);
         this.mockCustomersSubject.next(this.mockCustomersSubject.value.filter(customer => customer.id !== id));
         this.refreshCustomers();
         return of(true);
@@ -92,12 +87,20 @@ export class CustomerService {
   }
 
   private normalizeCustomers(res: any): Customer[] {
-    const customers = Array.isArray(res) ? res : (res?.data || res?.customers || []);
-    if (!Array.isArray(customers) || customers.length === 0) {
+    // If backend explicitly returns an empty array, believe it.
+    // If it's undefined or null, it's an error/loading state where we might use mocks.
+    const customers = Array.isArray(res) ? res : (res?.data || res?.customers);
+    
+    if (customers === undefined || customers === null) {
       return this.mockCustomersSubject.value;
     }
 
-    this.mockCustomersSubject.next(customers);
-    return customers;
+    if (Array.isArray(customers)) {
+       // Update mocks local storage to stay in sync if needed
+       this.mockCustomersSubject.next(customers);
+       return customers;
+    }
+
+    return this.mockCustomersSubject.value;
   }
 }

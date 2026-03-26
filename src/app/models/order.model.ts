@@ -5,8 +5,8 @@ export type PaymentMethod = 'credit_card' | 'debit_card' | 'upi' | 'cash' | 'wal
 
 export interface Order {
     id: string;
-    items: CartItem[];
-    address: Address;
+    items?: CartItem[];
+    address?: Address;
     paymentMethod: PaymentMethod;
     totalAmount: number;
     subTotal: number;

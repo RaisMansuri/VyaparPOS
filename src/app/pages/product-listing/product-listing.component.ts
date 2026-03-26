@@ -136,6 +136,9 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   private loadProducts(): void {
+    // Explicitly trigger a refresh from the service for page-wise loading
+    this.productService.getProducts().subscribe();
+
     this.productService.products$.subscribe(products => {
       this.allProducts = products;
       this.categories = [...new Set(products.map(p => p.category))];

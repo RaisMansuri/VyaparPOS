@@ -9,11 +9,13 @@ import { Order } from '../../../models/order.model';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-my-orders',
     standalone: true,
-    imports: [CommonModule, CurrencyPipe, DatePipe, ButtonModule, TagModule, IconFieldModule, InputIconModule, InputTextModule],
+    imports: [CommonModule, CurrencyPipe, DatePipe, ButtonModule, TagModule, IconFieldModule, InputIconModule, InputTextModule, TableModule, TooltipModule],
     templateUrl: './my-orders.component.html',
     styleUrl: './my-orders.component.css'
 })
@@ -55,8 +57,23 @@ export class MyOrdersComponent implements OnInit {
             case 'credit_card': return 'Credit Card';
             case 'debit_card': return 'Debit Card';
             case 'upi': return 'UPI';
+            case 'cash': return 'Cash';
             default: return method;
         }
+    }
+
+    getPaymentIcon(method: string): string {
+        switch (method) {
+            case 'credit_card':
+            case 'debit_card': return 'pi-credit-card';
+            case 'upi': return 'pi-mobile';
+            case 'cash': return 'pi-money-bill';
+            default: return 'pi-wallet';
+        }
+    }
+
+    getItemsTooltip(order: Order): string {
+        return (order.items || []).map(i => `${i.product.name} (x${i.quantity})`).join('\n');
     }
 
     handleImageError(event: any): void {

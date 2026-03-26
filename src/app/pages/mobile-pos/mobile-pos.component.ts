@@ -40,13 +40,8 @@ export class MobilePosComponent implements OnInit {
   private productService = inject(ProductService);
   public cartService = inject(CartService);
   private messageService = inject(MessageService);
-  private customerService = inject(CustomerService);
   private router = inject(Router);
 
-  // CRM state
-  customers: Customer[] = [];
-  filteredCustomers: Customer[] = [];
-  customerSearchQuery = '';
 
   // Scanner state
   allowedFormats = [
@@ -69,33 +64,17 @@ export class MobilePosComponent implements OnInit {
   selectedCategory = 'All';
 
   ngOnInit(): void {
+    // Explicitly trigger a refresh from the service for page-wise loading
+    this.productService.getProducts().subscribe();
+
     this.productService.getProductsByCategory('all').subscribe(products => {
       this.allProducts = products;
-      // Show top 6 items as "Quick Add" (could be logic-based later)
-      this.quickAddProducts = products.slice(0, 6);
+      // Show all items initially (removed 6 item limit)
+      this.quickAddProducts = products;
     });
 
-    this.customerService.customers$.subscribe(customers => {
-      this.customers = customers;
-    });
   }
 
-  filterCustomers(event: any): void {
-    const query = event.query.toLowerCase();
-    this.filteredCustomers = this.customers.filter(c => 
-      c.name.toLowerCase().includes(query) || 
-      c.phone.includes(query)
-    );
-  }
-
-  onCustomerSelect(customer: any): void {
-    this.cartService.setCustomer(customer);
-  }
-
-  clearCustomer(): void {
-    this.cartService.clearCustomer();
-    this.customerSearchQuery = '';
-  }
 
   onCodeResult(resultString: string): void {
     const product = this.allProducts.find(p => p.barcode === resultString || p.id.toString() === resultString);
@@ -172,7 +151,7 @@ export class MobilePosComponent implements OnInit {
       return filtered.filter(p => 
         p.name.toLowerCase().includes(query) || 
         p.category.toLowerCase().includes(query)
-      ).slice(0, 5);
+      ); // Removed .slice(0, 5) to show all search matches
     }
     
     return [];
@@ -181,9 +160,9 @@ export class MobilePosComponent implements OnInit {
   selectCategory(category: string): void {
       this.selectedCategory = category;
       if(category === 'All') {
-          this.quickAddProducts = this.allProducts.slice(0, 6);
+          this.quickAddProducts = this.allProducts; // Removed .slice(0, 6)
       } else {
-          this.quickAddProducts = this.allProducts.filter(p => p.category.toLowerCase().includes(category.toLowerCase())).slice(0,6);
+          this.quickAddProducts = this.allProducts.filter(p => p.category.toLowerCase().includes(category.toLowerCase())); // Removed .slice(0, 6)
       }
   }
 

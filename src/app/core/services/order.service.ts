@@ -53,15 +53,22 @@ export class OrderService {
                 total: i.subtotal,
                 category: i.product.category
             })),
+            address,
             totalAmount,
+            subTotal, // Now explicitly sending subTotal
+            deliveryFee, // Now explicitly sending deliveryFee
             tax: totalGST,
             paymentMethod,
-            processedBy: 'Current User', // Placeholder
+            processedBy: 'Current User', 
             paymentStatus: 'Paid',
             amountPaid: totalAmount
         };
 
         return this.http.post<Order>(this.apiUrl, orderData).pipe(
+            map(savedOrder => {
+                // Return normalized order
+                return this.mapToOrder(savedOrder, { items, address, subTotal, deliveryFee, taxableAmount, totalGST });
+            }),
             tap(savedOrder => {
                 this.orders.set([savedOrder, ...this.orders()]);
             }),
@@ -91,12 +98,37 @@ export class OrderService {
     fetchOrders(): Observable<Order[]> {
         return this.http.get<any>(this.apiUrl).pipe(
             map(res => {
-                const orders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
-                return Array.isArray(orders) ? orders : [];
+                const rawOrders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
+                return rawOrders.map((o: any) => this.mapToOrder(o));
             }),
             tap(orders => this.orders.set(orders)),
             catchError(() => of([]))
         );
+    }
+
+    private mapToOrder(o: any, fallbacks?: any): Order {
+        return {
+            ...o,
+            id: o.id || o._id || (fallbacks ? fallbacks.id : `ORD-${Date.now()}`),
+            totalAmount: o.totalAmount || o.amount || (fallbacks ? fallbacks.totalAmount : 0),
+            deliveryFee: o.deliveryFee !== undefined ? o.deliveryFee : (fallbacks ? fallbacks.deliveryFee : 0),
+            subTotal: o.subTotal || o.subtotal || (fallbacks ? fallbacks.subTotal : (o.totalAmount || 0)),
+            // Reconstruct items if they are partial
+            items: (o.items || (fallbacks ? fallbacks.items : [])).map((i: any) => ({
+                product: i.product || {
+                    id: i.productId,
+                    name: i.name || 'Unknown Product',
+                    price: i.price || 0,
+                    category: i.category || 'General',
+                    imageUrl: i.imageUrl || ''
+                },
+                quantity: i.quantity || 0,
+                subtotal: i.total || i.subtotal || ((i.price || 0) * (i.quantity || 0))
+            } as CartItem)),
+            address: o.address || (fallbacks ? fallbacks.address : undefined),
+            orderDate: new Date(o.orderDate || o.createdAt || o.date || (fallbacks ? fallbacks.orderDate : Date.now())),
+            status: (o.status || o.paymentStatus || (fallbacks ? fallbacks.status : 'confirmed')).toLowerCase()
+        } as Order;
     }
 
     getLastOrder(): Order | null {

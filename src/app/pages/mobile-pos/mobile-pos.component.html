@@ -82,7 +82,6 @@
         <span class="lightning-icon">⚡</span>
         <span>Quick Add Items</span>
       </div>
-      <a class="see-all-link">See all</a>
     </div>
 
     <div class="quick-add-grid">
@@ -150,46 +149,6 @@
        <span class="items-count-badge">{{ cartService.cartCount() }} items</span>
     </div>
 
-    <!-- Customer Selection (CRM+) -->
-    <div class="customer-selection-pos p-2 border-bottom-1 border-gray-200 bg-gray-50">
-       @if (!cartService.selectedCustomer()) {
-           <div class="customer-search-box">
-               <p-autoComplete 
-                   [(ngModel)]="customerSearchQuery" 
-                   [suggestions]="filteredCustomers" 
-                   (completeMethod)="filterCustomers($event)" 
-                   field="name" 
-                   [forceSelection]="true"
-                   (onSelect)="onCustomerSelect($event.value)"
-                   placeholder="Search Customer..."
-                   [style]="{'width':'100%'}"
-                   [inputStyle]="{'width':'100%', 'padding':'0.5rem', 'border-radius':'8px'}">
-                   <ng-template let-customer pTemplate="item">
-                       <div class="flex flex-column">
-                           <span class="font-bold text-sm">{{ customer.name }}</span>
-                           <small class="text-gray-500">{{ customer.phone }}</small>
-                       </div>
-                   </ng-template>
-               </p-autoComplete>
-           </div>
-       } @else {
-           <div class="selected-customer-card flex align-items-center justify-content-between p-2">
-               <div class="flex align-items-center gap-2">
-                   <div class="customer-avatar bg-primary-100 text-primary border-circle flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                       <i class="pi pi-user"></i>
-                   </div>
-                   <div class="flex flex-column">
-                       <span class="font-bold text-sm">{{ cartService.selectedCustomer().name }}</span>
-                       <div class="flex gap-2 text-xs">
-                           <span class="text-green-600 font-semibold">{{ cartService.selectedCustomer().loyaltyPoints || 0 }} pts</span>
-                           <span class="text-blue-600 font-semibold">| {{ cartService.selectedCustomer().walletBalance | currency:'INR' }}</span>
-                       </div>
-                   </div>
-               </div>
-               <button pButton icon="pi pi-times" class="p-button-text p-button-rounded p-button-sm p-button-danger" (click)="clearCustomer()"></button>
-           </div>
-       }
-    </div>
 
     <div class="order-items-list">
        @if (cartService.cartCount() === 0) {

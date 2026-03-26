@@ -40,6 +40,7 @@ export class CustomersComponent implements OnInit {
   customers: Customer[] = [];
   customerForm: FormGroup;
   showDialog = false;
+  isViewOnly = false;
   editingCustomerId: string | null = null;
 
   constructor() {
@@ -61,12 +62,16 @@ export class CustomersComponent implements OnInit {
   openNew(): void {
     this.editingCustomerId = null;
     this.customerForm.reset();
+    this.isViewOnly = false;
+    this.customerForm.enable(); // Ensure form is enabled for new entry
     this.showDialog = true;
   }
 
   editCustomer(customer: Customer): void {
+    this.isViewOnly = true;
     this.editingCustomerId = customer.id;
     this.customerForm.patchValue(customer);
+    this.customerForm.disable(); // Disable all fields for view mode
     this.showDialog = true;
   }
 

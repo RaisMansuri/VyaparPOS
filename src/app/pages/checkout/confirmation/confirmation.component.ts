@@ -30,7 +30,7 @@ export class ConfirmationComponent implements OnInit {
     }
 
     viewOrder(): void {
-        if (this.order) {
+        if (this.order?.id) {
             this.router.navigate(['/orders', this.order.id]);
         }
     }
@@ -40,7 +40,7 @@ export class ConfirmationComponent implements OnInit {
     }
 
     viewInvoice(): void {
-        if (this.order) {
+        if (this.order?.id) {
             this.router.navigate(['/orders', this.order.id, 'invoice']);
         }
     }

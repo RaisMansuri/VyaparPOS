@@ -64,19 +64,19 @@
         <div class="price-breakdown">
             <div class="price-row">
                 <span>Subtotal</span>
-                <span>{{ order.totalAmount - order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+                <span>{{ (order.subTotal || (order.totalAmount - (order.deliveryFee || 0))) | currency:'INR':'symbol':'1.0-0' }}</span>
             </div>
             <div class="price-row">
                 <span>Delivery Fee</span>
-                @if (order.deliveryFee === 0) {
+                @if ((order.deliveryFee || 0) === 0) {
                 <span class="free">FREE</span>
                 } @else {
-                <span>{{ order.deliveryFee | currency:'INR':'symbol':'1.0-0' }}</span>
+                <span>{{ (order.deliveryFee || 0) | currency:'INR':'symbol':'1.0-0' }}</span>
                 }
             </div>
             <div class="price-row total">
                 <span>Total Amount</span>
-                <span>{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+                <span>{{ (order.totalAmount || 0) | currency:'INR':'symbol':'1.0-0' }}</span>
             </div>
         </div>
     </div>

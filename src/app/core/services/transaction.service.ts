@@ -18,13 +18,18 @@ export class TransactionService {
     return this.http.get<any>(this.apiUrl, { params: filters }).pipe(      
       map(res => {
         const data = Array.isArray(res) ? res : (res?.data || res?.transactions || []);
-        
-        return data.map((t: any) => ({
-          ...t,
-          date: new Date(t.date || t.timestamp || t.createdAt)
-        }));
+        return data.map((t: any) => this.mapToTransaction(t));
       }),
-      catchError(() => of([]))
+      catchError(() => {
+        // Fallback: Fetch from /sales and map orders to transactions
+        return this.http.get<any>(`${environment.apiUrl}/sales`).pipe(
+          map(res => {
+            const orders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
+            return orders.map((o: any) => this.mapOrderToTransaction(o));
+          }),
+          catchError(() => of([]))
+        );
+      })
     );
   }
 
@@ -33,70 +38,83 @@ export class TransactionService {
    */
   getTransactionStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`).pipe(
-      map(res => res.data || {
-        totalVolume: 0,
-        upiVolume: 0,
-        cashVolume: 0,
-        cardVolume: 0,
-        refundVolume: 0,
-        settledRate: 0
-      }),
-      catchError(() => of({
-        totalVolume: 0,
-        upiVolume: 0,
-        cashVolume: 0,
-        cardVolume: 0,
-        refundVolume: 0,
-        settledRate: 0
-      }))
+      map(res => res.data || res),
+      catchError(() => {
+        // Fallback: Aggregate from /sales
+        return this.http.get<any>(`${environment.apiUrl}/sales`).pipe(
+          map(res => {
+            const orders = Array.isArray(res) ? res : (res?.data || res?.orders || []);
+            const stats = {
+              totalVolume: 0,
+              upiVolume: 0,
+              cashVolume: 0,
+              cardVolume: 0,
+              refundVolume: 0,
+              settledRate: 100
+            };
+
+            orders.forEach((o: any) => {
+              const amount = o.totalAmount || 0;
+              stats.totalVolume += amount;
+              const method = (o.paymentMethod || '').toLowerCase();
+              if (method.includes('upi')) stats.upiVolume += amount;
+              else if (method.includes('cash')) stats.cashVolume += amount;
+              else if (method.includes('card')) stats.cardVolume += amount;
+            });
+
+            return stats;
+          }),
+          catchError(() => of({
+            totalVolume: 0,
+            upiVolume: 0,
+            cashVolume: 0,
+            cardVolume: 0,
+            refundVolume: 0,
+            settledRate: 0
+          }))
+        );
+      })
     );
   }
 
-  private getMockTransactions(): Transaction[] {
-    const now = new Date();
-    return [
-      {
-        id: 'TXN-1001',
-        type: 'Sale',
-        amount: 1250,
-        method: 'UPI',
-        upiId: 'pay@axl',
-        status: 'Completed',
-        date: new Date(now.getTime() - 1000 * 60 * 60 * 2), // 2 hours ago
-        referenceId: 'REF-882190',
-        customerName: 'Rahul Sharma'
-      },
-      {
-        id: 'TXN-1002',
-        type: 'Expense',
-        amount: 500,
-        method: 'Cash',
-        status: 'Completed',
-        date: new Date(now.getTime() - 1000 * 60 * 60 * 24), // 1 day ago
-        referenceId: 'VCHR-001',
-        description: 'Office Supplies'
-      },
-      {
-        id: 'TXN-1003',
-        type: 'Sale',
-        amount: 2100,
-        method: 'UPI',
-        upiId: '9876543210@ybl',
-        status: 'Completed',
-        date: new Date(now.getTime() - 1000 * 60 * 60 * 25),
-        referenceId: 'REF-882201',
-        customerName: 'Priya Singh'
-      },
-      {
-        id: 'TXN-1004',
-        type: 'Refund',
-        amount: 150,
-        method: 'Card',
-        status: 'Completed',
-        date: new Date(now.getTime() - 1000 * 60 * 60 * 48),
-        referenceId: 'REF-882150',
-        customerName: 'Amit Patel'
-      }
-    ];
+  private mapOrderToTransaction(o: any): Transaction {
+    return {
+      id: o.id || `TXN-${Date.now()}`,
+      type: 'Sale',
+      amount: o.totalAmount || 0,
+      method: this.normalizePaymentMethod(o.paymentMethod),
+      status: this.normalizeStatus(o.status || o.paymentStatus),
+      date: new Date(o.orderDate || o.createdAt || o.date || Date.now()),
+      referenceId: o.id?.split('-').pop() || 'REF-000',
+      customerName: o.address?.fullName || 'Walk-in Customer',
+      description: `Order with ${o.items?.length || 0} items`
+    };
+  }
+
+  private mapToTransaction(t: any): Transaction {
+    return {
+      ...t,
+      date: new Date(t.date || t.timestamp || t.createdAt || Date.now()),
+      method: this.normalizePaymentMethod(t.method || t.paymentMethod),
+      status: this.normalizeStatus(t.status || t.paymentStatus)
+    };
+  }
+
+  private normalizePaymentMethod(method: string = ''): any {
+    const m = method.toLowerCase();
+    if (m.includes('upi')) return 'UPI';
+    if (m.includes('card')) return 'Card';
+    if (m.includes('cash')) return 'Cash';
+    if (m.includes('bank')) return 'Bank Transfer';
+    return 'Cash';
+  }
+
+  private normalizeStatus(status: string = ''): any {
+    const s = status.toLowerCase();
+    if (s.includes('comp') || s.includes('paid') || s.includes('conf')) return 'Completed';
+    if (s.includes('fail')) return 'Failed';
+    if (s.includes('pend')) return 'Pending';
+    if (s.includes('refu')) return 'Refunded';
+    return 'Completed';
   }
 }

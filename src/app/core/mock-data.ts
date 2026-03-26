@@ -297,11 +297,11 @@ export function cloneCustomers(): Customer[] {
 export function cloneOrders(): Order[] {
   return MOCK_ORDERS.map((order) => ({
     ...order,
-    address: { ...order.address },
-    items: order.items.map((item) => ({
+    address: order.address ? { ...order.address } : undefined,
+    items: order.items ? order.items.map((item) => ({
       ...item,
       product: { ...item.product },
-    })),
+    })) : [],
   }));
 }
 

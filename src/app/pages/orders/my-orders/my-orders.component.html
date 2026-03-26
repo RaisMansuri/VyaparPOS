@@ -1,6 +1,6 @@
 <div class="orders-page">
     <div class="orders-header flex justify-between items-center mb-4">
-        <h1 class="m-0 mr-4"><i class="pi pi-shopping-bag"></i> My Orders</h1>
+        <!-- <h1 class="m-0 mr-4"><i class="pi pi-shopping-bag"></i> My Orders</h1> -->
         <div class="search-action-group">
             <p-iconfield>
                 <p-inputicon class="pi pi-search"></p-inputicon>
@@ -18,51 +18,84 @@
             (click)="continueShopping()"></button>
     </div>
     } @else {
-    <div class="orders-list">
-        @for (order of orderService.getOrders(); track order.id) {
-        <div class="order-card" (click)="viewOrder(order)">
-            <div class="order-card-header">
-                <div class="order-id-section">
-                    <span class="order-id">{{ order.id }}</span>
-                    <span class="order-date">{{ order.orderDate | date:'dd/MM/yyyy' }}</span>
-                </div>
-                <p-tag [value]="order.status | titlecase" [severity]="getStatusSeverity(order.status)" />
-            </div>
-            <div class="order-card-body">
-                <div class="order-items-preview">
-                    @for (item of order.items; track item.product.id) {
-                    <div class="mini-item">
-                        <img [src]="item.product.imageUrl || 'https://placehold.co/150/e2e8f0/64748b?text=Product'" 
-                             (error)="handleImageError($event)"
-                             [alt]="item.product.name" class="mini-thumb" />
-                        <div class="mini-info">
-                            <span class="mini-name">{{ item.product.name }}</span>
-                            <span class="mini-qty">× {{ item.quantity }}</span>
+    <div class="card-modern">
+        <p-table #dt [value]="orderService.getOrders()" [paginator]="true" [rows]="10" responsiveLayout="stack"
+            breakpoint="960px" styleClass="p-datatable-sm modern-table"
+            [globalFilterFields]="['id', 'status', 'paymentMethod']">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id">Order ID <p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="orderDate">Date <p-sortIcon field="orderDate"></p-sortIcon></th>
+                    <th>Items</th>
+                    <th pSortableColumn="totalAmount" class="text-right">Total <p-sortIcon
+                            field="totalAmount"></p-sortIcon></th>
+                    <th pSortableColumn="paymentMethod">Payment <p-sortIcon field="paymentMethod"></p-sortIcon></th>
+                    <th pSortableColumn="status" class="text-center">Status <p-sortIcon field="status"></p-sortIcon>
+                    </th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-order>
+                <tr>
+                    <td>
+                        <span class="p-column-title font-bold">Order ID</span>
+                        <a (click)="viewOrder(order)" class="order-link">{{ order.id }}</a>
+                    </td>
+                    <td>
+                        <span class="p-column-title font-bold">Date</span>
+                        {{ order.orderDate | date:'dd/MM/yyyy' }}
+                    </td>
+                    <td>
+                        <span class="p-column-title font-bold">Items</span>
+                        <div class="items-summary" [pTooltip]="getItemsTooltip(order)">
+                            {{ order.items.length }} {{ order.items.length === 1 ? 'item' : 'items' }}
                         </div>
-                    </div>
-                    }
-                </div>
-                <div class="order-card-right">
-                    <div class="order-meta">
-                        <span class="meta-label">Payment</span>
-                        <span class="meta-value">{{ getPaymentLabel(order.paymentMethod) }}</span>
-                    </div>
-                    <div class="order-total">
-                        <span class="total-label">Total</span>
-                        <span class="total-value">{{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button *ngIf="isManager" pButton label="Cancel" icon="pi pi-times"
-                            class="p-button-outlined p-button-danger p-button-rounded p-button-sm flex-1"
-                            (click)="cancelOrder(order, $event)"></button>
-                        <button pButton label="View" icon="pi pi-arrow-right" iconPos="right"
-                            class="p-button-outlined p-button-rounded p-button-sm view-btn flex-1"
-                            (click)="viewOrder(order); $event.stopPropagation()"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        }
+                    </td>
+                    <td class="text-right font-bold">
+                        <span class="p-column-title font-bold">Total</span>
+                        {{ order.totalAmount | currency:'INR':'symbol':'1.0-0' }}
+                    </td>
+                    <td>
+                        <span class="p-column-title font-bold">Payment</span>
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi" [ngClass]="getPaymentIcon(order.paymentMethod)"></i>
+                            {{ getPaymentLabel(order.paymentMethod) }}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="p-column-title font-bold">Status</span>
+                        <p-tag [value]="order.status | titlecase" [severity]="getStatusSeverity(order.status)"
+                            class="status-tag" />
+                    </td>
+                    <td class="text-center">
+                        <span class="p-column-title font-bold">Actions</span>
+                        <div class="flex justify-content-center gap-2">
+                            <button pButton icon="pi pi-eye" class="p-button-text p-button-rounded"
+                                (click)="viewOrder(order)" pTooltip="View Details"></button>
+                            <button *ngIf="isManager && order.status === 'pending'" pButton icon="pi pi-times"
+                                class="p-button-text p-button-danger p-button-rounded"
+                                (click)="cancelOrder(order, $event)" pTooltip="Cancel Order"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center p-5">
+                        <div class="empty-state">
+                            <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
+                            <h3 class="m-0">No orders found</h3>
+                            <p class="text-gray-500 mb-4">You haven't placed any orders yet.</p>
+                            <button pButton label="Start Shopping" icon="pi pi-shopping-cart" iconPos="left"
+                                class="p-button-rounded" (click)="continueShopping()"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
     }
 </div>

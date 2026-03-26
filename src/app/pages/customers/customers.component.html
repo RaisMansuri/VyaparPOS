@@ -5,12 +5,12 @@
       <h1>Customer Database</h1>
       <p>Manage your loyal customers and their spending habits.</p>
     </div>
-    <button pButton label="Add Customer" icon="pi pi-user-plus" class="p-button-primary shadow-2" (click)="openNew()"></button>
   </div>
 
   <div class="card-modern mt-3">
-    <p-table #dt [value]="customers" [paginator]="true" [rows]="10" responsiveLayout="stack" breakpoint="960px" styleClass="p-datatable-sm modern-table"
-      [globalFilterFields]="['name', 'email', 'phone']">
+    <p-table #dt [value]="customers" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20, 50]" 
+      responsiveLayout="stack" breakpoint="960px" styleClass="p-datatable-sm modern-table"
+      [globalFilterFields]="['name', 'email', 'phone', 'id']">
       
       <ng-template #caption>
         <div class="flex justify-content-between align-items-center flex-wrap gap-3 mb-2 p-3">
@@ -30,13 +30,13 @@
           <th>Contact</th>
           <th class="text-center">Orders</th>
           <th class="text-right">Total Spent</th>
-          <th class="text-center">Actions</th>
+          <th class="text-center" style="width: 80px">Action</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-customer let-columns="columns">
         <tr>
           <td>
-            <span class="p-column-title font-bold">Customer</span>
+            <span class="p-column-title">Customer</span>
             <div class="customer-cell">
               <div class="avatar">{{ customer.name.charAt(0) }}</div>
               <div class="info">
@@ -46,25 +46,29 @@
             </div>
           </td>
           <td>
-            <span class="p-column-title font-bold">Contact</span>
+            <span class="p-column-title">Contact</span>
             <div class="contact-cell">
               <span><i class="pi pi-envelope mr-1"></i>{{ customer.email }}</span>
               <span><i class="pi pi-phone mr-1"></i>{{ customer.phone }}</span>
             </div>
           </td>
           <td class="text-center">
-            <span class="p-column-title font-bold">Orders</span>
+            <span class="p-column-title">Orders</span>
             <p-tag [value]="customer.totalOrders" severity="info"></p-tag>
           </td>
           <td class="text-right font-bold">
-            <span class="p-column-title font-bold">Total Spent</span>
+            <span class="p-column-title">Total Spent</span>
             {{ customer.totalSpent | currency:'INR' }}
           </td>
           <td class="text-center">
-            <span class="p-column-title font-bold">Actions</span>
+            <span class="p-column-title">Action</span>
             <div class="flex justify-content-center gap-2">
-              <button pButton icon="pi pi-pencil" class="btn-action-edit" (click)="editCustomer(customer)"></button>
-              <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteCustomer(customer)"></button>
+              <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-primary" 
+                      pTooltip="View Details" tooltipPosition="left"
+                      (click)="editCustomer(customer)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" 
+                      pTooltip="Delete Customer" tooltipPosition="left"
+                      (click)="deleteCustomer(customer)"></button>
             </div>
           </td>
         </tr>
@@ -116,10 +120,14 @@
     </ng-template>
     <ng-template pTemplate="footer">
       <div class="flex justify-content-end gap-2 p-3">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-outlined p-button-secondary premium-footer-btn" 
+        <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text p-button-secondary p-button-rounded" 
           (click)="showDialog = false"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="premium-footer-btn-save" 
+        @if (!isViewOnly) {
+        <button pButton pRipple [label]="editingCustomerId ? 'Update Info' : 'Add Customer'" 
+          [icon]="editingCustomerId ? 'pi pi-save' : 'pi-plus'" 
+          class="p-button-rounded shadow-2" 
           (click)="saveCustomer()" [disabled]="customerForm.invalid"></button> 
+        }
       </div>
     </ng-template>
   </p-dialog>
