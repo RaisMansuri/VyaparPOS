@@ -49,7 +49,7 @@
 /* --- Metrics Grid (Matching Reports Page) --- */
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.25rem;
     padding: 0 2.5rem;
     margin-bottom: 1.25rem;
@@ -82,6 +82,7 @@
 .upi-bg { background: #eff6ff; color: #3b82f6; }
 .orders-bg { background: #ecfdf5; color: #10b981; }
 .avg-bg { background: #fff1f2; color: #e11d48; }
+.expense-bg { background: #fee2e2; color: #ef4444; }
 .filter-bg { background: #f5f3ff; color: #8b5cf6; }
 
 .metric-info { display: flex; flex-direction: column; }

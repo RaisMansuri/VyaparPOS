@@ -40,6 +40,14 @@
             </div>
         </div>
         <div class="metric-card">
+            <div class="metric-icon expense-bg"><i class="pi pi-wallet"></i></div>
+            <div class="metric-info">
+                <span class="metric-label">Total Expenses</span>
+                <span class="metric-value text-red-600">{{ stats.expenseVolume | currency:'INR':'symbol':'1.0-0' }}</span>
+                <div class="metric-trend negative"><i class="pi pi-arrow-up"></i> Business <span>spent</span></div>
+            </div>
+        </div>
+        <div class="metric-card">
             <div class="metric-icon filter-bg"><i class="pi pi-check-circle"></i></div>
             <div class="metric-info">
                 <span class="metric-label">Settled Rate</span>
@@ -100,7 +108,7 @@
                     <td>
                         <button type="button" pButton pRipple [pRowToggler]="txn" class="p-button-text p-button-rounded p-button-plain p-button-sm" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
                     </td>
-                    <td><span class="txn-id-tag">{{ txn.id }}</span></td>
+                    <td><span class="txn-id-tag">{{ txn.transactionId }}</span></td>
                     <td>
                         <div class="type-chip" [ngClass]="txn.type.toLowerCase()">
                             <i [class]="getTypeIcon(txn.type)"></i>

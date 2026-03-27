@@ -14,6 +14,7 @@ export type TransactionStatus = 'Completed' | 'Pending' | 'Failed' | 'Refunded';
 
 export interface Transaction {
   id: string;
+  transactionId: string;
   type: TransactionType;
   amount: number;
   method: PaymentMethod;

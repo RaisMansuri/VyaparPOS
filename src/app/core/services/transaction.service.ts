@@ -78,8 +78,10 @@ export class TransactionService {
   }
 
   private mapOrderToTransaction(o: any): Transaction {
+    const id = o.id || `TXN-${Date.now()}`;
     return {
-      id: o.id || `TXN-${Date.now()}`,
+      id: id,
+      transactionId: o.orderNumber || id,
       type: 'Sale',
       amount: o.totalAmount || 0,
       method: this.normalizePaymentMethod(o.paymentMethod),
@@ -93,6 +95,7 @@ export class TransactionService {
 
   private mapToTransaction(t: any): Transaction {
     return {
+      transactionId: t.transactionId || t.id || `TXN-${Date.now()}`,
       ...t,
       date: new Date(t.date || t.timestamp || t.createdAt || Date.now()),
       method: this.normalizePaymentMethod(t.method || t.paymentMethod),
