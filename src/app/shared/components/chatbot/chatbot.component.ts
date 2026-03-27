@@ -49,12 +49,21 @@ export class ChatbotComponent {
       category: p.category
     }));
 
+    const lastOrder = this.orderService.getLastOrder();
+    const lastOrderContext = lastOrder ? {
+      orderId: lastOrder.id,
+      total: lastOrder.totalAmount,
+      status: lastOrder.status,
+      date: lastOrder.orderDate
+    } : null;
+
     return {
       cart: {
         items: this.cartService.items(),
         total: this.cartService.cartTotal(),
         count: this.cartService.cartCount()
       },
+      lastOrder: lastOrderContext,
       availableProducts: availableProducts,
       user: this.authService.getCurrentUser(),
       systemInstructions: `

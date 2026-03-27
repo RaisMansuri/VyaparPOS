@@ -43,32 +43,48 @@ export class InvoiceComponent implements OnInit {
             const id = params.get('id');
             if (id) {
                 this.order = this.orderService.getOrderById(id);
-            }
-            if (!this.order) {
+                
+                if (!this.order) {
+                    this.orderService.fetchOrders().subscribe(() => {
+                        this.order = this.orderService.getOrderById(id);
+                        if (this.order) {
+                            this.initInvoice();
+                        } else {
+                            this.router.navigate(['/orders']);
+                        }
+                    });
+                } else {
+                    this.initInvoice();
+                }
+            } else {
                 this.router.navigate(['/orders']);
-                return;
-            }
-            // Generate invoice number from order ID
-            this.invoiceNumber = 'INV-' + this.order.id.replace('ORD-', '');
-
-            // Ensure financial fields are populated (handling differences in BE response)
-            const tax = (this.order as any).tax || this.order.totalGST || 0;
-            const total = this.order.totalAmount || 0;
-            const delivery = (this.order as any).deliveryFee !== undefined ? (this.order as any).deliveryFee : 0;
-            
-            if (!this.order.totalGST) this.order.totalGST = tax;
-            if (!this.order.taxableAmount) this.order.taxableAmount = total - tax - delivery;
-            if (!this.order.subTotal) this.order.subTotal = total - delivery;
-            if (this.order.deliveryFee === undefined) this.order.deliveryFee = delivery;
-
-            // Handle auto-actions from chatbot
-            const action = this.route.snapshot.queryParamMap.get('action');
-            if (action === 'print') {
-                setTimeout(() => this.printInvoice(), 1000);
-            } else if (action === 'download') {
-                setTimeout(() => this.downloadInvoice(), 1000);
             }
         });
+    }
+
+    private initInvoice(): void {
+        if (!this.order) return;
+
+        // Generate invoice number from order ID
+        this.invoiceNumber = 'INV-' + this.order.id.replace('ORD-', '');
+
+        // Ensure financial fields are populated (handling differences in BE response)
+        const tax = (this.order as any).tax || this.order.totalGST || 0;
+        const total = this.order.totalAmount || 0;
+        const delivery = (this.order as any).deliveryFee !== undefined ? (this.order as any).deliveryFee : 0;
+        
+        if (!this.order.totalGST) this.order.totalGST = tax;
+        if (!this.order.taxableAmount) this.order.taxableAmount = total - tax - delivery;
+        if (!this.order.subTotal) this.order.subTotal = total - delivery;
+        if (this.order.deliveryFee === undefined) this.order.deliveryFee = delivery;
+
+        // Handle auto-actions from chatbot
+        const action = this.route.snapshot.queryParamMap.get('action');
+        if (action === 'print') {
+            setTimeout(() => this.printInvoice(), 1000);
+        } else if (action === 'download') {
+            setTimeout(() => this.downloadInvoice(), 1000);
+        }
     }
 
     printInvoice(): void {
