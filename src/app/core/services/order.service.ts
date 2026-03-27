@@ -110,9 +110,14 @@ export class OrderService {
         return {
             ...o,
             id: o.id || o._id || (fallbacks ? fallbacks.id : `ORD-${Date.now()}`),
-            totalAmount: o.totalAmount || o.amount || (fallbacks ? fallbacks.totalAmount : 0),
-            deliveryFee: o.deliveryFee !== undefined ? o.deliveryFee : (fallbacks ? fallbacks.deliveryFee : 0),
-            subTotal: o.subTotal || o.subtotal || (fallbacks ? fallbacks.subTotal : (o.totalAmount || 0)),
+            totalAmount: Number(o.totalAmount || o.amount || (fallbacks ? fallbacks.totalAmount : 0)),
+            deliveryFee: Number(o.deliveryFee !== undefined ? o.deliveryFee : (fallbacks ? fallbacks.deliveryFee : 0)),
+            subTotal: Number(o.subTotal || o.subtotal || (fallbacks ? fallbacks.subTotal : (o.totalAmount || 0))),
+            totalGST: Number(o.tax || o.totalGST || (fallbacks ? fallbacks.totalGST : 0)),
+            cgst: Number(o.cgst || (fallbacks ? fallbacks.cgst : 0)),
+            sgst: Number(o.sgst || (fallbacks ? fallbacks.sgst : 0)),
+            igst: Number(o.igst || (fallbacks ? fallbacks.igst : 0)),
+            taxableAmount: Number(o.taxableAmount || (fallbacks ? fallbacks.taxableAmount : (o.totalAmount || 0) - (o.tax || 0))),
             // Reconstruct items if they are partial
             items: (o.items || (fallbacks ? fallbacks.items : [])).map((i: any) => ({
                 product: i.product || {
@@ -126,7 +131,7 @@ export class OrderService {
                 subtotal: i.total || i.subtotal || ((i.price || 0) * (i.quantity || 0))
             } as CartItem)),
             address: o.address || (fallbacks ? fallbacks.address : undefined),
-            orderDate: new Date(o.orderDate || o.createdAt || o.date || (fallbacks ? fallbacks.orderDate : Date.now())),
+            orderDate: new Date(o.orderDate || o.timestamp || o.createdAt || o.date || (fallbacks ? fallbacks.orderDate : Date.now())),
             status: (o.status || o.paymentStatus || (fallbacks ? fallbacks.status : 'confirmed')).toLowerCase()
         } as Order;
     }

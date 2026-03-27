@@ -193,6 +193,9 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     // else if (url.includes('/customers')) this.pageTitle = this.translationService.translate('CUSTOMERS') || 'Customers';
     else if (url.includes('/reports')) this.pageTitle = this.translationService.translate('REPORTS') || 'Payment History';
     else if (url.includes('/support')) this.pageTitle = 'Customer Support';
+    else if (url.includes('/settings/inventory-management') || url.includes('/settings/products')) {
+      this.pageTitle = this.translationService.translate('INVENTORY_MANAGEMENT') || 'Inventory Management';
+    }
     else if (url.includes('/products')) this.pageTitle = this.translationService.translate('PRODUCTS') || 'Products';
     else if (url.includes('/category/')) {
       const cat = url.split('/').pop();
@@ -202,7 +205,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     else if (url.includes('/cart')) this.pageTitle = 'Cart';
     else if (url.includes('/orders')) this.pageTitle = 'My Orders';
     else if (url.includes('/profile')) this.pageTitle = 'My Profile';
-    else if (url.includes('/settings/products')) this.pageTitle = this.translationService.translate('INVENTORY_MANAGEMENT') || 'Inventory Management';
     else if (url.includes('/settings/categories')) this.pageTitle = this.translationService.translate('CATEGORIES') || 'Category Management';
     else if (url.includes('/settings/subscription')) this.pageTitle = 'Subscription';
     else if (url.includes('/settings/users')) this.pageTitle = 'User Settings';

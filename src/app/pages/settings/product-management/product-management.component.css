@@ -6,9 +6,11 @@
 
 /* Premium Header */
 .dashboard-header {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
   margin-bottom: 1.25rem;
   border-radius: 0 0 16px 16px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 2.5rem;
 }
 
 .header-content {
@@ -56,7 +58,9 @@
   transition: transform 0.18s ease;
 }
 
-.metric-card:hover { transform: translateY(-3px); }
+.metric-card:hover {
+  transform: translateY(-3px);
+}
 
 .metric-icon {
   width: 56px;
@@ -69,10 +73,21 @@
   flex-shrink: 0;
 }
 
-.total-bg { background: #eff6ff; color: #3b82f6; }
-.alert-bg { background: #fff1f2; color: #e11d48; }
+.total-bg {
+  background: #eff6ff;
+  color: #3b82f6;
+}
 
-.metric-info { display: flex; flex-direction: column; }
+.alert-bg {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .metric-label {
   color: #64748b;
   font-size: 0.65rem;
@@ -89,13 +104,16 @@
 }
 
 .metric-trend {
-    font-size: 0.72rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-.metric-trend.negative { color: #ef4444; }
+
+.metric-trend.negative {
+  color: #ef4444;
+}
 
 /* Table Card & Filters */
 .table-card {
@@ -112,10 +130,15 @@
 }
 
 .search-item {
-    flex: 1;
+  flex: 1;
 }
 
-.filter-item { display: flex; flex-direction: column; gap: 0.5rem; }
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .filter-item label {
   font-size: 0.75rem;
   font-weight: 800;
@@ -131,12 +154,22 @@
 }
 
 /* Visibility Toggles */
-.desktop-only { display: block; }
-.mobile-only { display: none; }
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
 
 @media screen and (max-width: 960px) {
-  .desktop-only { display: none; }
-  .mobile-only { display: block; }
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
 }
 
 /* Mobile Product Grid */
@@ -208,8 +241,15 @@
   color: #64748b;
 }
 
-.status-in-text { color: #059669; font-weight: 700; }
-.status-low-text { color: #dc2626; font-weight: 700; }
+.status-in-text {
+  color: #059669;
+  font-weight: 700;
+}
+
+.status-low-text {
+  color: #dc2626;
+  font-weight: 700;
+}
 
 .product-card-footer {
   display: flex;
@@ -507,21 +547,21 @@
 
 :host ::ng-deep .p-paginator .p-select,
 :host ::ng-deep .p-paginator .p-dropdown {
-    width: auto !important;
+  width: auto !important;
 }
 
 @media screen and (max-width: 960px) {
-  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody > tr {
+  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody>tr {
     display: block;
     border: 1px solid var(--surface-border);
     margin-bottom: 1rem;
     border-radius: 12px;
     background: #fff;
     padding: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   }
 
-  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody > tr > td {
+  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody>tr>td {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -531,7 +571,7 @@
     width: 100% !important;
   }
 
-  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody > tr > td:first-child {
+  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody>tr>td:first-child {
     border-bottom: 1px solid var(--surface-border);
     margin-bottom: 0.5rem;
     padding-bottom: 1rem;
@@ -539,7 +579,7 @@
     display: block;
   }
 
-  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody > tr > td .p-column-title {
+  :host ::ng-deep .modern-table.p-datatable-responsive-stack .p-datatable-tbody>tr>td .p-column-title {
     font-weight: 700;
     color: var(--text-color-secondary);
     margin-right: 1.5rem;
@@ -552,11 +592,11 @@
 
 @media screen and (max-width: 576px) {
   .product-mgmt-container {
-      padding: 0.75rem;
+    padding: 0.75rem;
   }
 
   .dashboard-header {
-      padding-bottom: 1rem;
+    padding-bottom: 1rem;
   }
 
   .header-content {
@@ -572,18 +612,19 @@
     padding: 1rem;
   }
 
-  .metrics-grid, .table-card {
-      padding: 1rem 1.25rem;
-      margin-left: 1rem;
-      margin-right: 1rem;
+  .metrics-grid,
+  .table-card {
+    padding: 1rem 1.25rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
   .filter-belt {
-      flex-direction: column;
+    flex-direction: column;
   }
 
   .search-action-group {
-      width: 100% !important;
+    width: 100% !important;
   }
 
 
@@ -595,16 +636,16 @@
   }
 
   .image-preview-card {
-      width: 100%;
-      height: 180px;
+    width: 100%;
+    height: 180px;
   }
-  
+
   .image-upload-actions {
-      justify-content: center;
+    justify-content: center;
   }
 
   .modern-dialog :host ::ng-deep .p-dialog {
-      width: 95vw !important;
-      max-height: 90vh;
+    width: 95vw !important;
+    max-height: 90vh;
   }
 }

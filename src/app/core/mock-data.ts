@@ -257,6 +257,7 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
   totalItemsInStock: MOCK_PRODUCTS.reduce((sum, item) => sum + item.stock, 0),
   lowStockCount: MOCK_PRODUCTS.filter((item) => item.stock > 0 && item.stock <= item.minStockLevel).length,
   outOfStockCount: MOCK_PRODUCTS.filter((item) => item.stock === 0).length,
+  todayProfit: 1250,
 };
 
 export const MOCK_SALES_BY_DAY = [

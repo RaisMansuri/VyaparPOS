@@ -58,6 +58,13 @@ export class ProductService {
     );
   }
 
+  getInventoryProducts(): Observable<Product[]> {
+    return this.http.get<any>(`${this.apiUrl}/inventory`).pipe(
+      map(res => this.normalizeProducts(res)),
+      catchError(() => of([]))
+    );
+  }
+
   getProductsByCategory(category: string): Observable<Product[]> {
     if (category === 'all') {
       return this.products$;
@@ -85,10 +92,10 @@ export class ProductService {
                 grossTotal: 0,
                 netProfit: 0,
                 totalStockValue: 0,
-                totalItemsInStock: 0,
-                lowStockCount: 0,
-                outOfStockCount: 0,
-                ...res.overall
+                totalItemsInStock: res.data?.totalItemsInStock || 0,
+                lowStockCount: res.data?.lowStockCount || 0,
+                outOfStockCount: res.data?.outOfStockCount || 0,
+                todayProfit: res.data?.todayProfit || 0
             };
         }),
         catchError(() => of({
@@ -97,7 +104,8 @@ export class ProductService {
             totalStockValue: 0,
             totalItemsInStock: 0,
             lowStockCount: 0,
-            outOfStockCount: 0
+            outOfStockCount: 0,
+            todayProfit: 0
         }))
     );
   }

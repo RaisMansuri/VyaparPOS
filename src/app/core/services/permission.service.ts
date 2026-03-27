@@ -25,7 +25,7 @@ export class PermissionService {
     { path: '/orders', label: 'My Orders', icon: 'pi pi-list', section: 'shopping', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'cashier', 'delivery_staff', 'customer', 'consumer'] },
     { path: '/profile', label: 'My Profile', icon: 'pi pi-user', section: 'account', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'cashier', 'inventory_manager', 'accountant', 'delivery_staff', 'customer', 'consumer'] },
     { path: '/settings/subscription', label: 'Subscription', icon: 'pi pi-credit-card', section: 'account', allowedRoles: ['superadmin', 'owner', 'admin'], requiredPermission: 'Manage Settings' },
-    { path: '/settings/products', label: 'INVENTORY_MANAGEMENT', icon: 'pi pi-box', section: 'inventory', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'inventory_manager'], requiredPermission: 'Manage Products' },
+    { path: '/settings/inventory-management', label: 'INVENTORY_MANAGEMENT', icon: 'pi pi-box', section: 'inventory', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'inventory_manager'], requiredPermission: 'Manage Products' },
     { path: '/settings/categories', label: 'CATEGORIES', icon: 'pi pi-tags', section: 'inventory', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'inventory_manager'], requiredPermission: 'Manage Products' },
     { path: '/settings/users', label: 'Users', icon: 'pi pi-users', section: 'settings', allowedRoles: ['superadmin', 'owner', 'admin'], requiredPermission: 'Manage Users' },
     { path: '/settings/expenses', label: 'Expenses', icon: 'pi pi-wallet', section: 'settings', allowedRoles: ['superadmin', 'owner', 'admin', 'manager', 'accountant'], requiredPermission: 'Manage Expenses' },

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../core/services/product.service';
+import { ExportService } from '../../../core/services/export.service';
 import { Product } from '../../../models/product.model';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -47,6 +48,7 @@ export class ProductManagementComponent implements OnInit {
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  private exportService = inject(ExportService);
 
   products: Product[] = [];
   productDialog: boolean = false;
@@ -69,6 +71,7 @@ export class ProductManagementComponent implements OnInit {
       minStockLevel: [5, [Validators.required, Validators.min(0)]],
       barcode: [''],
       gstRate: [0, [Validators.required, Validators.min(0)]],
+      unit: ['pcs', Validators.required],
       description: [''],
       imageUrl: [this.defaultImageUrl]
     });
@@ -86,7 +89,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProductsByCategory('all').subscribe(data => {
+    this.productService.getInventoryProducts().subscribe(data => {
       this.products = data;
     });
   }
@@ -98,6 +101,7 @@ export class ProductManagementComponent implements OnInit {
       stock: 0,
       minStockLevel: 5,
       gstRate: 0,
+      unit: 'pcs',
       imageUrl: this.defaultImageUrl
     });
     this.imagePreviewUrl = this.defaultImageUrl;
@@ -232,6 +236,21 @@ export class ProductManagementComponent implements OnInit {
         }
       });
     }
+  }
+
+  exportExcel() {
+    this.exportService.exportToExcel(this.products, 'Inventory_Report');
+  }
+
+  exportPDF() {
+    const cols = [
+      { header: 'Product Name', dataKey: 'name' },
+      { header: 'Category', dataKey: 'category' },
+      { header: 'Price', dataKey: 'price' },
+      { header: 'Stock', dataKey: 'stock' },
+      { header: 'Unit', dataKey: 'unit' }
+    ];
+    this.exportService.exportToPDF('Product Inventory Report', cols, this.products, 'Inventory_Report');
   }
 
   private isSupportedImage(file: File): boolean {

@@ -5,6 +5,7 @@ export interface DashboardStats {
   totalItemsInStock: number;
   lowStockCount: number;
   outOfStockCount: number;
+  todayProfit: number;
 }
 
 export type TransactionType = 'Sale' | 'Expense' | 'Refund' | 'Wallet';

@@ -2,43 +2,46 @@
   <div class="header-section">
     <div>
       <h1 class="page-title">Expense Management</h1>
-  <div class="p-4">
-  <div class="mb-4">
-    <h1 class="text-3xl font-bold text-900 m-0">Expense Tracking</h1>
-    <p class="text-500 m-0">Monitor and manage your business expenditures and payouts.</p>
+      <p class="subtitle text-500">Monitor and manage your business expenditures and payouts.</p>
+    </div>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="grid mb-2">
-    <p-card styleClass="stats-card total-card">
-      <div class="stats-content">
-        <div class="stats-info">
-          <span class="stats-label">Total Expenses</span>
-          <span class="stats-value text-red-500">{{ stats.totalAmount | currency:'INR' }}</span>
-        </div>
-        <div class="stats-icon bg-red-100 text-red-500">
-          <i class="pi pi-wallet"></i>
-        </div>
-      </div>
-    </p-card>
+  <div class="p-0">
+    <div class="mb-4">
+      <h2 class="text-3xl font-bold text-900 m-0">Expense Tracking</h2>
+    </div>
 
-    <p-card styleClass="stats-card count-card">
+    <!-- Summary Cards -->
+    <div class="stats-grid mb-4">
+      <p-card styleClass="stats-card total-card shadow-1 border-round-xl">
         <div class="stats-content">
           <div class="stats-info">
-            <span class="stats-label">Total Transactions</span>
-            <span class="stats-value">{{ expenses.length }}</span>
+            <span class="stats-label">Total Expenses</span>
+            <span class="stats-value text-red-500">{{ stats.totalAmount | currency:'INR' }}</span>
           </div>
-          <div class="stats-icon bg-blue-100 text-blue-500">
-            <i class="pi pi-list"></i>
+          <div class="stats-icon bg-red-100 text-red-500">
+            <i class="pi pi-wallet"></i>
           </div>
         </div>
       </p-card>
-  </div>
 
-  <!-- Expenses Table -->
-  <p-card styleClass="shadow-2 border-round-xl overflow-hidden mt-4">
-    <p-table #dt [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
-             [globalFilterFields]="globalFilterFields" responsiveLayout="scroll" styleClass="p-datatable-striped">
+      <p-card styleClass="stats-card count-card shadow-1 border-round-xl">
+          <div class="stats-content">
+            <div class="stats-info">
+              <span class="stats-label">Total Transactions</span>
+              <span class="stats-value">{{ expenses.length }}</span>
+            </div>
+            <div class="stats-icon bg-blue-100 text-blue-500">
+              <i class="pi pi-list"></i>
+            </div>
+          </div>
+        </p-card>
+    </div>
+
+    <!-- Expenses Table -->
+    <p-card styleClass="shadow-2 border-round-xl overflow-hidden mt-4 table-card">
+      <p-table #dt [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
+               [globalFilterFields]="globalFilterFields" responsiveLayout="scroll" styleClass="p-datatable-striped">
       <ng-template pTemplate="caption">
         <div class="search-action-group p-2">
           <p-iconfield>
@@ -77,7 +80,7 @@
           <td>
             <div class="flex gap-2 justify-content-center">
               <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info" (click)="showDialog(expense)"></button>
-              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteExpense(expense._id)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteExpense(expense.id)"></button>
             </div>
           </td>
         </tr>
@@ -137,4 +140,5 @@
       </div>
     </ng-template>
   </p-dialog>
+</div>
 </div>

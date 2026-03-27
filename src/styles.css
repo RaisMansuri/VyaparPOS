@@ -2,49 +2,50 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #1f2937;
-  background-color: #f3f4f6;
-  background-image: 
-    linear-gradient(rgba(243, 244, 246, 0.7), rgba(243, 244, 246, 0.7)), 
-    url('/assets/images/bg-pos.png');
-  background-size: 300px; /* Pattern size */
-  background-repeat: repeat;
-  background-attachment: fixed;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1f2937;
+    background-color: #f3f4f6;
+    background-image:
+        linear-gradient(rgba(243, 244, 246, 0.7), rgba(243, 244, 246, 0.7)),
+        url('/assets/images/bg-pos.png');
+    background-size: 300px;
+    /* Pattern size */
+    background-repeat: repeat;
+    background-attachment: fixed;
 }
 
 app-root {
-  display: block;
-  min-height: 100%;
+    display: block;
+    min-height: 100%;
 }
 
 /* Global CSS variables not covered by PrimeNG theme */
 :root {
-  --primary-color: #6366f1;
-  --danger-color: #ef4444;
-  --success-color: #22c55e;
-  --warning-color: #f59e0b;
+    --primary-color: #6366f1;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
 }
 
 /* Glass card - used across product cards, dashboard cards, etc. */
 .glass-card {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  transform: translateY(-4px);
-  border-color: var(--primary-color);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
 }
 
 /* Sidebar and Toolbar colors */
@@ -52,17 +53,17 @@ app-root {
 .p-sidebar .sidebar-nav a,
 .p-sidebar .nav-item i,
 .p-sidebar .nav-section-title {
-  color: #1f2937 !important;
+    color: #1f2937 !important;
 }
 
 .p-sidebar .sidebar-nav a:hover,
 .p-sidebar .sidebar-nav a.active {
-  background-color: #f3f4f6 !important;
+    background-color: #f3f4f6 !important;
 }
 
 .layout-toolbar .toolbar-title,
 .layout-toolbar .p-button-icon {
-  color: #1f2937 !important;
+    color: #1f2937 !important;
 }
 
 /* Global Search & Action Layout */
@@ -78,7 +79,8 @@ app-root {
 
 /* Icon Field refinement */
 .p-iconfield {
-    flex: 1; /* Allow to grow but also shrink if needed */
+    flex: 1;
+    /* Allow to grow but also shrink if needed */
     min-width: 200px;
     max-width: 320px;
 }
@@ -89,7 +91,8 @@ app-root {
 
 /* Global Button Refinement */
 .p-button {
-    white-space: nowrap !important; /* Prevent text wrapping inside buttons */
+    white-space: nowrap !important;
+    /* Prevent text wrapping inside buttons */
     border-radius: 8px !important;
     padding: 0.6rem 1.25rem !important;
     font-weight: 600 !important;
@@ -113,8 +116,10 @@ app-root {
 
 @media (max-width: 640px) {
     .search-action-group {
-        flex-wrap: wrap; /* Allow wrapping on small mobile */
+        flex-wrap: wrap;
+        /* Allow wrapping on small mobile */
     }
+
     .p-iconfield {
         max-width: 100%;
     }
@@ -185,7 +190,8 @@ app-root {
 }
 
 .p-confirm-dialog .p-dialog-header-icons {
-    display: none !important; /* Hide close icon for cleaner look */
+    display: none !important;
+    /* Hide close icon for cleaner look */
 }
 
 .p-confirm-dialog .p-dialog-content {
@@ -203,19 +209,23 @@ app-root {
     justify-content: center !important;
     width: 72px !important;
     height: 72px !important;
-    background: #fff1f2 !important; /* Ultra light red */
-    color: #e11d48 !important; /* Rosy red */
+    background: #fff1f2 !important;
+    /* Ultra light red */
+    color: #e11d48 !important;
+    /* Rosy red */
     border-radius: 50% !important;
     font-size: 2rem !important;
     margin: -1rem 0 1.5rem 0 !important;
-    order: -1; /* Move to top of content */
+    order: -1;
+    /* Move to top of content */
 }
 
 .p-confirm-dialog .p-confirm-dialog-message {
     font-size: 1.1rem !important;
     color: #6b7280 !important;
     line-height: 1.5 !important;
-    margin-left: 0 !important; /* Remove default margin */
+    margin-left: 0 !important;
+    /* Remove default margin */
 }
 
 .p-confirm-dialog .p-confirm-dialog-message b {
@@ -275,21 +285,21 @@ app-root {
         left: 1rem !important;
         right: 1rem !important;
     }
-    
+
     .p-toast-message {
         margin-bottom: 0.5rem !important;
     }
-    
+
     .p-toast-message-content {
         padding: 0.75rem !important;
     }
-    
+
     .p-toast-summary {
         font-size: 0.95rem !important;
         font-weight: 700 !important;
         word-break: break-word !important;
     }
-    
+
     .p-toast-detail {
         font-size: 0.85rem !important;
         line-height: 1.4 !important;
@@ -303,7 +313,9 @@ app-root {
     }
 
     /* Prevent toast from being cut off if positioned top-right */
-    .p-toast-top-right, .p-toast-top-left, .p-toast-top-center {
+    .p-toast-top-right,
+    .p-toast-top-left,
+    .p-toast-top-center {
         top: 1rem !important;
         left: 1rem !important;
         right: 1rem !important;
@@ -312,7 +324,8 @@ app-root {
 
 /* Project-wide Button Spacing in Dialogs & Actions */
 .p-dialog .p-dialog-footer,
-.p-dialog .p-dialog-footer > div, /* Catch nested flex containers from templates */
+.p-dialog .p-dialog-footer>div,
+/* Catch nested flex containers from templates */
 .form-actions,
 .quick-actions,
 .header-actions,
@@ -330,17 +343,19 @@ app-root {
 .p-dialog .p-dialog-footer button,
 .form-actions button,
 .quick-actions button {
-    margin: 0 !important; /* Remove legacy margins to favor gap */
+    margin: 0 !important;
+    /* Remove legacy margins to favor gap */
 }
 
 @media screen and (max-width: 576px) {
+
     .p-dialog .p-dialog-footer,
     .form-actions,
     .quick-actions {
         flex-direction: column-reverse !important;
         gap: 0.75rem !important;
     }
-    
+
     .p-dialog .p-dialog-footer button,
     .form-actions button,
     .quick-actions button {

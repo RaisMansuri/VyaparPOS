@@ -12,6 +12,7 @@ export interface Product {
   minStockLevel: number;
   barcode?: string;
   gstRate: number; // e.g., 5, 12, 18, 28
+  unit?: string;
 }
 
 export interface Discount {

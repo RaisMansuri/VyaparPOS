@@ -196,7 +196,7 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'settings/products',
+        path: 'settings/inventory-management',
         canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/settings/product-management/product-management.component').then(
@@ -228,6 +228,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/settings/expenses/expenses.component').then(
             (m) => m.ExpensesComponent
+          ),
+      },
+      {
+        path: 'settings/audit-logs',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/settings/audit-logs/audit-logs.component').then(
+            (m) => m.AuditLogsComponent
           ),
       },
       {

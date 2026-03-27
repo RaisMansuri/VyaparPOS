@@ -127,8 +127,8 @@ export class ExpensesComponent implements OnInit {
 
     const expenseData = this.expenseForm.value;
 
-    if (this.editingExpense?._id) {
-      this.expenseService.updateExpense(this.editingExpense._id, expenseData).subscribe({
+    if (this.editingExpense?.id) {
+      this.expenseService.updateExpense(this.editingExpense.id, expenseData).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense updated' });
           this.loadExpenses();

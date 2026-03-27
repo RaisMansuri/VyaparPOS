@@ -1,18 +1,10 @@
 <div class="product-mgmt-container">
   <p-toast></p-toast>
 
-  <!-- Premium Header -->
-  <div class="dashboard-header">
-    <div class="header-content">
-      <div class="header-title">
-        <h1><i class="pi pi-box mr-2"></i> Inventory Management</h1>
-        <p>Add, edit and track your bakery products and stock levels</p>
-      </div>
-      <div class="header-actions">
-        <button pButton label="Add New Product" icon="pi pi-plus" class="p-button-success shadow-2"
-          (click)="openNew()"></button>
-      </div>
-    </div>
+  <!-- Standardized Premium Header -->
+  <div class="dashboard-header mb-4">
+    <button pButton label="Add Product" icon="pi pi-plus" class="p-button-success shadow-2"
+      (click)="openNew()"></button>
   </div>
 
   <!-- Quick Stats Cards -->
@@ -35,17 +27,14 @@
     </div>
   </div>
 
-  <!-- Search & Filters Bar -->
-  <div class="table-card mb-4 filter-card">
-    <div class="filter-belt">
-      <div class="filter-item search-item">
-        <label>Search Inventory</label>
-        <p-iconfield>
-          <p-inputicon class="pi pi-search"></p-inputicon>
-          <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-            placeholder="Search by name, barcode or category..." class="w-full" />
-        </p-iconfield>
-      </div>
+  <!-- Search Bar Standardized -->
+  <div class="table-card mb-4 p-3 bg-white border-round-xl shadow-1">
+    <div class="search-action-group">
+      <p-iconfield class="w-full">
+        <p-inputicon class="pi pi-search"></p-inputicon>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Search items, category or barcode..." class="w-full" />
+      </p-iconfield>
     </div>
   </div>
 
@@ -63,6 +52,7 @@
             <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
             <th pSortableColumn="category.name">Category <p-sortIcon field="category.name"></p-sortIcon></th>
             <th pSortableColumn="stock">Inventory <p-sortIcon field="stock"></p-sortIcon></th>
+            <th pSortableColumn="unit">Unit <p-sortIcon field="unit"></p-sortIcon></th>
             <th>GST</th>
             <th class="text-center">Actions</th>
           </tr>
@@ -84,12 +74,13 @@
             <td>
               <div class="stock-status">
                 <span [class]="'stock-badge ' + (product.stock > (product.minStockLevel || 0) ? 'status-in' : 'status-low')">
-                  {{ product.stock }} in stock
+                  {{ product.stock }} {{ product.unit || 'pcs' }}
                 </span>
-                <small class="min-stock">Min: {{ product.minStockLevel || 0 }}</small>
+                <small class="min-stock text-xs block text-secondary">Min: {{ product.minStockLevel || 0 }}</small>
               </div>
             </td>
-            <td>{{ product.gstRate }}%</td>
+            <td><p-tag [value]="product.unit || 'pcs'" severity="contrast"></p-tag></td>
+            <td><span class="font-semibold text-primary">{{ product.gstRate || 0 }}%</span></td>
             <td class="text-center">
               <div class="flex justify-center gap-2">
                 <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editProduct(product)"></button>
@@ -266,12 +257,20 @@
         <div class="premium-grid">
           <div class="premium-col field">
             <label for="gstRate" class="premium-label">Tax / GST %</label>
-            <p-inputNumber id="gstRate" formControlName="gstRate" placeholder="0"></p-inputNumber>
+            <p-inputNumber id="gstRate" formControlName="gstRate" placeholder="0" suffix="%"></p-inputNumber>
           </div>
           <div class="premium-col field">
-            <label for="stock" class="premium-label">Opening stock</label>
-            <p-inputNumber id="stock" formControlName="stock" placeholder="0"></p-inputNumber>
+            <label for="unit" class="premium-label">Unit <span class="required-mark">*</span></label>
+            <input type="text" pInputText id="unit" formControlName="unit" placeholder="e.g. kg, pcs, ltr"
+              [class.p-invalid]="submitted && productForm.get('unit')?.invalid" />
           </div>
+        </div>
+
+        <div class="field mt-3">
+          <label for="stock" class="premium-label">Current Stock <span class="required-mark">*</span></label>
+          <p-inputNumber id="stock" formControlName="stock" placeholder="0" [showButtons]="true" buttonLayout="horizontal"
+            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            [class.p-invalid]="submitted && productForm.get('stock')?.invalid"></p-inputNumber>
         </div>
       </form>
     </ng-template>

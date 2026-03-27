@@ -119,9 +119,20 @@
       </div>
 
       <div class="metric-card profit-card">
+        <div class="metric-icon profit-bg"><i class="pi pi-calendar"></i></div>
+        <div class="metric-info">
+          <span class="metric-label">Today's Profit</span>
+          <div class="metric-value text-green-600 font-bold">{{ stats.todayProfit | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="metric-trend positive">
+            <i class="pi pi-bolt"></i> <span>Live performance today</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card profit-card">
         <div class="metric-icon profit-bg"><i class="pi pi-chart-line"></i></div>
         <div class="metric-info">
-          <span class="metric-label">Net Profit</span>
+          <span class="metric-label">Filtered Profit</span>
           <div class="metric-value text-blue-600">{{ stats.netProfit | currency:'INR':'symbol':'1.0-0' }}</div>
           <div class="metric-trend positive">
             <i class="pi pi-arrow-up"></i> <span>Based on selected range</span>

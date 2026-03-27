@@ -1,0 +1,39 @@
+.audit-logs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-title-group p {
+    opacity: 0.8;
+}
+
+.modern-table .p-datatable-thead > tr > th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+}
+
+.modern-table .p-datatable-tbody > tr {
+    transition: background 0.2s;
+}
+
+.modern-table .p-datatable-tbody > tr:hover {
+    background: #f1f5f9;
+}
+
+@media screen and (max-width: 768px) {
+    .search-action-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+}

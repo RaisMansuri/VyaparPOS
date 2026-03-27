@@ -171,9 +171,18 @@ export class DashboardComponent implements OnInit {
       (product) => product.stock <= product.minStockLevel
     );
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const todayReports = this.allReports.filter((report) => {
+      const reportDate = this.toDate(report.date || report._id);
+      return reportDate >= today;
+    });
+
     this.stats = {
       grossTotal: filteredReports.reduce((sum, report) => sum + (report.revenue || 0), 0),
       netProfit: filteredReports.reduce((sum, report) => sum + (report.profit || 0), 0),
+      todayProfit: todayReports.reduce((sum, report) => sum + (report.profit || 0), 0),
       totalStockValue: filteredInventoryProducts.reduce(
         (sum, product) => sum + product.costPrice * product.stock,
         0
