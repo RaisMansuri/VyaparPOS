@@ -78,18 +78,10 @@ export class ExpensesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadExpenses();
-    this.loadStats();
-  }
-
-  loadExpenses(): void {
-    this.loading = true;
-    this.expenseService.getExpenses().subscribe({
-      next: (res) => {
-        this.expenses = res.data;
-        this.loading = false;
-      },
-      error: () => (this.loading = false)
+    this.expenseService.expenses$.subscribe((expenses) => {
+      this.expenses = expenses;
+      this.stats.count = expenses.length;
+      this.loadStats();
     });
   }
 
@@ -97,8 +89,7 @@ export class ExpensesComponent implements OnInit {
     this.expenseService.getExpenseStats().subscribe({
       next: (res) => {
         this.stats.totalAmount = res.data.total;
-        this.stats.count = this.expenses.length; // Approximate or from aggregate
-      }
+      },
     });
   }
 
@@ -107,7 +98,7 @@ export class ExpensesComponent implements OnInit {
     if (expense) {
       this.expenseForm.patchValue({
         ...expense,
-        date: new Date(expense.date)
+        date: new Date(expense.date),
       });
     } else {
       this.expenseForm.reset({
@@ -116,7 +107,7 @@ export class ExpensesComponent implements OnInit {
         category: 'Other',
         date: new Date(),
         description: '',
-        paidBy: 'Admin'
+        paidBy: 'Admin',
       });
     }
     this.displayDialog = true;
@@ -130,20 +121,24 @@ export class ExpensesComponent implements OnInit {
     if (this.editingExpense?.id) {
       this.expenseService.updateExpense(this.editingExpense.id, expenseData).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense updated' });
-          this.loadExpenses();
-          this.loadStats();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Expense updated',
+          });
           this.displayDialog = false;
-        }
+        },
       });
     } else {
       this.expenseService.createExpense(expenseData).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense recorded' });
-          this.loadExpenses();
-          this.loadStats();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Expense recorded',
+          });
           this.displayDialog = false;
-        }
+        },
       });
     }
   }
@@ -160,12 +155,14 @@ export class ExpensesComponent implements OnInit {
       accept: () => {
         this.expenseService.deleteExpense(id).subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense deleted' });
-            this.loadExpenses();
-            this.loadStats();
-          }
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Expense deleted',
+            });
+          },
         });
-      }
+      },
     });
   }
 

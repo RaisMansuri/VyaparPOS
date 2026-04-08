@@ -62,13 +62,13 @@
   <!-- Products Content -->
   <div class="products-content">
     @if (products.length === 0) {
-      <div class="empty-state glass-card">
-        <div class="empty-illustration">
-          <i class="pi pi-search"></i>
+      <div class="empty-state-full glass-card p-8 text-center flex flex-column align-items-center justify-content-center m-4">
+        <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+          <i class="pi pi-search" style="font-size: 3rem;"></i>
         </div>
-        <h3>No matches found</h3>
-        <p>We couldn't find any products matching your current filters.</p>
-        <button pButton label="Clear All Filters" class="p-button-primary" (click)="clearFilters()"></button>
+        <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+        <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">We couldn't find any products matching your current filters. Try adjusting your search or category.</p>
+        <button pButton label="Clear All Filters" class="p-button-text mt-3" (click)="clearFilters()"></button>
       </div>
     } @else {
       @for (group of categorySections; track group.name) {
@@ -177,4 +177,84 @@
     <button pButton label="Clear All" icon="pi pi-filter-slash" 
             class="p-button-text p-button-danger w-full" (click)="clearFilters()"></button>
   </ng-template>
+</p-sidebar>
+
+<!-- Floating Cart Button -->
+<div class="floating-cart-btn" (click)="toggleCart()" [class.has-items]="cartCount() > 0">
+  <div class="cart-icon-wrapper">
+    <i class="pi pi-shopping-cart"></i>
+    <p-badge *ngIf="cartCount() > 0" [value]="cartCount()" severity="danger"></p-badge>
+  </div>
+  <span class="cart-label" *ngIf="cartCount() > 0">{{ cartTotal() | currency:'INR' }}</span>
+</div>
+
+<!-- Cart Sidebar -->
+<p-sidebar [(visible)]="showCartSidebar" position="right" styleClass="cart-sidebar" [baseZIndex]="10001" [dismissible]="true">
+  <ng-template pTemplate="header">
+    <div class="cart-header">
+      <div class="header-main">
+        <i class="pi pi-shopping-bag mr-2"></i>
+        <span class="font-bold text-xl">Current Order</span>
+      </div>
+      <span class="item-count text-600 font-medium">{{ cartCount() }} {{ cartCount() === 1 ? 'Item' : 'Items' }}</span>
+    </div>
+  </ng-template>
+
+  <div class="cart-content h-full flex flex-column">
+    @if (cartItems().length === 0) {
+      <div class="empty-cart-state flex-1 flex flex-column align-items-center justify-content-center p-4">
+        <div class="empty-icon-box bg-slate-50 text-slate-300 mb-4">
+          <i class="pi pi-shopping-cart" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="text-slate-700 font-bold text-xl">Your cart is empty</h3>
+        <p class="text-slate-400 text-center mt-2 max-w-200px">Add products from your menu to begin your order.</p>
+        <button pButton label="Start Adding Items" class="p-button-text mt-4" (click)="showCartSidebar = false"></button>
+      </div>
+    } @else {
+      <div class="cart-items-list flex-1 overflow-y-auto pr-2">
+        @for (item of cartItems(); track item.product.id) {
+          <div class="cart-item-row p-3 mb-2 glass-card">
+            <div class="item-main flex align-items-center gap-3">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name" class="item-thumb" />
+              <div class="item-info flex-1">
+                <div class="flex justify-content-between align-items-start">
+                  <span class="item-name font-bold text-slate-700">{{ item.product.name }}</span>
+                  <button pButton icon="pi pi-times" class="p-button-text p-button-danger p-button-sm p-0 h-auto" (click)="removeFromCart(item.product.id)"></button>
+                </div>
+                <div class="flex justify-content-between align-items-center mt-2">
+                  <div class="quantity-controls flex align-items-center gap-2">
+                    <button class="qty-btn" (click)="decrementQuantity(item.product.id)"><i class="pi pi-minus"></i></button>
+                    <span class="qty-value font-bold">{{ item.quantity }}</span>
+                    <button class="qty-btn" (click)="addToCart(item.product)" [disabled]="getAvailableStock(item.product) <= 0"><i class="pi pi-plus"></i></button>
+                  </div>
+                  <span class="item-subtotal font-bold text-primary">{{ item.subtotal | currency:'INR' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="cart-summary p-3 bg-slate-50 border-round-xl mt-auto">
+        <div class="flex justify-content-between align-items-center mb-2">
+          <span class="text-slate-500 font-medium">Subtotal</span>
+          <span class="text-slate-800 font-bold">{{ cartTotal() | currency:'INR' }}</span>
+        </div>
+        <div class="flex justify-content-between align-items-center mb-3">
+          <span class="text-slate-500 font-medium">Tax (GST)</span>
+          <span class="text-slate-800 font-bold">₹0.00</span>
+        </div>
+        <p-divider></p-divider>
+        <div class="flex justify-content-between align-items-center mt-3 mb-4">
+          <span class="text-xl font-bold text-slate-800">Total Order</span>
+          <span class="text-2xl font-black text-primary">{{ cartTotal() | currency:'INR' }}</span>
+        </div>
+
+        <div class="cart-actions grid p-0 m-0 gap-2">
+          <button pButton label="Clear Cart" icon="pi pi-trash" class="p-button-outlined p-button-secondary border-round-lg col" (click)="clearCart()"></button>
+          <button pButton label="Checkout" icon="pi pi-arrow-right" iconPos="right" class="p-button-primary shadow-2 border-round-lg col-8" (click)="goToCheckout()"></button>
+        </div>
+      </div>
+    }
+  </div>
 </p-sidebar>

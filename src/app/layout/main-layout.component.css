@@ -454,10 +454,11 @@
 
   :host ::ng-deep .layout-toolbar.p-toolbar {
     padding: 0 0.5rem;
+    height: 60px;
   }
 
   .layout-content {
-    padding: 1rem 0.5rem;
+    padding: 12px 12px 60px; /* More standard padding and room for footer/fab */
     overflow-x: hidden;
   }
 

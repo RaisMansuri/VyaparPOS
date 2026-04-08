@@ -43,7 +43,7 @@
     <div class="desktop-only">
       <p-table #dt [value]="products" [rows]="10" [paginator]="true"
         [globalFilterFields]="['name', 'category.name', 'barcode']" [rowHover]="true" dataKey="id"
-        styleClass="p-datatable-sm modern-table" responsiveLayout="scroll"
+        styleClass="p-datatable-sm modern-table" responsiveLayout="stack" breakpoint="960px"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
 
         <ng-template pTemplate="header">
@@ -61,6 +61,7 @@
         <ng-template pTemplate="body" let-product>
           <tr>
             <td>
+              <span class="p-column-title font-bold">Product</span>
               <div class="product-cell">
                 <img [src]="product.imageUrl || defaultImageUrl" [alt]="product.name" class="product-thumb" />
                 <div class="product-info-cell">
@@ -69,9 +70,16 @@
                 </div>
               </div>
             </td>
-            <td><span class="font-bold">{{ product.price | currency:'INR' }}</span></td>
-            <td><p-tag [value]="product.category?.name || product.category || 'General'" severity="secondary"></p-tag></td>
             <td>
+              <span class="p-column-title font-bold">Price</span>
+              <span class="font-bold">{{ product.price | currency:'INR' }}</span>
+            </td>
+            <td>
+              <span class="p-column-title font-bold">Category</span>
+              <p-tag [value]="product.category?.name || product.category || 'General'" severity="secondary"></p-tag>
+            </td>
+            <td>
+              <span class="p-column-title font-bold">Inventory</span>
               <div class="stock-status">
                 <span [class]="'stock-badge ' + (product.stock > (product.minStockLevel || 0) ? 'status-in' : 'status-low')">
                   {{ product.stock }} {{ product.unit || 'pcs' }}
@@ -79,9 +87,16 @@
                 <small class="min-stock text-xs block text-secondary">Min: {{ product.minStockLevel || 0 }}</small>
               </div>
             </td>
-            <td><p-tag [value]="product.unit || 'pcs'" severity="contrast"></p-tag></td>
-            <td><span class="font-semibold text-primary">{{ product.gstRate || 0 }}%</span></td>
+            <td>
+              <span class="p-column-title font-bold">Unit</span>
+              <p-tag [value]="product.unit || 'pcs'" severity="contrast"></p-tag>
+            </td>
+            <td>
+              <span class="p-column-title font-bold">GST</span>
+              <span class="font-semibold text-primary">{{ product.gstRate || 0 }}%</span>
+            </td>
             <td class="text-center">
+              <span class="p-column-title font-bold">Actions</span>
               <div class="flex justify-center gap-2">
                 <button pButton icon="pi pi-pencil" class="btn-action-edit mr-2" (click)="editProduct(product)"></button>
                 <button pButton icon="pi pi-trash" class="btn-action-delete" (click)="deleteProduct(product)"></button>
@@ -92,10 +107,15 @@
         
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="6" class="text-center p-8">
-              <i class="pi pi-box text-6xl text-gray-200 mb-4 block"></i>
-              <h3 class="text-gray-400 font-bold">No Products Found</h3>
-              <p class="text-gray-300">Try adjusting your filters or add a new product.</p>
+            <td colspan="7" class="text-center" style="padding: 4rem;">
+              <div class="empty-state flex flex-column align-items-center justify-content-center">
+                <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+                  <i class="pi pi-box" style="font-size: 3rem;"></i>
+                </div>
+                <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+                <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">Your product catalog is empty. Add your first product to start selling.</p>
+                <button pButton label="Add First Product" icon="pi pi-plus" class="p-button-text mt-3" (click)="openNew()"></button>
+              </div>
             </td>
           </tr>
         </ng-template>

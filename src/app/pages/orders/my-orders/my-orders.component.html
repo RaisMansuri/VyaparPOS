@@ -10,11 +10,13 @@
     </div>
 
     @if (orderService.getOrders().length === 0) {
-    <div class="empty-orders">
-        <i class="pi pi-inbox empty-icon"></i>
-        <h2>No orders yet</h2>
-        <p>You haven't placed any orders. Start shopping now!</p>
-        <button pButton label="Browse Products" icon="pi pi-shopping-cart" class="p-button-rounded"
+    <div class="empty-state-full glass-card p-8 text-center flex flex-column align-items-center justify-content-center m-4">
+        <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+            <i class="pi pi-inbox" style="font-size: 3rem;"></i>
+        </div>
+        <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+        <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">You haven't placed any orders yet. Start your first transaction to see them here.</p>
+        <button pButton label="Start Shopping" icon="pi pi-shopping-cart" class="p-button-primary p-button-rounded mt-4 px-6 py-3 shadow-2"
             (click)="continueShopping()"></button>
     </div>
     } @else {
@@ -84,13 +86,13 @@
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="7" class="text-center p-5">
-                        <div class="empty-state">
-                            <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
-                            <h3 class="m-0">No orders found</h3>
-                            <p class="text-gray-500 mb-4">You haven't placed any orders yet.</p>
-                            <button pButton label="Start Shopping" icon="pi pi-shopping-cart" iconPos="left"
-                                class="p-button-rounded" (click)="continueShopping()"></button>
+                    <td colspan="7" class="text-center" style="padding: 4rem;">
+                        <div class="empty-state flex flex-column align-items-center justify-content-center">
+                            <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+                                <i class="pi pi-shopping-bag" style="font-size: 3rem;"></i>
+                            </div>
+                            <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+                            <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">No orders found matching your search criteria.</p>
                         </div>
                     </td>
                 </tr>

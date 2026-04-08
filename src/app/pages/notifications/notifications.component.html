@@ -12,9 +12,12 @@
 
   <div class="notifications-list flex flex-col gap-3">
     @if (notifications.length === 0) {
-      <div class="empty-state glass-card p-8 text-center">
-        <i class="pi pi-bell-slash text-4xl mb-4 text-gray-400"></i>
-        <p class="text-gray-500 m-0">{{ translationService.translate('NO_NOTIFICATIONS') }}</p>
+      <div class="empty-state-full glass-card p-8 text-center flex flex-column align-items-center justify-content-center mt-4">
+        <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+          <i class="pi pi-bell-slash" style="font-size: 3rem;"></i>
+        </div>
+        <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+        <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">{{ translationService.translate('NO_NOTIFICATIONS_DESC') || "You're all caught up! No new notifications at the moment." }}</p>
       </div>
     }
 

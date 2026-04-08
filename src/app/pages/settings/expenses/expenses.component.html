@@ -41,13 +41,13 @@
     <!-- Expenses Table -->
     <p-card styleClass="shadow-2 border-round-xl overflow-hidden mt-4 table-card">
       <p-table #dt [value]="expenses" [rows]="10" [paginator]="true" [loading]="loading"
-               [globalFilterFields]="globalFilterFields" responsiveLayout="scroll" styleClass="p-datatable-striped">
+               [globalFilterFields]="globalFilterFields" responsiveLayout="stack" breakpoint="960px" styleClass="p-datatable-striped modern-table">
       <ng-template pTemplate="caption">
         <div class="search-action-group p-2">
-          <p-iconfield>
+          <p-iconfield class="search-field">
             <p-inputicon class="pi pi-search"></p-inputicon>
             <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
-                   placeholder="Search expenses..." />
+                   placeholder="Search expenses..." class="w-full" />
           </p-iconfield>
           <button pButton label="Add Expense" icon="pi pi-plus" class="p-button-primary shadow-2 border-round-lg flex-shrink-0" (click)="showDialog()"></button>
         </div>
@@ -65,19 +65,28 @@
       </ng-template>
       <ng-template pTemplate="body" let-expense>
         <tr>
-          <td>{{ expense.date | date:'mediumDate' }}</td>
+          <td><span class="p-column-title font-bold">Date</span>{{ expense.date | date:'mediumDate' }}</td>
           <td>
+            <span class="p-column-title font-bold">Title</span>
             <div class="flex flex-column">
               <span class="font-bold text-900">{{ expense.title }}</span>
               <small class="text-500">{{ expense.description }}</small>
             </div>
           </td>
           <td>
+            <span class="p-column-title font-bold">Category</span>
             <p-tag [value]="expense.category" [severity]="getSeverity(expense.category)" [rounded]="true"></p-tag>
           </td>
-          <td class="font-bold text-red-600">-{{ expense.amount | currency:'INR' }}</td>
-          <td>{{ expense.paidBy }}</td>
+          <td class="font-bold text-red-600">
+            <span class="p-column-title font-bold">Amount</span>
+            -{{ expense.amount | currency:'INR' }}
+          </td>
           <td>
+            <span class="p-column-title font-bold">Paid By</span>
+            {{ expense.paidBy }}
+          </td>
+          <td>
+            <span class="p-column-title font-bold">Actions</span>
             <div class="flex gap-2 justify-content-center">
               <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info" (click)="showDialog(expense)"></button>
               <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteExpense(expense.id)"></button>
@@ -87,11 +96,14 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="text-center" style="padding: 3rem;">
+          <td colspan="6" class="text-center" style="padding: 4rem;">
             <div class="empty-state flex flex-column align-items-center justify-content-center">
-              <i class="pi pi-wallet" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
-              <div style="font-size: 1.25rem; color: #64748b; font-weight: 600;">No expenses found</div>
-              <p style="color: #94a3b8; margin-top: 0.5rem;">Total costs will appear here once recorded.</p>
+              <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+                <i class="pi pi-wallet" style="font-size: 3rem;"></i>
+              </div>
+              <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
+              <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">Business expenditures will appear here once recorded. Start tracking your costs now.</p>
+              <button pButton label="Add First Expense" icon="pi pi-plus" class="p-button-text mt-3" (click)="showDialog()"></button>
             </div>
           </td>
         </tr>

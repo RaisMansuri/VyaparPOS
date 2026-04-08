@@ -15,6 +15,9 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { BadgeModule } from 'primeng/badge';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-product-listing',
@@ -30,7 +33,9 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     IconFieldModule,
     InputIconModule,
-    InputTextModule
+    InputTextModule,
+    BadgeModule,
+    DividerModule
   ],
   templateUrl: './product-listing.component.html',
   styleUrls: ['./product-listing.component.css']
@@ -44,6 +49,11 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
+
+  public cartItems = this.cartService.items;
+  public cartTotal = this.cartService.cartTotal;
+  public cartCount = this.cartService.cartCount;
 
   allProducts: Product[] = [];
   products: Product[] = [];
@@ -61,6 +71,8 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
     { label: 'Name: Z-A', value: 'name-za' },
     { label: 'Highest Discount', value: 'discount' }
   ];
+
+  showCartSidebar = false;
 
   // Barcode state
   private barcodeBuffer = '';
@@ -371,5 +383,24 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
     if (normalizedCategory.includes('dairy')) return 'pi pi-box';
 
     return 'pi pi-tag';
+  }
+
+  toggleCart(): void {
+    this.showCartSidebar = !this.showCartSidebar;
+  }
+
+  removeFromCart(productId: string | number, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.cartService.removeFromCart(productId);
+  }
+
+  clearCart(): void {
+    this.cartService.clearCart();
+    this.toastService.success('Cart Cleared', 'All items removed from cart');
+  }
+
+  goToCheckout(): void {
+    this.showCartSidebar = false;
+    this.router.navigate(['/orders/checkout']);
   }
 }

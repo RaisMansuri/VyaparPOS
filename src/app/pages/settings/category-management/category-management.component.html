@@ -8,18 +8,18 @@
 
     <p-card styleClass="shadow-2 border-round-xl overflow-hidden">
         <p-table #dt [value]="categories" [rows]="10" [paginator]="true" [globalFilterFields]="['name','description']"
-            responsiveLayout="scroll" [rowHover]="true" dataKey="id"
-            styleClass="p-datatable-striped"
+            responsiveLayout="stack" breakpoint="960px" [rowHover]="true" dataKey="id"
+            styleClass="p-datatable-striped modern-table"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true">
 
             <ng-template pTemplate="caption">
                 <div class="search-action-group p-2">
-                    <p-iconfield>
+                    <p-iconfield class="search-field">
                         <p-inputicon class="pi pi-search"></p-inputicon>
                         <input pInputText type="text"
                             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Search categories..." />
+                            placeholder="Search categories..." class="w-full" />
                     </p-iconfield>
                     <button pButton label="Add New Category" icon="pi pi-plus" class="p-button-primary shadow-2 border-round-lg flex-shrink-0"
                         (click)="openNew()"></button>
@@ -36,8 +36,12 @@
             </ng-template>
             <ng-template pTemplate="body" let-cat let-i="rowIndex">
                 <tr>
-                    <td><span class="text-500">{{i + 1}}</span></td>
                     <td>
+                        <span class="p-column-title font-bold">#</span>
+                        <span class="text-500">{{i + 1}}</span>
+                    </td>
+                    <td>
+                        <span class="p-column-title font-bold">Category</span>
                         <div class="category-cell">
                             <div class="cat-icon-box" [style.background-color]="cat.color || '#eef2ff'">
                                 <i class="pi pi-tag text-primary"></i>
@@ -45,8 +49,12 @@
                             <span class="category-name-text">{{cat.name}}</span>
                         </div>
                     </td>
-                    <td class="text-600">{{cat.description || 'No description provided'}}</td>
                     <td>
+                        <span class="p-column-title font-bold">Description</span>
+                        <span class="text-600">{{cat.description || 'No description provided'}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="p-column-title font-bold">Actions</span>
                         <div class="flex gap-2 justify-content-center">
                             <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
                                 (click)="editCategory(cat)"></button>
@@ -60,8 +68,10 @@
                 <tr>
                     <td colspan="4" class="text-center" style="padding: 4rem;">
                         <div class="empty-state flex flex-column align-items-center justify-content-center">
-                            <i class="pi pi-tags" style="font-size: 3.5rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
-                            <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No categories found</div>
+                            <div class="empty-icon-box bg-slate-50 text-slate-400 mb-4">
+                                <i class="pi pi-tags" style="font-size: 3rem;"></i>
+                            </div>
+                            <div style="font-size: 1.5rem; color: #475569; font-weight: 700;">No record found</div>
                             <p style="color: #94a3b8; margin-top: 0.5rem; max-width: 300px;">Organize your bakery by adding product categories to group your catalog.</p>
                             <button pButton label="Add First Category" icon="pi pi-plus" class="p-button-text mt-3" (click)="openNew()"></button>
                         </div>
