@@ -1,7 +1,7 @@
 import { CartItem } from './cart.model';
 import { Address } from './address.model';
 
-export type PaymentMethod = 'credit_card' | 'debit_card' | 'upi' | 'cash' | 'wallet';
+export type PaymentMethod = 'credit_card' | 'debit_card' | 'upi' | 'cash' | 'wallet' | 'credit';
 
 export interface Order {
     id: string;

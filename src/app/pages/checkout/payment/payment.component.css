@@ -136,8 +136,63 @@
 
 /* Payment Form */
 .payment-form {
-    margin-bottom: 8px;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
 }
+
+.credit-info {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.credit-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.credit-stat .label {
+    font-size: 0.875rem;
+    color: var(--text-secondary-color);
+}
+
+.credit-stat .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.info-alert, .error-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.info-alert {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.error-alert {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.text-success { color: #10b981; }
+.text-danger { color: #ef4444; }
+.mt-3 { margin-top: 1rem; }
+.flex-1 { flex: 1; }
 
 .form-row {
     margin-bottom: 18px;

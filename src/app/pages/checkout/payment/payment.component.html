@@ -47,6 +47,18 @@
                     <i class="pi pi-briefcase"></i>
                     <span>Wallet</span>
                 </div>
+                <div class="method-tab" [class.active]="selectedMethod === 'cash'"
+                    (click)="selectMethod('cash')">
+                    <i class="pi pi-money-bill"></i>
+                    <span>Cash</span>
+                </div>
+                @if (cartService.selectedCustomer()?.customerType === 'wholesale') {
+                    <div class="method-tab" [class.active]="selectedMethod === 'credit'"
+                        (click)="selectMethod('credit')">
+                        <i class="pi pi-receipt"></i>
+                        <span>Pay on Credit</span>
+                    </div>
+                }
             </div>
 
             <!-- UPI Form -->
@@ -123,19 +135,21 @@
                 <div class="wallet-info p-3 border-round bg-gray-50">
                     <div class="flex justify-content-between mb-2">
                         <span class="text-gray-600">Wallet Balance:</span>
-                        <span class="font-bold">{{ customer.walletBalance | currency:'INR' }}</span>
+                        <span class="font-bold">{{ (customer.walletBalance || 0) | currency:'INR' }}</span>
                     </div>
-                    <div class="flex justify-content-between mb-2" *ngIf="customer.creditLimit">
-                        <span class="text-gray-600">Credit Limit:</span>
-                        <span class="font-bold">{{ customer.creditLimit | currency:'INR' }}</span>
-                    </div>
+                    @if (customer.creditLimit) {
+                        <div class="flex justify-content-between mb-2">
+                            <span class="text-gray-600">Credit Limit:</span>
+                            <span class="font-bold">{{ customer.creditLimit | currency:'INR' }}</span>
+                        </div>
+                    }
                     <div class="border-top-1 border-gray-200 my-2"></div>
                     <div class="flex justify-content-between mb-3">
                         <span class="font-bold">Total Available:</span>
-                        <span class="font-bold text-green-600">{{ (customer.walletBalance + (customer.creditLimit || 0)) | currency:'INR' }}</span>
+                        <span class="font-bold text-green-600">{{ ((customer.walletBalance || 0) + (customer.creditLimit || 0)) | currency:'INR' }}</span>
                     </div>
                     
-                    @if ((customer.walletBalance + (customer.creditLimit || 0)) < cartService.grandTotal()) {
+                    @if (((customer.walletBalance || 0) + (customer.creditLimit || 0)) < cartService.grandTotal()) {
                     <div class="p-2 bg-red-50 text-red-600 border-round flex align-items-center gap-2">
                         <i class="pi pi-exclamation-triangle"></i>
                         <span>Insufficient funds</span>
@@ -164,6 +178,44 @@
                     [icon]="isProcessing ? 'pi pi-spin pi-spinner' : 'pi pi-lock'" class="p-button-rounded pay-btn"
                     (click)="pay()" [disabled]="isProcessing"></button>
             </div>
+
+            <!-- Cash Form -->
+            @if (selectedMethod === 'cash') {
+            <div class="payment-form cash-payment">
+                <div class="info-alert">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Receive cash payment at the counter.</span>
+                </div>
+            </div>
+            }
+
+            <!-- Credit Form -->
+            @if (selectedMethod === 'credit') {
+            <div class="payment-form credit-payment">
+                @if (cartService.selectedCustomer(); as customer) {
+                <div class="credit-info card">
+                    <div class="credit-stat">
+                        <span class="label">Credit Limit</span>
+                        <span class="value">{{ (customer.creditLimit || 0) | currency:'INR' }}</span>
+                    </div>
+                    <div class="credit-stat">
+                        <span class="label">Outstanding</span>
+                        <span class="value text-danger">{{ (customer.outstandingBalance || 0) | currency:'INR' }}</span>
+                    </div>
+                    <div class="credit-stat highlight">
+                        <span class="label">Available Credit</span>
+                        <span class="value text-success">{{ ((customer.creditLimit || 0) - (customer.outstandingBalance || 0)) | currency:'INR' }}</span>
+                    </div>
+                </div>
+                @if (((customer.creditLimit || 0) - (customer.outstandingBalance || 0)) < cartService.grandTotal()) {
+                    <div class="error-alert mt-3">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <span>Insufficient credit limit to complete this transaction on credit.</span>
+                    </div>
+                }
+                }
+            </div>
+            }
         </div>
 
         <!-- Order Summary Sidebar -->

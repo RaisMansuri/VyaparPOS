@@ -1,0 +1,70 @@
+.suppliers-container {
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: var(--text-color);
+}
+
+.subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--text-secondary-color);
+}
+
+.table-card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.supplier-name {
+    font-weight: 600;
+    display: block;
+}
+
+.gst-tag {
+    font-size: 0.75rem;
+    color: var(--text-secondary-color);
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.875rem;
+}
+
+.contact-info i {
+    font-size: 0.75rem;
+    margin-right: 4px;
+    color: var(--primary-color);
+}
+
+.text-danger {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}

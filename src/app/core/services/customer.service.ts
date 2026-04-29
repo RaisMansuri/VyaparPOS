@@ -50,6 +50,7 @@ export class CustomerService {
           notes: customer.notes,
           preferences: [],
           createdAt: new Date(),
+          customerType: customer.customerType || 'retail',
         };
         this.mockCustomersSubject.next([mockCustomer, ...this.mockCustomersSubject.value]);
         this.refreshCustomers();

@@ -1,0 +1,101 @@
+<div class="suppliers-container">
+    <p-toast></p-toast>
+    
+    <div class="page-header">
+        <div class="header-left">
+            <h1>Supplier Management</h1>
+            <p class="subtitle">Manage your product sources and supply chain</p>
+        </div>
+        <div class="header-right">
+            <p-button label="Add New Supplier" icon="pi pi-plus" (onClick)="openNew()" styleClass="p-button-primary"></p-button>
+        </div>
+    </div>
+
+    <p-card styleClass="table-card">
+        <p-table [value]="suppliers" [rows]="10" [paginator]="true" [responsiveLayout]="'scroll'"
+            [globalFilterFields]="['name', 'contactPerson', 'email']" #dt>
+            <ng-template pTemplate="caption">
+                <div class="table-header">
+                    <p-iconField iconPosition="left">
+                        <p-inputIcon styleClass="pi pi-search"></p-inputIcon>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+                            placeholder="Search suppliers..." />
+                    </p-iconField>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="name">Supplier Name <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="contactPerson">Contact Person <p-sortIcon field="contactPerson"></p-sortIcon></th>
+                    <th>Email / Phone</th>
+                    <th>Categories</th>
+                    <th pSortableColumn="outstandingPayment">Outstanding <p-sortIcon field="outstandingPayment"></p-sortIcon></th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-supplier>
+                <tr>
+                    <td>
+                        <span class="supplier-name">{{supplier.name}}</span>
+                        @if (supplier.gstNumber) {
+                            <div class="gst-tag">GST: {{supplier.gstNumber}}</div>
+                        }
+                    </td>
+                    <td>{{supplier.contactPerson}}</td>
+                    <td>
+                        <div class="contact-info">
+                            <span><i class="pi pi-envelope"></i> {{supplier.email}}</span>
+                            <span><i class="pi pi-phone"></i> {{supplier.phone}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="categories-tags">
+                            <p-tag *ngFor="let cat of supplier.categories" [value]="cat" severity="info" styleClass="mr-1"></p-tag>
+                        </div>
+                    </td>
+                    <td>
+                        <span [class.text-danger]="supplier.outstandingPayment > 0">
+                            {{supplier.outstandingPayment | currency:'INR'}}
+                        </span>
+                    </td>
+                    <td>
+                        <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-warning" (onClick)="editSupplier(supplier)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+
+    <p-dialog [(visible)]="supplierDialog" [style]="{width: '450px'}" header="Supplier Details" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field mb-3">
+                <label for="name">Supplier Name</label>
+                <input type="text" pInputText id="name" [(ngModel)]="supplier.name" required autofocus />
+                @if (submitted && !supplier.name) {
+                    <small class="p-error">Name is required.</small>
+                }
+            </div>
+            <div class="field mb-3">
+                <label for="contact">Contact Person</label>
+                <input type="text" pInputText id="contact" [(ngModel)]="supplier.contactPerson" />
+            </div>
+            <div class="field mb-3">
+                <label for="email">Email</label>
+                <input type="email" pInputText id="email" [(ngModel)]="supplier.email" />
+            </div>
+            <div class="field mb-3">
+                <label for="phone">Phone</label>
+                <input type="text" pInputText id="phone" [(ngModel)]="supplier.phone" />
+            </div>
+            <div class="field mb-3">
+                <label for="gst">GST Number</label>
+                <input type="text" pInputText id="gst" [(ngModel)]="supplier.gstNumber" />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text" (onClick)="hideDialog()"></p-button>
+            <p-button label="Save" icon="pi pi-check" styleClass="p-button-primary" (onClick)="saveSupplier()"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>

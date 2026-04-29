@@ -13,6 +13,8 @@ export interface Product {
   barcode?: string;
   gstRate: number; // e.g., 5, 12, 18, 28
   unit?: string;
+  wholesalePrice?: number;
+  minWholesaleQuantity?: number;
 }
 
 export interface Discount {

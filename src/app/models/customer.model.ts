@@ -10,4 +10,7 @@ export interface Customer {
   preferences?: string[];
   notes?: string;
   createdAt: Date;
+  customerType: 'retail' | 'wholesale';
+  creditLimit?: number;
+  outstandingBalance?: number;
 }

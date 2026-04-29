@@ -106,9 +106,12 @@
                   
                   <div class="card-footer">
                     <div class="price-box">
-                      <span class="current-price">{{ (product.discount ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
-                      @if (product.discount) {
+                      <span class="current-price">{{ (product.discount || (cartService.selectedCustomer()?.customerType === 'wholesale' && product.wholesalePrice) ? getDiscountedPrice(product) : product.price) | currency:'INR' }}</span>
+                      @if (product.discount && cartService.selectedCustomer()?.customerType !== 'wholesale') {
                         <span class="original-price">{{ product.price | currency:'INR' }}</span>
+                      }
+                      @if (cartService.selectedCustomer()?.customerType === 'wholesale' && product.wholesalePrice) {
+                        <div class="wholesale-badge">Wholesale</div>
                       }
                     </div>
                     

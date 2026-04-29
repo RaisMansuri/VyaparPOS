@@ -47,7 +47,7 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   private scrollIntervals: any[] = [];
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
-  private cartService = inject(CartService);
+  public cartService = inject(CartService);
   private toastService = inject(ToastService);
   private router = inject(Router);
 
@@ -351,6 +351,14 @@ export class ProductListingComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getDiscountedPrice(product: Product): number {
+    const customer = this.cartService.selectedCustomer();
+    const isWholesaleCustomer = customer && customer.customerType === 'wholesale';
+    
+    // For listing, we show the wholesale price if the customer is a wholesaler
+    if (isWholesaleCustomer && product.wholesalePrice) {
+      return product.wholesalePrice;
+    }
+
     if (product.discount) {
       const discountAmount = (product.price * product.discount.value) / 100;
       return product.price - discountAmount;

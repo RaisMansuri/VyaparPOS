@@ -18,6 +18,8 @@ export const MOCK_PRODUCTS: Product[] = [
     minStockLevel: 10,
     barcode: '8901000001011',
     gstRate: 5,
+    wholesalePrice: 38,
+    minWholesaleQuantity: 10,
   },
   {
     id: 102,
@@ -32,6 +34,8 @@ export const MOCK_PRODUCTS: Product[] = [
     minStockLevel: 8,
     barcode: '8901000001028',
     gstRate: 5,
+    wholesalePrice: 45,
+    minWholesaleQuantity: 20,
   },
   {
     id: 103,
@@ -104,6 +108,7 @@ export const MOCK_CUSTOMERS: Customer[] = [
     preferences: ['Cakes', 'Pastries'],
     notes: 'Prefers evening delivery.',
     createdAt: new Date('2025-10-10'),
+    customerType: 'retail',
   },
   {
     id: 'CUS-1002',
@@ -116,6 +121,7 @@ export const MOCK_CUSTOMERS: Customer[] = [
     lastOrderDate: new Date('2026-03-14'),
     preferences: ['Drinks', 'Breads'],
     createdAt: new Date('2025-12-01'),
+    customerType: 'retail',
   },
   {
     id: 'CUS-1003',
@@ -129,6 +135,9 @@ export const MOCK_CUSTOMERS: Customer[] = [
     preferences: ['Cakes'],
     notes: 'Birthday and party bulk buyer.',
     createdAt: new Date('2025-08-18'),
+    customerType: 'wholesale',
+    creditLimit: 50000,
+    outstandingBalance: 12000,
   },
 ];
 

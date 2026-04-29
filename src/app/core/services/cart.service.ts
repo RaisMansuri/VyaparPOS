@@ -89,10 +89,20 @@ export class CartService {
 
     setCustomer(customer: any): void {
         this.selectedCustomerSignal.set(customer);
+        this.recalculateCart();
     }
 
     clearCustomer(): void {
         this.selectedCustomerSignal.set(null);
+        this.recalculateCart();
+    }
+
+    private recalculateCart(): void {
+        const updated = this.cartItems().map(item => ({
+            ...item,
+            subtotal: this.calcSubtotal(item.product, item.quantity)
+        }));
+        this.cartItems.set(updated);
     }
 
     addToCart(product: Product, quantity: number = 1): void {
@@ -148,9 +158,18 @@ export class CartService {
 
     private calcSubtotal(product: Product, quantity: number): number {
         let price = product.price;
-        if (product.discount) {
+
+        const customer = this.selectedCustomerSignal();
+        const isWholesaleCustomer = customer && customer.customerType === 'wholesale';
+        const meetsWholesaleQty = product.minWholesaleQuantity && quantity >= product.minWholesaleQuantity;
+
+        // Apply wholesale price if applicable
+        if ((isWholesaleCustomer || meetsWholesaleQty) && product.wholesalePrice) {
+            price = product.wholesalePrice;
+        } else if (product.discount) {
             price = price - (price * product.discount.value / 100);
         }
+
         return price * quantity;
     }
 }

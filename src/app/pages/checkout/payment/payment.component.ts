@@ -82,6 +82,17 @@ export class PaymentComponent implements OnInit {
                 this.toastService.error('Insufficient Balance', 'Customer does not have enough wallet balance or credit limit.');
                 return;
             }
+        } else if (this.selectedMethod === 'credit') {
+            const customer = this.cartService.selectedCustomer();
+            if (!customer || customer.customerType !== 'wholesale') {
+                this.toastService.error('Action Not Allowed', 'Credit payment is only available for wholesale customers.');
+                return;
+            }
+            const availableCredit = (customer.creditLimit || 0) - (customer.outstandingBalance || 0);
+            if (availableCredit < this.cartService.grandTotal()) {
+                this.toastService.error('Credit Limit Exceeded', 'The order total exceeds the available credit limit.');
+                return;
+            }
         }
 
         this.isProcessing = true;

@@ -204,6 +204,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'settings/suppliers',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/settings/suppliers/suppliers.component').then(
+            (m) => m.SuppliersComponent
+          ),
+      },
+      {
         path: 'settings/categories',
         canActivate: [authGuard],
         loadComponent: () =>
